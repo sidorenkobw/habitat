@@ -5,8 +5,8 @@ var Agent = function () {
     this.author     = null;
     this.x          = null;
     this.y          = null;
-    this.health     = 10;
-    this.satiety    = 0;
+    this.health     = 100;
+    this.satiety    = 10000;
 
     this.terrainMovements = {
         0 : false,
@@ -52,6 +52,12 @@ var Agent = function () {
     };
 };
 
+Agent.prototype.setLocation = function (x, y)
+{
+    this.x = parseInt(x);
+    this.y = parseInt(y);
+};
+
 Agent.prototype.isAlive = function () {
     return this.health > 0;
 };
@@ -60,6 +66,6 @@ Agent.prototype.canMoveToTerrainType = function (terrainType) {
     return terrainType in this.terrainMovements && this.terrainMovements[terrainType];
 };
 
-exports.new = function () {
+exports.create = function () {
     return new Agent();
 };

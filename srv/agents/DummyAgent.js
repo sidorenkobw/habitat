@@ -1,5 +1,5 @@
 var DummyAgent = function () {
-
+    var status;
 };
 
 /**
@@ -22,7 +22,7 @@ DummyAgent.prototype.introduce = function () {
  *
  * Status structure:
  * {
- *     "health" : 100, // 0 - 100
+ *     "health" : 100, // 1 - 100
  *     "satiety" : 20, // 0 - 10000
  *     "environment" : {
  *          "map" : [
@@ -34,7 +34,7 @@ DummyAgent.prototype.introduce = function () {
  *          ],
  *          "objects" : [
  *              {
- *                  "class" : "agent,
+ *                  "class" : "agent", // available values: "agent", "food"
  *                  "x" : 0, // Coordinates relative to the agent (agent's location is in the center)
  *                  "y" : 1  // Coordinates relative to the agent (agent's location is in the center)
  *              }
@@ -43,7 +43,7 @@ DummyAgent.prototype.introduce = function () {
  * }
  */
 DummyAgent.prototype.onNewTick = function (status) {
-
+    this.status = status;
 };
 
 /**
@@ -59,7 +59,8 @@ DummyAgent.prototype.onNewTick = function (status) {
  * 0 - stay idle (do nothing. the same as return null|false|0|...)
  * 1 - move
  * 2 - reserved
- * 3 - attack
+ * 3 - reserved
+ * 4 - eat food
  *
  * Movement options:
  * key: dir - movement direction
@@ -79,9 +80,56 @@ DummyAgent.prototype.onNewTick = function (status) {
  *      "dir"    : 0
  * }; // go to the north
  *
+ * Food eating options:
+ * key: dir - eating direction
+ * values:
+ *  null - eat food from the cell agent stands on
+ *  0 - eat from N (North)
+ *  1 - eat from  NE
+ *  2 - eat from E
+ *  3 - eat from SE
+ *  4 - eat from S
+ *  5 - eat from SW
+ *  6 - eat from W
+ *  7 - eat from NW
+ *
+ * Example:
+ * return {
+ *      "action" : 4
+ *      "dir"    : 4
+ * }; // eat from the south
+ *
  * @returns {{}}
  */
 DummyAgent.prototype.decision = function () {
+    var rel, movementMap = [];
+
+    movementMap[0] = { "x" :  0, "y" : -1 }; // N
+    movementMap[1] = { "x" : +1, "y" : -1 }; // NE
+    movementMap[2] = { "x" : +1, "y" :  0 }; // E
+    movementMap[3] = { "x" : +1, "y" : +1 }; // SE
+    movementMap[4] = { "x" :  0, "y" : +1 }; // S
+    movementMap[5] = { "x" : -1, "y" : +1 }; // SW
+    movementMap[6] = { "x" : -1, "y" :  0 }; // W
+    movementMap[7] = { "x" : -1, "y" : -1 }; // NW
+
+    for (var dir in movementMap) {
+        rel = movementMap[dir];
+        for (var i in this.status.environment.objects) {
+            var obj = this.status.environment.objects[i];
+            if (obj.class !== "food") {
+                continue;
+            }
+
+            if (obj.x === rel.x && obj.y === rel.y) {
+                return {
+                    "action" : 4,
+                    "dir"    : dir
+                };
+            }
+        }
+    }
+
     return {
         "action" : 1,
         "dir"    : Math.floor(Math.random() * 8)
@@ -96,7 +144,8 @@ DummyAgent.prototype.decision = function () {
  * Notification codes:
  * 1 - decision error (wrong format or codes)
  * 21 - movement is impossible (can not move to terrain type)
- * TODO
+ * 41 - can't eat food (no food in the cell)
+ * 42 - can't eat more food (your stomach is full)
  */
 DummyAgent.prototype.onNotification = function (notificationCode) {
 
