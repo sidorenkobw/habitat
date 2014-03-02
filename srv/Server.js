@@ -346,9 +346,9 @@ Server.prototype.processDecisionEatFood = function (decision) {
     }));
 
     if (!food) {
-        agent.client.onNotification(31);
+        agent.client.onNotification(41);
     } else if (agent.satiety === 10000) {
-        agent.client.onNotification(32);
+        agent.client.onNotification(42);
     } else {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
             + " satiety: (+" + food.richness + ")");
