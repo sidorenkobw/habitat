@@ -60,14 +60,15 @@ Map.prototype.getTerrainTypeByXY = function(x, y)
 Map.prototype.getDirectionsMap = function () {
     var movementMap = [];
 
-    movementMap[0] = { "x" :  0, "y" : -1 }; // N
-    movementMap[1] = { "x" : +1, "y" : -1 }; // NE
-    movementMap[2] = { "x" : +1, "y" :  0 }; // E
-    movementMap[3] = { "x" : +1, "y" : +1 }; // SE
-    movementMap[4] = { "x" :  0, "y" : +1 }; // S
-    movementMap[5] = { "x" : -1, "y" : +1 }; // SW
-    movementMap[6] = { "x" : -1, "y" :  0 }; // W
-    movementMap[7] = { "x" : -1, "y" : -1 }; // NW
+    movementMap[0] = { "x" :  0, "y" :  0 }; // Current cell
+    movementMap[1] = { "x" :  0, "y" : -1 }; // N
+    movementMap[2] = { "x" : +1, "y" : -1 }; // NE
+    movementMap[3] = { "x" : +1, "y" :  0 }; // E
+    movementMap[4] = { "x" : +1, "y" : +1 }; // SE
+    movementMap[5] = { "x" :  0, "y" : +1 }; // S
+    movementMap[6] = { "x" : -1, "y" : +1 }; // SW
+    movementMap[7] = { "x" : -1, "y" :  0 }; // W
+    movementMap[8] = { "x" : -1, "y" : -1 }; // NW
 
     return movementMap;
 };

@@ -6,7 +6,7 @@ var Agent = function () {
     this.x          = null;
     this.y          = null;
     this.health     = 100;
-    this.satiety    = 10000;
+    this.satiety    = 100;
 
     this.terrainMovements = {
         0 : false,

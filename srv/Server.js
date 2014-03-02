@@ -88,6 +88,12 @@ Server.prototype.instantiateAgent = function (agentDefinition) {
 
     agent.setLocation(coords.x, coords.y);
 
+    // Add food for the newborn agent
+    var food = Food.create(10000);
+    food.setLocation(agent.x, agent.y);
+    this.objects.push(food);
+    this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y);
+
     return agent;
 };
 
@@ -119,6 +125,7 @@ Server.prototype.generateFood = function () {
 
     food = Food.create(Math.floor(Math.random() * 300) + 100);
     food.setLocation(coords.x, coords.y);
+    this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y);
 
     this.objects.push(food);
 };
@@ -247,6 +254,7 @@ Server.prototype.updateAgentStatus = function (agent) {
         var food = Food.create(2000);
         food.setLocation(agent.x, agent.y);
         this.objects.push(food);
+        this.log("Food with richness: " + food.richness + " was created instead of died agent at x:" + food.x + " y:" + food.y);
 
         // Remove agent from server
         this.agents.splice(this.agents.indexOf(agent), 1);
@@ -285,16 +293,16 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
             throw new Error("action code: " + decision.action + " is reserved");
 
         } else if (decision.action === 4) { // Eat food
-            decision.dir = parseInt(decision.dir);
 
+            decision.dir = parseInt(decision.dir);
             if (decision.dir === undefined || !_.contains(this.map.getPossibleDirections(), decision.dir)) {
                 throw new Error("decision returned wrong direction code: " + decision.dir);
             }
 
             return {
-                "isProcessed" : false,
-                "action" : 4,
-                "dir"    : decision.dir
+                "isProcessed"   : false,
+                "action"        : 4,
+                "dir"           : decision.dir
             };
 
         } else {

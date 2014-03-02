@@ -65,14 +65,15 @@ DummyAgent.prototype.onNewTick = function (status) {
  * Movement options:
  * key: dir - movement direction
  * values:
- *  0 - go to N (North)
- *  1 - go to NE
- *  2 - go to E
- *  3 - go to SE
- *  4 - go to S
- *  5 - go to SW
- *  6 - go to W
- *  7 - go to NW
+ *  0 - don't move
+ *  1 - go to N (North)
+ *  2 - go to NE
+ *  3 - go to E
+ *  4 - go to SE
+ *  5 - go to S
+ *  6 - go to SW
+ *  7 - go to W
+ *  8 - go to NW
  *
  * Example:
  * return {
@@ -83,15 +84,15 @@ DummyAgent.prototype.onNewTick = function (status) {
  * Food eating options:
  * key: dir - eating direction
  * values:
- *  null - eat food from the cell agent stands on
- *  0 - eat from N (North)
- *  1 - eat from  NE
- *  2 - eat from E
- *  3 - eat from SE
- *  4 - eat from S
- *  5 - eat from SW
- *  6 - eat from W
- *  7 - eat from NW
+ *  0 - eat food from the cell agent stands on
+ *  1 - eat from N (North)
+ *  2 - eat from  NE
+ *  3 - eat from E
+ *  4 - eat from SE
+ *  5 - eat from S
+ *  6 - eat from SW
+ *  7 - eat from W
+ *  8 - eat from NW
  *
  * Example:
  * return {
@@ -104,14 +105,15 @@ DummyAgent.prototype.onNewTick = function (status) {
 DummyAgent.prototype.decision = function () {
     var rel, movementMap = [];
 
-    movementMap[0] = { "x" :  0, "y" : -1 }; // N
-    movementMap[1] = { "x" : +1, "y" : -1 }; // NE
-    movementMap[2] = { "x" : +1, "y" :  0 }; // E
-    movementMap[3] = { "x" : +1, "y" : +1 }; // SE
-    movementMap[4] = { "x" :  0, "y" : +1 }; // S
-    movementMap[5] = { "x" : -1, "y" : +1 }; // SW
-    movementMap[6] = { "x" : -1, "y" :  0 }; // W
-    movementMap[7] = { "x" : -1, "y" : -1 }; // NW
+    movementMap[0] = { "x" :  0, "y" :  0 }; // Idle
+    movementMap[1] = { "x" :  0, "y" : -1 }; // N
+    movementMap[2] = { "x" : +1, "y" : -1 }; // NE
+    movementMap[3] = { "x" : +1, "y" :  0 }; // E
+    movementMap[4] = { "x" : +1, "y" : +1 }; // SE
+    movementMap[5] = { "x" :  0, "y" : +1 }; // S
+    movementMap[6] = { "x" : -1, "y" : +1 }; // SW
+    movementMap[7] = { "x" : -1, "y" :  0 }; // W
+    movementMap[8] = { "x" : -1, "y" : -1 }; // NW
 
     // Scan surrounding cells (all directions) for food and make decision to eat it if found
     for (var dir in movementMap) {
