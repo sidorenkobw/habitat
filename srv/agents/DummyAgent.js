@@ -113,6 +113,7 @@ DummyAgent.prototype.decision = function () {
     movementMap[6] = { "x" : -1, "y" :  0 }; // W
     movementMap[7] = { "x" : -1, "y" : -1 }; // NW
 
+    // Scan surrounding cells (all directions) for food and make decision to eat it if found
     for (var dir in movementMap) {
         rel = movementMap[dir];
         for (var i in this.status.environment.objects) {
@@ -130,6 +131,7 @@ DummyAgent.prototype.decision = function () {
         }
     }
 
+    // Otherwise move in random direction
     return {
         "action" : 1,
         "dir"    : Math.floor(Math.random() * 8)
