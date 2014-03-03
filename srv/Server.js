@@ -426,7 +426,7 @@ Server.prototype.tick = function () {
     this.processDecisions(decisions);
 
     this.saveServerState();
-//    this.printWorld();
+    this.printWorld();
 
     if (!this.agents.length) {
         this.log("All agents died");
@@ -476,6 +476,11 @@ Server.prototype.saveServerState = function () {
 };
 
 Server.prototype.printWorld = function () {
+    process.stdout.write("\n");
+    for (var x = 0 ; x < this.map.width ; x++) {
+        process.stdout.write("-");
+    }
+    process.stdout.write("\n");
     for (var y = 0 ; y < this.map.height ; y++) {
         for (var x = 0 ; x < this.map.width ; x++) {
             if (this.getAgentByXY(x, y)) {
@@ -483,7 +488,7 @@ Server.prototype.printWorld = function () {
             } else if (this.getObjectsByXY(x, y).length) {
                 process.stdout.write("#");
             } else {
-                process.stdout.write(""+this.map.getTerrainTypeByXY(x, y));
+                process.stdout.write(_.contains([1,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,35], this.map.getTerrainTypeByXY(x, y)) ? " " : ".");
             }
         }
         process.stdout.write("\n");
