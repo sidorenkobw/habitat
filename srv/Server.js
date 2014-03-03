@@ -16,10 +16,15 @@ var Server = function (agents, map) {
     this.displayLogs    = true;
 };
 
+Server.prototype.initLog = function () {
+    fs.writeFileSync("./var/log", "");
+};
+
 Server.prototype.log = function (msg) {
     if (this.displayLogs) {
         util.log(msg);
     }
+    fs.appendFileSync("./var/log", this.tickId + " " + msg + "\n");
 };
 
 Server.prototype.stop = function () {
@@ -477,9 +482,7 @@ Server.prototype.saveServerState = function () {
 
 Server.prototype.printWorld = function () {
     process.stdout.write("\n");
-    for (var x = 0 ; x < this.map.width ; x++) {
-        process.stdout.write("-");
-    }
+    process.stdout.write(""+this.tickId);
     process.stdout.write("\n");
     for (var y = 0 ; y < this.map.height ; y++) {
         for (var x = 0 ; x < this.map.width ; x++) {
@@ -493,9 +496,16 @@ Server.prototype.printWorld = function () {
         }
         process.stdout.write("\n");
     }
+
+    for (var x = 0 ; x < this.map.width ; x++) {
+        process.stdout.write("-");
+    }
+    process.stdout.write("\n");
 };
 
 Server.prototype.run = function () {
+    this.initLog();
+
     this.log("Server started");
 
     this.initAgents();
