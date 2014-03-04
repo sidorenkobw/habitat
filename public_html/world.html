@@ -12,14 +12,73 @@
 
     <!-- <link rel="shortcut icon" href="/favicon.png"> -->
     <link href="/css/default.css" rel="stylesheet">
+    <link href="/css/map.css" rel="stylesheet" />
 
     <script src="/libs/require/require.js" type="text/javascript"></script>
     <script src="/js/require.cfg.js" type="text/javascript"></script>
 
+    <script type="text/template" id="template-map">
+        <div class="tiled-map"><% var x, y = 0; _.each(data.map, function(row) { x = 0; %><div class="tiles-row"><% _.each(row, function(tile) { %><div class="tile tile-<%= tile %>" id="tile-<%= x %>x<%= y %>"></div><% x++;}) %></div><% y++;}) %></div>
+    </script>
+    <script type="text/template" id="template-mob">
+        <div class="mob"></div>
+    </script>
+    <script type="text/template" id="template-object">
+        <div class="object"></div>
+    </script>
     <script type="text/javascript">
         require.config({
 //            urlArgs : "build=<?php echo $this->config->build; ?>"
         });
+        require(
+            ['jquery', 'underscore'],
+            function($, _) {
+                $.ajax('/map.json', {
+                    dataType : 'json',
+                    success: function(data) {
+                        var templateMap = $('#template-map').html(),
+                            templateMob = $('#template-mob').html(),
+                            templateObj = $('#template-object').html();
+                        $('#map').html(_.template(templateMap, {data: data}));
+                        var dynamicObjects = [];
+                        var drawObjects = function() {
+                            $.ajax('/state.json', {
+                                dataType : 'json',
+                                success: function(data) {
+                                    var newObjects = [];
+                                    _.each(data['agents'], function(agent) {
+                                        newObjects.push({
+                                            xy : agent.x + 'x' + agent.y,
+                                            el : $(_.template(templateMob, agent))
+                                        });
+                                    });
+                                    _.each(data['objects'], function(object) {
+                                        newObjects.push({
+                                            xy : object.x + 'x' + object.y,
+                                            el : $(_.template(templateObj, object))
+                                        });
+                                    });
+                                    _.each(dynamicObjects, function(object){
+                                        object.el.detach();
+                                    });
+                                    _.each(newObjects, function(object) {
+                                        $('#tile-' + object.xy).append(object.el);
+                                    });
+                                    dynamicObjects = newObjects;
+                                    setTimeout(drawObjects, 800);
+                                }
+                            });
+                        }
+                        drawObjects();
+
+                    }
+                })
+                //map.setCenter(new OpenLayers.LonLat(1, 4), 2);
+                //map.addControl( new OpenLayers.Control.LayerSwitcher() );
+    //            function drawMap() {
+    //            }
+            }
+        );
     </script>
 
 </head>
@@ -27,6 +86,6 @@
 <body>
 
 <h1>World map</h1>
-
+<div id="map" style=""></div>
 </body>
 </html>

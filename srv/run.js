@@ -36,4 +36,7 @@ var serverModule = require("./Server"),
 
     var srv = new serverModule.Server(agents, map);
     srv.run();
+    var observerModule = require('./WebObserver');
+    var observer = new observerModule.WebObserver(srv, 8080);
+    observer.run();
 })();
