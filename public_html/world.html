@@ -21,10 +21,10 @@
         <div class="tiled-map"><% var x, y = 0; _.each(data.map, function(row) { x = 0; %><div class="tiles-row"><% _.each(row, function(tile) { %><div class="tile tile-<%= tile %>" id="tile-<%= x %>x<%= y %>"></div><% x++;}) %></div><% y++;}) %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-<%= id %>" title="<%= name%> by <%= author %>"></div>
+        <div class="mob model-<%= o.id %>" title="<%= o.name%> by <%= o.author %>"></div>
     </script>
     <script type="text/template" id="template-object">
-        <div class="object"></div>
+        <div class="object model-<%= o.class %>-<%= (o.x + o.y) % 5 %>"></div>
     </script>
     <script type="text/javascript">
         require.config({
@@ -36,10 +36,10 @@
                 $.ajax('/map.json', {
                     dataType : 'json',
                     success: function(data) {
-                        var templateMap = $('#template-map').html(),
-                            templateMob = $('#template-mob').html(),
-                            templateObj = $('#template-object').html();
-                        $('#map').html(_.template(templateMap, {data: data}));
+                        var templateMap = _.template($('#template-map').html()),
+                            templateMob = _.template($('#template-mob').html()),
+                            templateObj = _.template($('#template-object').html());
+                        $('#map').html(templateMap({data: data}));
                         var tickInterval = data.tickInterval;
                         var dynamicObjects = [];
                         var drawObjects = function() {
@@ -50,19 +50,20 @@
                                     _.each(data['agents'], function(agent) {
                                         newObjects.push({
                                             xy : agent.x + 'x' + agent.y,
-                                            el : $(_.template(templateMob, agent))
+                                            el : $(templateMob({o:agent}))
                                         });
                                     });
                                     _.each(data['objects'], function(object) {
                                         newObjects.push({
                                             xy : object.x + 'x' + object.y,
-                                            el : $(_.template(templateObj, object))
+                                            el : $(templateObj({o:object}))
                                         });
                                     });
                                     _.each(dynamicObjects, function(object){
                                         object.el.detach();
                                     });
                                     _.each(newObjects, function(object) {
+                                        object.cls = object.class;
                                         $('#tile-' + object.xy).append(object.el);
                                     });
                                     dynamicObjects = newObjects;

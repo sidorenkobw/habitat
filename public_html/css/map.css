@@ -172,3 +172,18 @@
 .mob.model-10 {
     background-image: url('../img/units/u1_09.gif');
 }
+.object.model-food-0 {
+    background-image: url('../img/objects/food-0.gif');
+}
+.object.model-food-1 {
+    background-image: url('../img/objects/food-1.gif');
+}
+.object.model-food-2 {
+    background-image: url('../img/objects/food-2.gif');
+}
+.object.model-food-3 {
+    background-image: url('../img/objects/food-3.gif');
+}
+.object.model-food-4 {
+    background-image: url('../img/objects/food-4.gif');
+}
