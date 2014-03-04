@@ -196,7 +196,7 @@ Server.prototype.getObjectsForEnvironmentByXY = function (agent, x, y, shift_x, 
 
 Server.prototype.getEnvironmentForAgent = function(agent)
 {
-    var radius = 2, env, coords, terrain, row, agentObj, objects, shift_x, shift_y;
+    var radius = 4, env, coords, terrain, row, agentObj, objects, shift_x, shift_y;
     env = {
         "map"       : [],
         "objects"   : []
@@ -266,20 +266,24 @@ Server.prototype.updateAgentStatus = function (agent) {
     }
 };
 
+Server.prototype.getEmptyDecision = function () {
+    return {
+        "isProcessed" : false,
+        "action" : 0
+    };
+};
+
 Server.prototype.sanitizeDecision = function (agent, decision) {
     try {
         if (decision !== Object(decision)) {
-            throw new Error("decision returned not an object");
+            return this.getEmptyDecision();
         }
 
         decision.action = parseInt(decision.action);
 
         if (decision.action === 0) { // Idle
 
-            return {
-                "isProcessed" : false,
-                "action" : 0
-            };
+            return this.getEmptyDecision();
 
         } else if (decision.action === 1) { // Move
             decision.dir = parseInt(decision.dir);
@@ -390,17 +394,7 @@ Server.prototype.tick = function () {
     }
 
     _.each(this.agents, function (agent) {
-        // Recalculate agent's characteristics (health, etc.), remove died
-        this.updateAgentStatus(agent);
-    }, this);
-
-    _.each(this.agents, function (agent) {
         try {
-
-            // Skip if agent is died after the recalculation
-            if (!agent.isAlive()) {
-                return;
-            }
 
             // Notify the agent that new tick has begun
             agent.client.onNewTick(this.getAgentStatus(agent));
@@ -413,22 +407,29 @@ Server.prototype.tick = function () {
             }
 
             decision = this.sanitizeDecision(agent, decision);
-            if (!decision.action) {
-                // Skip if idle action
-                return;
-            }
-
-            decision.agent = agent;
-
-            // Collect all decisions
-            decisions.push(decision);
 
         } catch (e) {
             this.log(agent.name + "(" + agent.id + ")" + " skipped on tick " + this.tickId + " because of error: " + e.message);
+            decision = this.getEmptyDecision();
         }
+
+        decision.agent = agent;
+
+        // Collect all decisions
+        decisions.push(decision);
+
     }, this);
 
     this.processDecisions(decisions);
+
+    // Recalculate agent's characteristics (health, etc.), remove died
+    _.each(this.agents, function (agent) {
+        this.updateAgentStatus(agent);
+    }, this);
+
+    if (!(this.tickId % 50)) {
+        this.saveServerState();
+    }
 
     this.saveServerState();
     //this.printWorld();
