@@ -94,7 +94,7 @@ Server.prototype.instantiateAgent = function (agentDefinition) {
     agent.setLocation(coords.x, coords.y);
 
     // Add food for the newborn agent
-    var food = Food.create(10000);
+    var food = Food.create(5000);
     food.setLocation(agent.x, agent.y);
     this.objects.push(food);
     this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y);
