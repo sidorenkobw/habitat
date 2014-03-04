@@ -23,7 +23,7 @@ DummyAgent.prototype.introduce = function () {
  * Status structure:
  * {
  *     "health" : 100, // 1 - 100
- *     "satiety" : 20, // 0 - 10000
+ *     "satiety" : 20, // 0 - 1000
  *     "environment" : {
  *          "map" : [
  *              [1,1,1,1,1,1,1,1,1],
