@@ -21,6 +21,9 @@
 .tile.tile-2 {
     background-image: url('../img/map/2.gif');
 }
+.tile.tile-3 {
+    background-image: url('../img/map/3.gif');
+}
 .tile.tile-4 {
     background-image: url('../img/map/4.gif');
 }
