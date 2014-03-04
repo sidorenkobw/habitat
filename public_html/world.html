@@ -21,7 +21,7 @@
         <div class="tiled-map"><% var x, y = 0; _.each(data.map, function(row) { x = 0; %><div class="tiles-row"><% _.each(row, function(tile) { %><div class="tile tile-<%= tile %>" id="tile-<%= x %>x<%= y %>"></div><% x++;}) %></div><% y++;}) %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-<%= o.id %>" title="<%= o.name%> by <%= o.author %>"></div>
+        <div class="mob model-<%= o.id %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div></div>
     </script>
     <script type="text/template" id="template-object">
         <div class="object model-<%= o.class %>-<%= (o.x + o.y) % 5 %>"></div>
@@ -47,16 +47,16 @@
                                 dataType : 'json',
                                 success: function(data) {
                                     var newObjects = [];
-                                    _.each(data['agents'], function(agent) {
-                                        newObjects.push({
-                                            xy : agent.x + 'x' + agent.y,
-                                            el : $(templateMob({o:agent}))
-                                        });
-                                    });
                                     _.each(data['objects'], function(object) {
                                         newObjects.push({
                                             xy : object.x + 'x' + object.y,
                                             el : $(templateObj({o:object}))
+                                        });
+                                    });
+                                    _.each(data['agents'], function(agent) {
+                                        newObjects.push({
+                                            xy : agent.x + 'x' + agent.y,
+                                            el : $(templateMob({o:agent}))
                                         });
                                     });
                                     _.each(dynamicObjects, function(object){

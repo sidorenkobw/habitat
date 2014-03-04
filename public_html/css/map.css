@@ -136,6 +136,15 @@
     position: absolute;
     background-image: url('../img/units/u7_h.gif');
 }
+.tile .mob .name {
+    position: absolute;
+    color: white;
+    font-size: 9px;
+    width: 50px;
+    text-align: center;
+    margin-top: -10px;
+    margin-left: -5px;
+}
 .tile .object {
     width: 40px;
     height: 40px;
