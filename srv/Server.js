@@ -444,14 +444,10 @@ Server.prototype.tick = function () {
     }, this.tickInterval);
 };
 
-Server.prototype.saveServerState = function () {
+Server.prototype.getServerState = function() {
     var state = {
         "tickId" : this.tickId,
-        "map"    : {
-            "width" : this.map.width,
-            "height" : this.map.health,
-            "map" : this.map.map
-        },
+        "map"    : this.map.getMap(),
         "agents"  : [],
         "objects" : [],
         "log"     : []
@@ -476,7 +472,11 @@ Server.prototype.saveServerState = function () {
             "y"     : obj.y
         };
     });
+    return state;
+};
 
+Server.prototype.saveServerState = function () {
+    var state = this.getServerState();
     fs.writeFileSync("./var/state.json", JSON.stringify(state));
 };
 

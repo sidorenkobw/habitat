@@ -19,7 +19,13 @@ Map.prototype.setSize = function(x, y)
         }
     }
 };
-
+Map.prototype.getMap = function() {
+    return {
+        "width" : this.width,
+        "height" : this.height,
+        "map" : this.map
+    }
+}
 Map.prototype.getXYByRel = function(x, y, shift_x, shift_y)
 {
     x = parseInt(x);
