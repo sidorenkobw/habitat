@@ -147,7 +147,7 @@ DummyAgent.prototype.decision = function () {
     // Otherwise move in random direction
     return {
         "action" : 1,
-        "dir"    : Math.floor(Math.random() * 8)
+        "dir"    : Math.floor(Math.random() * 9)
     };
 };
 
