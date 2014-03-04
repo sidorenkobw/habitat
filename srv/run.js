@@ -41,7 +41,8 @@ var serverModule = require("./Server"),
     var agents = [
         require("./agents/DummyAgent"),
         require("./agents/DummyAgent"),
-        require("./agents/VeryDummy")
+        require("./agents/VeryDummy"),
+        require("./agents/ReAgent")
     ];
 
     var srv = new serverModule.Server(agents, map);
