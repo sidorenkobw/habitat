@@ -134,11 +134,41 @@
     width: 40px;
     height:40px;
     position: absolute;
-    background-image: url('../img/units/u2_00.gif');
+    background-image: url('../img/units/u7_h.gif');
 }
 .tile .object {
     width: 40px;
     height: 40px;
     position: absolute;
     background-image: url('../img/map/39.gif');
+}
+.mob.model-1 {
+    background-image: url('../img/units/u1_00.gif');
+}
+.mob.model-2 {
+    background-image: url('../img/units/u1_01.gif');
+}
+.mob.model-3 {
+    background-image: url('../img/units/u1_02.gif');
+}
+.mob.model-4 {
+    background-image: url('../img/units/u1_03.gif');
+}
+.mob.model-5 {
+    background-image: url('../img/units/u1_04.gif');
+}
+.mob.model-6 {
+    background-image: url('../img/units/u1_05.gif');
+}
+.mob.model-7 {
+    background-image: url('../img/units/u1_06.gif');
+}
+.mob.model-8 {
+    background-image: url('../img/units/u1_07.gif');
+}
+.mob.model-9 {
+    background-image: url('../img/units/u1_08.gif');
+}
+.mob.model-10 {
+    background-image: url('../img/units/u1_09.gif');
 }
