@@ -159,6 +159,7 @@ DummyAgent.prototype.decision = function () {
  * Notification codes:
  * 1 - decision error (wrong format or codes)
  * 21 - movement is impossible (can not move to terrain type)
+ * 22 - movement is impossible (another agent is in the cell)
  * 41 - can't eat food (no food in the cell)
  * 42 - can't eat more food (your stomach is full)
  */

@@ -286,6 +286,7 @@ Server.prototype.sanitizeDecisionDirection = function (decision) {
 Server.prototype.sanitizeDecision = function (agent, decision) {
     try {
         if (decision !== Object(decision)) {
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle");
             return this.getEmptyDecision();
         }
 
@@ -293,10 +294,13 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
         if (decision.action === 0) { // Idle
 
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle");
             return this.getEmptyDecision();
 
         } else if (decision.action === 1) { // Move
             this.sanitizeDecisionDirection(decision);
+
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to go to " + decision.dir);
 
             return {
                 "isProcessed"   : false,
@@ -315,6 +319,8 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
         } else if (decision.action === 4) { // Eat food
             this.sanitizeDecisionDirection(decision);
 
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to eat food from " + decision.dir);
+
             return {
                 "isProcessed"   : false,
                 "action"        : 4,
@@ -326,6 +332,7 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
         }
 
     } catch (e) {
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (1)");
         agent.client.onNotification(1); // Notify agent that its decision has wrong format or params and will skip current tick
         throw e;
     }
@@ -334,17 +341,25 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 Server.prototype.processDecisionMove = function (decision) {
     var movementMap = this.map.getDirectionsMap(),
         agent = decision.agent,
-        relCoords, coords;
+        relCoords, coords, tmpAgent;
 
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
-    if (agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y))) {
-        agent.x = coords.x;
-        agent.y = coords.y;
+    tmpAgent = this.getAgentByXY(coords.x, coords.y);
 
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y);
+    if (tmpAgent && tmpAgent !== agent) {
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (22)");
+        agent.client.onNotification(22);
     } else {
-        agent.client.onNotification(21);
+        if (agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y))) {
+            agent.x = coords.x;
+            agent.y = coords.y;
+
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y);
+        } else {
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (21)");
+            agent.client.onNotification(21);
+        }
     }
 
     decision.isProcessed = true;
@@ -362,8 +377,10 @@ Server.prototype.processDecisionEatFood = function (decision) {
     }));
 
     if (!food) {
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (41)");
         agent.client.onNotification(41);
     } else if (agent.satiety === agent.maxSatiety) {
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (42)");
         agent.client.onNotification(42);
     } else {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
@@ -378,23 +395,15 @@ Server.prototype.processDecisionEatFood = function (decision) {
     decision.isProcessed = true;
 };
 
-Server.prototype.processDecisions = function (decisions) {
-    var decision;
-
-    for (var i in decisions) {
-        decision = decisions[i];
-
-        if (decision.action === 1) {
-            this.processDecisionMove(decision);
-        } else if (decision.action === 4) {
-            this.processDecisionEatFood(decision);
-        }
+Server.prototype.processDecision = function (decision) {
+    if (decision.action === 1) {
+        this.processDecisionMove(decision);
+    } else if (decision.action === 4) {
+        this.processDecisionEatFood(decision);
     }
 };
 
 Server.prototype.tick = function () {
-    var decisions = [], decision;
-
     this.tickId++;
     if (!(this.tickId % 100)) {
         this.generateFood();
@@ -407,27 +416,19 @@ Server.prototype.tick = function () {
             agent.client.onNewTick(this.getAgentStatus(agent));
 
             // Get and validate agent's decision
-            decision = agent.client.decision();
-            if (!decision) {
-                // Skip if idle action
-                return;
-            }
+            var decision = agent.client.decision();
 
             decision = this.sanitizeDecision(agent, decision);
+            decision.agent = agent;
 
         } catch (e) {
             this.log(agent.name + "(" + agent.id + ")" + " skipped on tick " + this.tickId + " because of error: " + e.message);
             decision = this.getEmptyDecision();
         }
 
-        decision.agent = agent;
-
-        // Collect all decisions
-        decisions.push(decision);
+        this.processDecision(decision);
 
     }, this);
-
-    this.processDecisions(decisions);
 
     // Recalculate agent's characteristics (health, etc.), remove died
     _.each(this.agents, function (agent) {
