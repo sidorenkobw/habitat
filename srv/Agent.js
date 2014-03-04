@@ -3,10 +3,15 @@ var Agent = function () {
     this.client     = null;
     this.name       = null;
     this.author     = null;
+
     this.x          = null;
     this.y          = null;
+
     this.health     = 100;
+    this.maxHealth  = 100;
+
     this.satiety    = 100;
+    this.maxSatiety = 10000;
 
     this.terrainMovements = {
         0 : false,

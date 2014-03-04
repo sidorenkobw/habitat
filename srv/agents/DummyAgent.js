@@ -26,15 +26,26 @@ DummyAgent.prototype.introduce = function () {
  *     "satiety" : 20, // 0 - 10000
  *     "environment" : {
  *          "map" : [
- *              [1,1,1,1,1],
- *              [1,1,1,1,1],
- *              [1,1,1,1,1],
- *              [1,1,1,1,1],
- *              [1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1],
+ *              [1,1,1,1,1,1,1,1,1]
  *          ],
  *          "objects" : [
  *              {
- *                  "class" : "agent", // available values: "agent", "food"
+ *                  "class"     : "agent",
+ *                  "health"    : 98,
+ *                  "maxHealth" : 100,
+ *                  "x"         : 0, // Coordinates relative to the agent (agent's location is in the center)
+ *                  "y"         : 1  // Coordinates relative to the agent (agent's location is in the center)
+ *              },
+ *              {
+ *                  "class" : "food",
  *                  "x" : 0, // Coordinates relative to the agent (agent's location is in the center)
  *                  "y" : 1  // Coordinates relative to the agent (agent's location is in the center)
  *              }

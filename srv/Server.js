@@ -93,12 +93,6 @@ Server.prototype.instantiateAgent = function (agentDefinition) {
 
     agent.setLocation(coords.x, coords.y);
 
-    // Add food for the newborn agent
-    var food = Food.create(5000);
-    food.setLocation(agent.x, agent.y);
-    this.objects.push(food);
-    this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y);
-
     return agent;
 };
 
@@ -118,6 +112,13 @@ Server.prototype.initAgents = function () {
 
         this.log(agent.name + "(" + agent.id + ")" + " was born at x:" + agent.x + " y:" + agent.y);
         this.agents.push(agent);
+
+        // Add food for the newborn agent
+        var food = Food.create(Math.round(agent.maxSatiety / 2));
+        food.setLocation(agent.x, agent.y);
+        this.objects.push(food);
+        this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y);
+
     }
 };
 
@@ -161,9 +162,11 @@ Server.prototype.getAgentForEnvironmentByXY = function (agent, x, y, shift_x, sh
     // Exclude current agents from agents list
     if (tmpAgent && tmpAgent !== agent) {
         agentObj = {
-            "class" : "agent",
-            "x"     : shift_x,
-            "y"     : shift_y
+            "class"     : "agent",
+            "health"    : tmpAgent.health,
+            "maxHealth" : tmpAgent.maxHealth,
+            "x"         : shift_x,
+            "y"         : shift_y
         };
 
         return agentObj;
@@ -273,6 +276,13 @@ Server.prototype.getEmptyDecision = function () {
     };
 };
 
+Server.prototype.sanitizeDecisionDirection = function (decision) {
+    decision.dir = parseInt(decision.dir);
+    if (decision.dir === undefined || !_.contains(this.map.getPossibleDirections(), decision.dir)) {
+        throw new Error("decision returned wrong direction code: " + decision.dir);
+    }
+};
+
 Server.prototype.sanitizeDecision = function (agent, decision) {
     try {
         if (decision !== Object(decision)) {
@@ -286,27 +296,24 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
             return this.getEmptyDecision();
 
         } else if (decision.action === 1) { // Move
-            decision.dir = parseInt(decision.dir);
-            if (decision.dir === undefined || !_.contains(this.map.getPossibleDirections(), decision.dir)) {
-                throw new Error("decision returned wrong direction code: " + decision.dir);
-            }
+            this.sanitizeDecisionDirection(decision);
 
             return {
-                "isProcessed" : false,
-                "action" : 1,
-                "dir"    : decision.dir
+                "isProcessed"   : false,
+                "action"        : 1,
+                "dir"           : decision.dir
             };
 
         } else if (decision.action === 2) { // Reserved
 
             throw new Error("action code: " + decision.action + " is reserved");
 
-        } else if (decision.action === 4) { // Eat food
+        } else if (decision.action === 3) { // Attack
 
-            decision.dir = parseInt(decision.dir);
-            if (decision.dir === undefined || !_.contains(this.map.getPossibleDirections(), decision.dir)) {
-                throw new Error("decision returned wrong direction code: " + decision.dir);
-            }
+            throw new Error("action code: " + decision.action + " is reserved");
+
+        } else if (decision.action === 4) { // Eat food
+            this.sanitizeDecisionDirection(decision);
 
             return {
                 "isProcessed"   : false,
@@ -356,13 +363,13 @@ Server.prototype.processDecisionEatFood = function (decision) {
 
     if (!food) {
         agent.client.onNotification(41);
-    } else if (agent.satiety === 10000) {
+    } else if (agent.satiety === agent.maxSatiety) {
         agent.client.onNotification(42);
     } else {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
             + " satiety: (+" + food.richness + ")");
 
-        agent.satiety = (agent.satiety + food.richness > 10000) ? 10000 : agent.satiety + food.richness;
+        agent.satiety = (agent.satiety + food.richness > agent.maxSatiety) ? agent.maxSatiety : agent.satiety + food.richness;
 
         // Remove food
         this.objects.splice(this.objects.indexOf(food), 1);
