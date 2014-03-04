@@ -404,12 +404,15 @@ Server.prototype.processDecision = function (decision) {
 };
 
 Server.prototype.tick = function () {
+    var agents = _.shuffle(this.agents);
+
     this.tickId++;
+
     if (!(this.tickId % 100)) {
         this.generateFood();
     }
 
-    _.each(this.agents, function (agent) {
+    _.each(agents, function (agent) {
         try {
 
             // Notify the agent that new tick has begun
