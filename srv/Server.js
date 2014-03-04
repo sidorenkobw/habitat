@@ -431,7 +431,7 @@ Server.prototype.tick = function () {
     this.processDecisions(decisions);
 
     this.saveServerState();
-    this.printWorld();
+    //this.printWorld();
 
     if (!this.agents.length) {
         this.log("All agents died");

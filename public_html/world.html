@@ -40,6 +40,7 @@
                             templateMob = $('#template-mob').html(),
                             templateObj = $('#template-object').html();
                         $('#map').html(_.template(templateMap, {data: data}));
+                        var tickInterval = data.tickInterval;
                         var dynamicObjects = [];
                         var drawObjects = function() {
                             $.ajax('/state.json', {
@@ -65,7 +66,7 @@
                                         $('#tile-' + object.xy).append(object.el);
                                     });
                                     dynamicObjects = newObjects;
-                                    setTimeout(drawObjects, 800);
+                                    setTimeout(drawObjects, tickInterval);
                                 }
                             });
                         }

@@ -49,7 +49,9 @@ WebObserver.prototype.processServerState = function(request, response) {
     return true;
 };
 WebObserver.prototype.processServerMap = function(request, response) {
-    var str = JSON.stringify(this.server.map.getMap());
+    var map = this.server.map.getMap();
+    map.tickInterval = this.server.tickInterval;
+    var str = JSON.stringify(map);
     response.writeHead(200, {'Content-Type':'text/javascript'})
     response.write(str, 'utf8');
     response.end();
