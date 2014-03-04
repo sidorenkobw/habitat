@@ -249,7 +249,9 @@ Server.prototype.getAgentStatus = function (agent) {
 };
 
 Server.prototype.updateAgentStatus = function (agent) {
-    if (agent.satiety == 0) {
+    if (agent.satiety > Math.floor(agent.maxSatiety * 0.8)) {
+        agent.health++;
+    } else if (agent.satiety == 0) {
         agent.health = agent.health - 1;
     } else {
         agent.satiety--;
