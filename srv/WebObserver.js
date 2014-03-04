@@ -11,7 +11,8 @@ var WebObserver = function(serverObject, port) {
     this.uriMap = {
         '^/state.json$' : this.processServerState,
         '^/map.json$' : this.processServerMap,
-        '^/.*$' : this.processStatic
+        '^\\/?$' : function(request, response) {this.set302(response, '/world.html'); return true;},
+        '^\\/.+$' : this.processStatic
     };
 };
 WebObserver.prototype.processRequest = function(request, response) {
@@ -32,6 +33,10 @@ WebObserver.prototype.processRequest = function(request, response) {
 WebObserver.prototype.set404 = function(response) {
     response.writeHead(404, {'content-type': 'text/plain'})
     response.write("404 Not Found\n");
+    response.end();
+};
+WebObserver.prototype.set302 = function(response, location) {
+    response.writeHead(302, {'location': location});
     response.end();
 };
 WebObserver.prototype.processServerState = function(request, response) {
