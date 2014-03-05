@@ -263,7 +263,7 @@ Server.prototype.updateAgentStatus = function (agent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety +  "] has died at x:" + agent.x + " y:" + agent.y + " on tick " + this.tickId, 1);
 
         // Create food instead of died agent
-        var food = Food.create(2000);
+        var food = Food.create(1000);
         food.setLocation(agent.x, agent.y);
         this.objects.push(food);
         this.log("Food with richness: " + food.richness + " was created instead of died agent at x:" + food.x + " y:" + food.y, 2);
@@ -471,13 +471,15 @@ Server.prototype.getServerState = function() {
 
     state.agents = _.map(this.agents, function (agent) {
         return {
-            "id"        : agent.id,
-            "name"      : agent.name,
-            "author"    : agent.author,
-            "x"         : agent.x,
-            "y"         : agent.y,
-            "health"    : agent.health,
-            "satiety"   : agent.satiety
+            "id"            : agent.id,
+            "name"          : agent.name,
+            "author"        : agent.author,
+            "x"             : agent.x,
+            "y"             : agent.y,
+            "health"        : agent.health,
+            "maxHealth"     : agent.maxHealth,
+            "satiety"       : agent.satiety,
+            "maxSatiety"    : agent.maxSatiety
         };
     });
 
