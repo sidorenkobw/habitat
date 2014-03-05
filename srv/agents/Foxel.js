@@ -420,7 +420,7 @@ var FoxelAgent = createClass({
         this.status = status;
 
 //        console.log(this.status);
-        console.log(this.getMapString());
+//        console.log(this.getMapString());
     },
 
     'decision': function () {
