@@ -11,7 +11,7 @@ var Agent = function () {
     this.maxHealth  = 100;
 
     this.satiety    = 100;
-    this.maxSatiety = 1000;
+    this.maxSatiety = 3000;
 
     this.terrainMovements = {
         0 : false,
