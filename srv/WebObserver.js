@@ -1,7 +1,7 @@
 var url  = require('url'),
     fs   = require('fs'),
     _    = require('underscore'),
-    mime = require('node-mime'),
+    mime = require('mime'),
     http = require('http');
 
 var WebObserver = function(serverObject, port) {

@@ -68,13 +68,16 @@
                                     });
                                     dynamicObjects = newObjects;
                                     setTimeout(drawObjects, tickInterval);
+                                },
+                                error: function() {
+                                    setTimeout(drawObjects, tickInterval*5);
                                 }
                             });
-                        }
+                        };
                         drawObjects();
 
                     }
-                })
+                });
                 //map.setCenter(new OpenLayers.LonLat(1, 4), 2);
                 //map.addControl( new OpenLayers.Control.LayerSwitcher() );
     //            function drawMap() {
