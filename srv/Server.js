@@ -23,7 +23,7 @@ Server.prototype.initLog = function () {
 
 Server.prototype.log = function (msg, level) {
     if (this.displayLogs) {
-        if (level < 13) {
+        if (level < 3) {
             util.log(msg);
         }
     }
@@ -243,9 +243,11 @@ Server.prototype.getEnvironmentForAgent = function(agent)
 
 Server.prototype.getAgentStatus = function (agent) {
     var status = {
-        "health"  : agent.health,
-        "satiety" : agent.satiety,
-        "environment" : this.getEnvironmentForAgent(agent)
+        "health"        : agent.health,
+        "maxHealth"     : agent.maxHealth,
+        "satiety"       : agent.satiety,
+        "maxSatiety"    : agent.maxSatiety,
+        "environment"   : this.getEnvironmentForAgent(agent)
     };
 
 //    if (agent.id == 1) {
