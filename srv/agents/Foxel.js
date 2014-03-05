@@ -285,9 +285,11 @@ var FoxelAgent = createClass({
     oldPos: null,
     options: null,
     memFood: null,
+    hungry: false,
 
     forgetAfter: 300,
-    hungerThreshold: 700,
+    hungerThreshold: 0.7,
+    satietyThreshold: 0.95,
 
     'getNearestUnknownCoords': function(pos) {
         var bestDistance = Infinity,
@@ -428,7 +430,13 @@ var FoxelAgent = createClass({
         var myTarget, direction, doPathShift = true;
 
         // Scan surrounding cells (all directions) for food and make decision to eat it if found
-        if (this.status.satiety < this.hungerThreshold) {
+        if (this.status.satiety < this.hungerThreshold * this.status.maxSatiety) {
+            this.hungry = true;
+        } else if (this.status.satiety > this.satietyThreshold * this.status.maxSatiety) {
+            this.hungry = false;
+        }
+
+        if (this.hungry) {
             for (var i = 0; i < this.status.environment.objects.length; i++) {
                 var obj = this.status.environment.objects[i];
                 if (obj.class !== "food") {
