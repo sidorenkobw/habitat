@@ -1,0 +1,9 @@
+{
+    "name": "habitat",
+    "version": "0.0.1",
+    "dependencies": {
+        "mime"  : ">= 1.2.0",
+        "underscore" : ">= 1.5.0"
+    },
+    "private": true
+}
