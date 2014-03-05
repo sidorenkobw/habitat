@@ -194,29 +194,39 @@ var getMovement = function(toObj) {
     return 0;
 };
 
+var getDistance = function(pos1, pos2) {
+    return Math.sqrt(Math.pow(pos1.x - pos2.x, 2) + Math.pow(pos1.y - pos2.y, 2));
+};
+
 var aStarNeightbours = function(map, x, y) {
 //    if (!map.getCell(x, y)) {
 //        return [];
 //    }
 
-    return _.filter(_.map(movementMap, function(move) {
-        if (!move.x && !move.y) {
-            return null;
-        }
-        var cx = move.x + x;
-        var cy = move.y + y;
-        var dims = map.getDims();
-        if (cx > dims.tx + 1 || cy > dims.ty + 1 || cx < dims.bx - 1 || cy < dims.by - 1) {
-            return null;
-        }
+    return _.chain(movementMap)
+        .sortBy(function(el) {
+            return Math.abs(el.x) + Math.abs(el.y);
+        })
+        .map(function(move) {
+            if (!move.x && !move.y) {
+                return null;
+            }
+            var cx = move.x + x;
+            var cy = move.y + y;
+            var dims = map.getDims();
+            if (cx > dims.tx + 1 || cy > dims.ty + 1 || cx < dims.bx - 1 || cy < dims.by - 1) {
+                return null;
+            }
 
-        var cell = map.getCell(cx, cy);
-        return (!cell || !cell.blocked)
-            ? {x: cx, y: cy}
-            : null;
-    }), function(el) {
-        return !!el;
-    });
+            var cell = map.getCell(cx, cy);
+            return (!cell || !cell.blocked)
+                ? {x: cx, y: cy}
+                : null;
+        })
+        .filter(function(el) {
+            return !!el;
+        })
+        .value();
 };
 var aStarAlgo = function(map, sPos, tPos) {
     var sx = sPos.x, sy = sPos.y, tx = tPos.x, ty = tPos.y;
@@ -260,11 +270,10 @@ var FoxelAgent = createClass({
     myPath: null,
     oldPos: null,
     options: null,
-    forgetAfter: 100,
+    forgetAfter: 300,
 
     'getNearestUnknownCoords': function(pos) {
-        var posDiff = Infinity,
-            centerDiff = Infinity,
+        var bestDistance = Infinity,
             tx = pos.x,
             ty = pos.y,
             center = this.getKnownCenter(),
@@ -274,12 +283,10 @@ var FoxelAgent = createClass({
             for (var x = dims.bx-1; x <= dims.tx+1; x++) {
                 var cell = this.memMap.getCell(x, y);
                 if (!cell || (!cell.blocked && cell.lastSeen > this.forgetAfter)) {
-                    var newPosDiff = Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2));
-                    var newCenterDiff = Math.sqrt(Math.pow(center.x - x, 2) + Math.pow(center.y - y, 2));
-                    if (newCenterDiff < centerDiff || (newCenterDiff < centerDiff+1 && newPosDiff <= posDiff)) {
+                    var newDistance = getDistance(center, {x: x, y: y}) + getDistance(pos, {x: x, y: y})/2;
+                    if (newDistance <= bestDistance) {
                         tx = x; ty = y;
-                        posDiff = newPosDiff;
-                        centerDiff = newCenterDiff;
+                        bestDistance = newDistance;
                     }
                 }
             }
