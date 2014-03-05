@@ -18,10 +18,22 @@ var createClass = function(protoProps, staticProps) {
 
 var sign = function(x) {
     return x == 0 ? 0 : Math.round(x/Math.abs(x));
-}
+};
+
+/** @class */
+var Pos = createClass({
+    x: 0,
+    y: 0,
+    /** @constructs */
+    initialize: function(x, y) {
+        this.x = x || 0;
+        this.y = y || 0;
+    }
+});
 
 // CLASSES //
 // memory store
+/** @class */
 var InfiniteList = createClass({
     /** @type {Array} */
     _storage: null,
@@ -62,6 +74,7 @@ var InfiniteList = createClass({
     }
 });
 
+/** @class */
 var MapCell = createClass({
     blocked: false,
     lastSeen: 0,
@@ -71,6 +84,7 @@ var MapCell = createClass({
     }
 });
 
+/** @class */
 var InfiniteMap = createClass({
     /** @type {InfiniteList} */
     _rows: null,
@@ -220,7 +234,7 @@ var aStarNeightbours = function(map, x, y) {
 
             var cell = map.getCell(cx, cy);
             return (!cell || !cell.blocked)
-                ? {x: cx, y: cy}
+                ? new Pos(cx, cy)
                 : null;
         })
         .filter(function(el) {
@@ -231,7 +245,7 @@ var aStarNeightbours = function(map, x, y) {
 var aStarAlgo = function(map, sPos, tPos) {
     var sx = sPos.x, sy = sPos.y, tx = tPos.x, ty = tPos.y;
     var parentMap = new InfiniteMap();
-    var queue = [{x: sx, y: sy}];
+    var queue = [new Pos(sx, sy)];
     parentMap.setCell(sx, sy, true);
 
     while (queue.length) {
@@ -270,7 +284,10 @@ var FoxelAgent = createClass({
     myPath: null,
     oldPos: null,
     options: null,
+    memFood: null,
+
     forgetAfter: 300,
+    hungerThreshold: 700,
 
     'getNearestUnknownCoords': function(pos) {
         var bestDistance = Infinity,
@@ -283,7 +300,7 @@ var FoxelAgent = createClass({
             for (var x = dims.bx-1; x <= dims.tx+1; x++) {
                 var cell = this.memMap.getCell(x, y);
                 if (!cell || (!cell.blocked && cell.lastSeen > this.forgetAfter)) {
-                    var newDistance = getDistance(center, {x: x, y: y}) + getDistance(pos, {x: x, y: y})/2;
+                    var newDistance = getDistance(center, new Pos(x, y)) + getDistance(pos, new Pos(x, y))/2;
                     if (newDistance <= bestDistance) {
                         tx = x; ty = y;
                         bestDistance = newDistance;
@@ -292,7 +309,7 @@ var FoxelAgent = createClass({
             }
         }
 
-        return {x: tx, y: ty};
+        return new Pos(tx, ty);
     },
     'getKnownCenter': function() {
         var xa = 0, ya = 0, cnt = 0,
@@ -309,8 +326,8 @@ var FoxelAgent = createClass({
         }
 
         return (cnt > 0)
-            ? {x: Math.round(xa/cnt), y: Math.round(ya/cnt)}
-            : {x: 0, y: 0};
+            ? new Pos(Math.round(xa/cnt), Math.round(ya/cnt))
+            : new Pos();
     },
     'getMapString': function() {
         var s = '',
@@ -321,6 +338,13 @@ var FoxelAgent = createClass({
                     return pos.x == x && pos.y == y;
                 })) {
                     s+= '*';
+                    continue;
+                }
+
+                if (!!_.find(this.memFood, function(pos) {
+                    return pos.x == x && pos.y == y;
+                })) {
+                    s+= '@';
                     continue;
                 }
 
@@ -349,9 +373,10 @@ var FoxelAgent = createClass({
     'initialize': function() {
         this.status = {};
         this.memMap = new InfiniteMap();
-        this.myPos = {x: 0, y: 0};
-        this.oldPos = {x: 0, y: 0};
+        this.myPos  = new Pos();
+        this.oldPos = new Pos();
         this.myPath = [];
+        this.memFood = [];
     },
 
     'introduce': function () {
@@ -376,11 +401,21 @@ var FoxelAgent = createClass({
             }, this)
         }, this);
 
+        this.memFood = _.filter(this.memFood, function(pos) {
+            return Math.abs(pos.x - this.myPos.x) > 4 || Math.abs(pos.y - this.myPos.y) > 4;
+        }, this);
+
 //        status.environment.objects.forEach(function(obj) {
 //            if (obj.class !== "food") {
 //                this.memMap.getCell(obj.x, obj.y).blocked = true;
 //            }
 //        }, this);
+
+        status.environment.objects.forEach(function(obj) {
+            if (obj.class == "food") {
+                this.memFood.push(new Pos(obj.x + this.myPos.x, obj.y + this.myPos.y));
+            }
+        }, this);
 
         this.status = status;
 
@@ -393,24 +428,32 @@ var FoxelAgent = createClass({
         var myTarget, direction, doPathShift = true;
 
         // Scan surrounding cells (all directions) for food and make decision to eat it if found
-        for (var i = 0; i < this.status.environment.objects.length; i++) {
-            var obj = this.status.environment.objects[i];
-            if (obj.class !== "food") {
-                continue;
+        if (this.status.satiety < this.hungerThreshold) {
+            for (var i = 0; i < this.status.environment.objects.length; i++) {
+                var obj = this.status.environment.objects[i];
+                if (obj.class !== "food") {
+                    continue;
+                }
+
+                if (Math.abs(obj.x) <= 1 && Math.abs(obj.y) <= 1) {
+                    this.myPath = [];
+                    return {
+                        "action" : 4,
+                        "dir"    : getMovement(obj)
+                    };
+                }
             }
 
-            if (Math.abs(obj.x) <= 1 && Math.abs(obj.y) <= 1) {
-                this.myPath = [];
-                return {
-                    "action" : 4,
-                    "dir"    : getMovement(obj)
-                };
-            } else {
-                var pathToFood = aStarAlgo(this.memMap, this.myPos, {x: obj.x + this.myPos.x, y: obj.y + this.myPos.y});
+            var foodPos = _.sortBy(this.memFood, function(pos) {
+                return getDistance(pos, this.myPos)
+            }, this).shift();
+
+            if (foodPos)
+            {
+                var pathToFood = aStarAlgo(this.memMap, this.myPos, foodPos);
                 if (pathToFood.length > 1) {
                     this.myPath = pathToFood.slice(1);
                 }
-                break;
             }
         }
 
