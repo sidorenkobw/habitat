@@ -86,7 +86,7 @@ var InfiniteMap = createClass({
     /**
      * @param x {Number}
      * @param y {Number}
-     * @return {MapCell}
+     * @return
      */
     'getCell': function(x, y) {
         var row = this._rows.get(y) || new InfiniteList();
@@ -98,7 +98,7 @@ var InfiniteMap = createClass({
     /**
      * @param x {Number}
      * @param y {Number}
-     * @param cell {MapCell}
+     * @param cell
      */
     'setCell': function(x, y, cell) {
         this._rows.get(y) || this._rows.set(y, new InfiniteList());
@@ -386,7 +386,7 @@ var FoxelAgent = createClass({
         var myTarget, direction, doPathShift = true;
 
         // Scan surrounding cells (all directions) for food and make decision to eat it if found
-        for (var i in this.status.environment.objects) {
+        for (var i = 0; i < this.status.environment.objects.length; i++) {
             var obj = this.status.environment.objects[i];
             if (obj.class !== "food") {
                 continue;
