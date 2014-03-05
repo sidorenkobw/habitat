@@ -86,7 +86,7 @@ var InfiniteMap = createClass({
     /**
      * @param x {Number}
      * @param y {Number}
-     * @return {MapCell}
+     * @return
      */
     'getCell': function(x, y) {
         var row = this._rows.get(y) || new InfiniteList();
@@ -98,7 +98,7 @@ var InfiniteMap = createClass({
     /**
      * @param x {Number}
      * @param y {Number}
-     * @param cell {MapCell}
+     * @param cell
      */
     'setCell': function(x, y, cell) {
         this._rows.get(y) || this._rows.set(y, new InfiniteList());
@@ -194,11 +194,70 @@ var getMovement = function(toObj) {
     return 0;
 };
 
+var aStarNeightbours = function(map, x, y) {
+//    if (!map.getCell(x, y)) {
+//        return [];
+//    }
+
+    return _.filter(_.map(movementMap, function(move) {
+        if (!move.x && !move.y) {
+            return null;
+        }
+        var cx = move.x + x;
+        var cy = move.y + y;
+        var dims = map.getDims();
+        if (cx > dims.tx + 1 || cy > dims.ty + 1 || cx < dims.bx - 1 || cy < dims.by - 1) {
+            return null;
+        }
+
+        var cell = map.getCell(cx, cy);
+        return (!cell || !cell.blocked)
+            ? {x: cx, y: cy}
+            : null;
+    }), function(el) {
+        return !!el;
+    });
+};
+var aStarAlgo = function(map, sPos, tPos) {
+    var sx = sPos.x, sy = sPos.y, tx = tPos.x, ty = tPos.y;
+    var parentMap = new InfiniteMap();
+    var queue = [{x: sx, y: sy}];
+    parentMap.setCell(sx, sy, true);
+
+    while (queue.length) {
+        var node = queue.shift();
+        var neightbours = aStarNeightbours(map, node.x, node.y);
+        for (var i = 0; i < neightbours.length; i++) {
+            var nnode = neightbours[i];
+            if (parentMap.getCell(nnode.x, nnode.y)) {
+                continue;
+            }
+            parentMap.setCell(nnode.x, nnode.y, node);
+            if (nnode.x == tx && nnode.y == ty) {
+                var tnode = nnode;
+                var path = [tnode];
+                while (tnode = parentMap.getCell(tnode.x, tnode.y)) {
+                    if (tnode === true) {
+                        break;
+                    }
+                    path.push(tnode);
+                }
+
+                return path.reverse();
+            }
+            queue.push(nnode);
+        }
+    }
+
+    return [];
+};
+
 // AGENT
 var FoxelAgent = createClass({
     status: null,
     memMap: null,
     myPos: null,
+    myPath: null,
     oldPos: null,
     options: null,
     forgetAfter: 100,
@@ -214,7 +273,7 @@ var FoxelAgent = createClass({
         for (var y = dims.by-1; y <= dims.ty+1; y++) {
             for (var x = dims.bx-1; x <= dims.tx+1; x++) {
                 var cell = this.memMap.getCell(x, y);
-                if (!cell || cell.lastSeen > this.forgetAfter) {
+                if (!cell || (!cell.blocked && cell.lastSeen > this.forgetAfter)) {
                     var newPosDiff = Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2));
                     var newCenterDiff = Math.sqrt(Math.pow(center.x - x, 2) + Math.pow(center.y - y, 2));
                     if (newCenterDiff < centerDiff || (newCenterDiff < centerDiff+1 && newPosDiff <= posDiff)) {
@@ -251,6 +310,13 @@ var FoxelAgent = createClass({
             dims = this.memMap.getDims();
         for (var y = dims.by; y <= dims.ty; y++) {
             for (var x = dims.bx; x <= dims.tx; x++) {
+                if (!!_.find(this.myPath, function(pos) {
+                    return pos.x == x && pos.y == y;
+                })) {
+                    s+= '*';
+                    continue;
+                }
+
                 if (x == this.myPos.x && y == this.myPos.y) {
                     s+= '+';
                     continue;
@@ -271,12 +337,14 @@ var FoxelAgent = createClass({
 
         return s;
     },
+
     /** @constructs */
     'initialize': function() {
         this.status = {};
         this.memMap = new InfiniteMap();
         this.myPos = {x: 0, y: 0};
         this.oldPos = {x: 0, y: 0};
+        this.myPath = [];
     },
 
     'introduce': function () {
@@ -301,6 +369,12 @@ var FoxelAgent = createClass({
             }, this)
         }, this);
 
+//        status.environment.objects.forEach(function(obj) {
+//            if (obj.class !== "food") {
+//                this.memMap.getCell(obj.x, obj.y).blocked = true;
+//            }
+//        }, this);
+
         this.status = status;
 
 //        console.log(this.status);
@@ -309,39 +383,59 @@ var FoxelAgent = createClass({
 
     'decision': function () {
         // default movement
-        var myTarget = this.getNearestUnknownCoords(this.myPos);
-        myTarget.x-= this.myPos.x;
-        myTarget.y-= this.myPos.y;
-        var direction = getMovement(myTarget);
+        var myTarget, direction, doPathShift = true;
 
         // Scan surrounding cells (all directions) for food and make decision to eat it if found
-        for (var i in this.status.environment.objects) {
+        for (var i = 0; i < this.status.environment.objects.length; i++) {
             var obj = this.status.environment.objects[i];
             if (obj.class !== "food") {
                 continue;
             }
 
-            direction = getMovement(obj);
-
             if (Math.abs(obj.x) <= 1 && Math.abs(obj.y) <= 1) {
+                this.myPath = [];
                 return {
                     "action" : 4,
-                    "dir"    : direction
+                    "dir"    : getMovement(obj)
                 };
+            } else {
+                var pathToFood = aStarAlgo(this.memMap, this.myPos, {x: obj.x + this.myPos.x, y: obj.y + this.myPos.y});
+                if (pathToFood.length > 1) {
+                    this.myPath = pathToFood.slice(1);
+                }
+                break;
             }
         }
 
-        var myStep, myStepCell;
+        if (this.myPath.length) {
+            myTarget = this.myPath[0];
+        } else {
+            myTarget = this.getNearestUnknownCoords(this.myPos);
+            var pathToTarget = aStarAlgo(this.memMap, this.myPos, myTarget);
+            if (pathToTarget.length > 1) {
+                this.myPath = pathToTarget.slice(1);
+                myTarget = this.myPath[0];
+            }
+        }
 
-        while (
-            (myStep = movementMap[direction]) &&
-            (myStepCell = this.memMap.getCell(this.myPos.x + myStep.x, this.myPos.y + myStep.y)) &&
-            myStepCell.blocked
-        ) {
-            direction = Math.floor(Math.random()*movementMap.length);
+        myTarget.x-= this.myPos.x;
+        myTarget.y-= this.myPos.y;
+        direction = getMovement(myTarget);
+
+        var myStep, myStepCell;
+        myStep = movementMap[direction];
+        myStepCell = this.memMap.getCell(this.myPos.x + myStep.x, this.myPos.y + myStep.y);
+
+        if (myStepCell && myStepCell.blocked) {
+            direction = 0;
+            doPathShift = false;
+            this.myPath = [];
         }
 
         // Otherwise move in desired direction
+        if (doPathShift) {
+            this.myPath.shift();
+        }
         this.myPos.x += movementMap[direction].x;
         this.myPos.y += movementMap[direction].y;
         return {
@@ -364,6 +458,8 @@ var FoxelAgent = createClass({
      */
     'onNotification': function (notificationCode) {
         _.extend(this.myPos, this.oldPos);
+        console.error('Error: '+notificationCode);
+        this.myPath = [];
     }
 });
 
