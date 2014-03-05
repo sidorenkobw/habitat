@@ -5,12 +5,13 @@
 var _ = require('underscore');
 
 // helper
-var createClass = function(proto) {
+var createClass = function(protoProps, staticProps) {
     var child = function() {
         this.initialize && this.initialize.apply(this, arguments);
     };
 
-    _.isObject(proto) && _.extend(child.prototype, proto);
+    _.isObject(protoProps)  && _.extend(child.prototype, protoProps);
+    _.isObject(staticProps) && _.extend(child, staticProps);
 
     return child;
 };
@@ -91,6 +92,9 @@ var InfiniteMap = createClass({
         var row = this._rows.get(y) || new InfiniteList();
         return row.get(x);
     },
+    'getDims': function() {
+        return _.clone(this._dims);
+    },
     /**
      * @param x {Number}
      * @param y {Number}
@@ -119,41 +123,6 @@ var InfiniteMap = createClass({
             });
         });
         return this;
-    },
-    'toString': function() {
-        var s = '';
-        for (var i = this._dims.by; i <= this._dims.ty; i++) {
-            for (var j = this._dims.bx; j <= this._dims.tx; j++) {
-                var cell = this.getCell(j, i);
-                if (cell) {
-                    s+= cell.blocked ? 'X' : ' ';
-                } else {
-                    s+= '?';
-                }
-            }
-            s+= "\n";
-        }
-
-        return s;
-    },
-    'getNearestUnknownCoords': function(pos) {
-        var posDiff = Infinity, centerDiff = Infinity, tx = pos.x, ty = pos.y;
-        for (var y = this._dims.by-1; y <= this._dims.ty+1; y++) {
-            for (var x = this._dims.bx-1; x <= this._dims.tx+1; x++) {
-                var cell = this.getCell(x, y);
-                if (!cell) {
-                    var newPosDiff = Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2));
-                    var newCenterDiff = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-                    if (newCenterDiff < centerDiff || (newCenterDiff < centerDiff+1 && newPosDiff <= posDiff)) {
-                        tx = x; ty = y;
-                        posDiff = newPosDiff;
-                        centerDiff = newCenterDiff;
-                    }
-                }
-            }
-        }
-
-        return {x: tx, y: ty};
     }
 });
 
@@ -216,7 +185,7 @@ var movementMap = [
 
 var getMovement = function(toObj) {
     for (var dir =0; dir < movementMap.length; dir++) {
-        rel = movementMap[dir];
+        var rel = movementMap[dir];
         if (sign(rel.x) == sign(toObj.x) && sign(rel.y) == sign(toObj.y)) {
             return dir;
         }
@@ -231,7 +200,77 @@ var FoxelAgent = createClass({
     memMap: null,
     myPos: null,
     oldPos: null,
+    options: null,
+    forgetAfter: 100,
 
+    'getNearestUnknownCoords': function(pos) {
+        var posDiff = Infinity,
+            centerDiff = Infinity,
+            tx = pos.x,
+            ty = pos.y,
+            center = this.getKnownCenter(),
+            dims = this.memMap.getDims();
+
+        for (var y = dims.by-1; y <= dims.ty+1; y++) {
+            for (var x = dims.bx-1; x <= dims.tx+1; x++) {
+                var cell = this.memMap.getCell(x, y);
+                if (!cell || cell.lastSeen > this.forgetAfter) {
+                    var newPosDiff = Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2));
+                    var newCenterDiff = Math.sqrt(Math.pow(center.x - x, 2) + Math.pow(center.y - y, 2));
+                    if (newCenterDiff < centerDiff || (newCenterDiff < centerDiff+1 && newPosDiff <= posDiff)) {
+                        tx = x; ty = y;
+                        posDiff = newPosDiff;
+                        centerDiff = newCenterDiff;
+                    }
+                }
+            }
+        }
+
+        return {x: tx, y: ty};
+    },
+    'getKnownCenter': function() {
+        var xa = 0, ya = 0, cnt = 0,
+            dims = this.memMap.getDims();
+        for (var y = dims.by-1; y <= dims.ty+1; y++) {
+            for (var x = dims.bx-1; x <= dims.tx+1; x++) {
+                var cell = this.memMap.getCell(x, y);
+                if (cell && cell.lastSeen > this.forgetAfter) {
+                    xa += x;
+                    ya += y;
+                    cnt++;
+                }
+            }
+        }
+
+        return (cnt > 0)
+            ? {x: Math.round(xa/cnt), y: Math.round(ya/cnt)}
+            : {x: 0, y: 0};
+    },
+    'getMapString': function() {
+        var s = '',
+            dims = this.memMap.getDims();
+        for (var y = dims.by; y <= dims.ty; y++) {
+            for (var x = dims.bx; x <= dims.tx; x++) {
+                if (x == this.myPos.x && y == this.myPos.y) {
+                    s+= '+';
+                    continue;
+                }
+                var cell = this.memMap.getCell(x, y);
+                if (cell) {
+                    if (cell.lastSeen > this.forgetAfter) {
+                        s+= cell.blocked ? '"' : '.';
+                    } else {
+                        s+= cell.blocked ? 'X' : ' ';
+                    }
+                } else {
+                    s+= '?';
+                }
+            }
+            s+= "\n";
+        }
+
+        return s;
+    },
     /** @constructs */
     'initialize': function() {
         this.status = {};
@@ -265,14 +304,12 @@ var FoxelAgent = createClass({
         this.status = status;
 
 //        console.log(this.status);
-        console.log(this.memMap.toString());
+        console.log(this.getMapString());
     },
 
     'decision': function () {
-        var rel;
-
         // default movement
-        var myTarget = this.memMap.getNearestUnknownCoords(this.myPos);
+        var myTarget = this.getNearestUnknownCoords(this.myPos);
         myTarget.x-= this.myPos.x;
         myTarget.y-= this.myPos.y;
         var direction = getMovement(myTarget);
