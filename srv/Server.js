@@ -3,7 +3,8 @@ var util  = require("util"),
     fs    = require("fs");
 
 var Agent = require("./Agent"),
-    Food  = require("./Food");
+    Food  = require("./Food"),
+    Constants = require("./constants");
 
 var Server = function (agents, map) {
     this.agentsClasses  = agents;
@@ -94,6 +95,9 @@ Server.prototype.instantiateAgent = function (agentDefinition) {
     } while (this.getAgentByXY(coords.x, coords.y) || !agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y)));
 
     agent.setLocation(coords.x, coords.y);
+    if (typeof agentClient.init === "function") {
+        agent.client.init(Constants);
+    }
 
     return agent;
 };

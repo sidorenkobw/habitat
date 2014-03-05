@@ -1,5 +1,6 @@
 var DummyAgent = function () {
     var status;
+    var constants = {};
 };
 
 /**
@@ -13,6 +14,10 @@ DummyAgent.prototype.introduce = function () {
         "author" : "Andrew Sidorenko",
         "email"  : "sidorenkobw@gmail.com"
     };
+};
+
+DummyAgent.prototype.init = function (constants) {
+    this.constants = constants;
 };
 
 /**
