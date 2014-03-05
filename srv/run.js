@@ -39,7 +39,7 @@ var serverModule = require("./Server"),
     ];
 
     var agents = [
-        require("./agents/DummyAgent"),
+        require("./agents/Foxel"),
         require("./agents/DummyAgent"),
         require("./agents/VeryDummy"),
         require("./agents/ReAgent")
