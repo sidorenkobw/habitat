@@ -23,7 +23,7 @@ Server.prototype.initLog = function () {
 
 Server.prototype.log = function (msg, level) {
     if (this.displayLogs) {
-        if (level < 3) {
+        if (level < 13) {
             util.log(msg);
         }
     }
@@ -40,6 +40,10 @@ Server.prototype.getRandomLocation = function () {
         "x" : Math.floor(Math.random() * this.map.width),
         "y" : Math.floor(Math.random() * this.map.height)
     };
+};
+
+Server.prototype.encapsulatedCall = function (client, method, args) {
+    return client[method].apply(client, args);
 };
 
 Server.prototype.instantiateAgent = function (agentDefinition) {
@@ -96,7 +100,7 @@ Server.prototype.instantiateAgent = function (agentDefinition) {
 
     agent.setLocation(coords.x, coords.y);
     if (typeof agentClient.init === "function") {
-        agent.client.init(Constants);
+        this.encapsulatedCall(agentClient, "init", [Constants]);
     }
 
     return agent;
@@ -341,7 +345,7 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
     } catch (e) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (1)", 4);
-        agent.client.onNotification(1); // Notify agent that its decision has wrong format or params and will skip current tick
+        this.encapsulatedCall(agent.client, "onNotification", [1]); // Notify agent that its decision has wrong format or params and will skip current tick
         throw e;
     }
 };
@@ -357,7 +361,7 @@ Server.prototype.processDecisionMove = function (decision) {
 
     if (tmpAgent && tmpAgent !== agent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (22)", 4);
-        agent.client.onNotification(22);
+        this.encapsulatedCall(agent.client, "onNotification", [22]);
     } else {
         if (agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y))) {
             agent.x = coords.x;
@@ -366,7 +370,7 @@ Server.prototype.processDecisionMove = function (decision) {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y, 2);
         } else {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (21)", 4);
-            agent.client.onNotification(21);
+            this.encapsulatedCall(agent.client, "onNotification", [21]);
         }
     }
 
@@ -386,10 +390,10 @@ Server.prototype.processDecisionEatFood = function (decision) {
 
     if (!food) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (41)", 4);
-        agent.client.onNotification(41);
+        this.encapsulatedCall(agent.client, "onNotification", [41]);
     } else if (agent.satiety === agent.maxSatiety) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (42)", 4);
-        agent.client.onNotification(42);
+        this.encapsulatedCall(agent.client, "onNotification", [42]);
     } else {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
             + " satiety: (+" + food.richness + ")", 2);
@@ -424,10 +428,10 @@ Server.prototype.tick = function () {
         try {
 
             // Notify the agent that new tick has begun
-            agent.client.onNewTick(this.getAgentStatus(agent));
+            this.encapsulatedCall(agent.client, "onNewTick", [this.getAgentStatus(agent)]);
 
             // Get and validate agent's decision
-            var decision = agent.client.decision();
+            var decision = this.encapsulatedCall(agent.client, "decision", [this.getAgentStatus(agent)]);
 
             decision = this.sanitizeDecision(agent, decision);
             decision.agent = agent;

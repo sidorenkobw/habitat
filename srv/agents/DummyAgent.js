@@ -1,3 +1,5 @@
+var Constants = {};
+
 var DummyAgent = function () {
     var status;
     var constants = {};
@@ -17,7 +19,7 @@ DummyAgent.prototype.introduce = function () {
 };
 
 DummyAgent.prototype.init = function (constants) {
-    this.constants = constants;
+    Constants = constants;
 };
 
 /**
@@ -142,7 +144,7 @@ DummyAgent.prototype.decision = function () {
 
             if (obj.x === rel.x && obj.y === rel.y) {
                 return {
-                    "action" : 4,
+                    "action" : Constants.ACTION_EAT,
                     "dir"    : dir
                 };
             }
@@ -151,7 +153,7 @@ DummyAgent.prototype.decision = function () {
 
     // Otherwise move in random direction
     return {
-        "action" : 1,
+        "action" : Constants.ACTION_MOVE,
         "dir"    : Math.floor(Math.random() * 9)
     };
 };
