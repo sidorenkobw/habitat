@@ -2,7 +2,6 @@ var Constants = {};
 
 var DummyAgent = function (args) {
     var status;
-    var constants = {};
 };
 
 /**
