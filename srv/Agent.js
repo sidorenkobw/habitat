@@ -1,5 +1,6 @@
 var Agent = function () {
     this.id         = null;
+    this.class      = null;
     this.client     = null;
     this.name       = null;
     this.author     = null;
@@ -54,6 +55,22 @@ var Agent = function () {
         37 : false,
         38 : false,
         39 : false
+    };
+};
+
+Agent.prototype.toJson = function () {
+    return {
+        "id"            : this.id,
+        "class"         : this.class,
+        "client"        : this.client,
+        "name"          : this.name,
+        "author"        : this.author,
+        "x"             : this.x,
+        "y"             : this.y,
+        "health"        : this.health,
+        "maxHealth"     : this.maxHealth,
+        "satiety"       : this.satiety,
+        "maxSatiety"    : this.maxSatiety
     };
 };
 

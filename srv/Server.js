@@ -43,15 +43,15 @@ Server.prototype.getRandomLocation = function () {
 };
 
 Server.prototype.instantiateAgent = function (agentData) {
-    var agentClass, params, agent, agentClient, agentIntroduction, coords;
-    agentClass = agentData.class;
-    params     = agentData.params;
+    var agentModule, params, agent, agentClient, agentIntroduction, coords;
+    agentModule = agentData.module;
+    params      = agentData.params;
 
-    if (!("agentClass" in agentClass)) {
+    if (!("agentClass" in agentModule)) {
         throw new Error("exports.agentClass not found");
     }
 
-    agentClient = new agentClass.agentClass(params);
+    agentClient = new agentModule.agentClass(params);
 
     if (typeof agentClient.introduce !== 'function') {
         throw new Error("Agent has no method introduce");
@@ -88,6 +88,7 @@ Server.prototype.instantiateAgent = function (agentData) {
 
     agent           = Agent.create();
     agent.id        = ++this.lastAgentId;
+    agent.class     = agentData.class;
     agent.client    = agentClient;
     agent.name      = agentIntroduction.name;
     agent.author    = agentIntroduction.author;
@@ -171,6 +172,7 @@ Server.prototype.getAgentForEnvironmentByXY = function (agent, x, y, shift_x, sh
     if (tmpAgent && tmpAgent !== agent) {
         agentObj = {
             "class"     : "agent",
+            "subClass"  : tmpAgent.class,
             "health"    : tmpAgent.health,
             "maxHealth" : tmpAgent.maxHealth,
             "x"         : shift_x,
@@ -521,17 +523,7 @@ Server.prototype.getServerState = function() {
     };
 
     state.agents = _.map(this.agents, function (agent) {
-        return {
-            "id"            : agent.id,
-            "name"          : agent.name,
-            "author"        : agent.author,
-            "x"             : agent.x,
-            "y"             : agent.y,
-            "health"        : agent.health,
-            "maxHealth"     : agent.maxHealth,
-            "satiety"       : agent.satiety,
-            "maxSatiety"    : agent.maxSatiety
-        };
+        return agent.toJson();
     });
 
     state.objects = _.map(this.objects, function (obj) {

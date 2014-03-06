@@ -5,7 +5,8 @@ var serverModule = require("./Server"),
 
     function initAgent(name, params) {
         return {
-            "class"     : require("./agents/" + name + ".js"),
+            "module"    : require("./agents/" + name + ".js"),
+            "class"     : name,
             "params"    : params
         };
     };
