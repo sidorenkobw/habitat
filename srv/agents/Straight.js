@@ -90,7 +90,7 @@ var StraighOne = createClass({
      * 42 - can't eat more food (your stomach is full)
      */
     'onNotification': function (notificationCode) {
-        this.direction = Math.round(Math.random()*movementMap.length) || 1;
+        this.direction = Math.floor(Math.random()*movementMap.length) || 1;
     }
 });
 
