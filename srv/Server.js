@@ -42,10 +42,6 @@ Server.prototype.getRandomLocation = function () {
     };
 };
 
-Server.prototype.encapsulatedCall = function (client, method, args) {
-    return client[method].apply(client, args);
-};
-
 Server.prototype.instantiateAgent = function (agentData) {
     var agentClass, params, agent, agentClient, agentIntroduction, coords;
     agentClass = agentData.class;
@@ -102,7 +98,7 @@ Server.prototype.instantiateAgent = function (agentData) {
 
     agent.setLocation(coords.x, coords.y);
     if (typeof agentClient.init === "function") {
-        this.encapsulatedCall(agentClient, "init", [Constants]);
+        agentClient.init(Constants);
     }
 
     return agent;
@@ -362,7 +358,7 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
     } catch (e) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (1)", 4);
-        this.encapsulatedCall(agent.client, "onNotification", [1]); // Notify agent that its decision has wrong format or params and will skip current tick
+        agent.client.onNotification(Constants.ERROR_WRONG_FORMAT);
         throw e;
     }
 };
@@ -377,8 +373,8 @@ Server.prototype.processDecisionMove = function (decision) {
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
 
     if (tmpAgent && tmpAgent !== agent) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (22)", 4);
-        this.encapsulatedCall(agent.client, "onNotification", [22]);
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (cell is occupied)", 4);
+        agent.client.onNotification(Constants.ERROR_MOVE_CELL_OCCUPIED);
     } else {
         if (agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y))) {
             agent.x = coords.x;
@@ -386,8 +382,8 @@ Server.prototype.processDecisionMove = function (decision) {
 
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y + " dir:" + decision.dir, 2);
         } else {
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (21)", 4);
-            this.encapsulatedCall(agent.client, "onNotification", [21]);
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (impassible terrain)", 4);
+            agent.client.onNotification(Constants.ERROR_MOVE_IMPASSABLE_TERRAIN);
         }
     }
 
@@ -406,11 +402,11 @@ Server.prototype.processDecisionEatFood = function (decision) {
     }));
 
     if (!food) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (41)", 4);
-        this.encapsulatedCall(agent.client, "onNotification", [41]);
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (no food in cell)", 4);
+        agent.client.onNotification(Constants.ERROR_EAT_NO_FOOD);
     } else if (agent.satiety === agent.maxSatiety) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (42)", 4);
-        this.encapsulatedCall(agent.client, "onNotification", [42]);
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (stomach is full)", 4);
+        agent.client.onNotification(Constants.ERROR_EAT_STOMACH_FULL);
     } else {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
             + " satiety: (+" + food.richness + ")", 2);
@@ -434,8 +430,8 @@ Server.prototype.processDecisionAttack = function (decision) {
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
 
     if (!tmpAgent) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (" + Constants.ERROR_ATTACK_NO_AGENT + ")", 4);
-        this.encapsulatedCall(agent.client, "onNotification", [Constants.ERROR_ATTACK_NO_AGENT]);
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (no agent in cell)", 4);
+        agent.client.onNotification(Constants.ERROR_ATTACK_NO_AGENT);
     } else {
         damage = Math.floor(Math.random() * 3);
         if (agent.satiety > Math.floor(agent.maxSatiety * 0.2) && agent.satiety < Math.floor(agent.maxSatiety * 0.9)) {
@@ -475,10 +471,10 @@ Server.prototype.tick = function () {
         try {
 
             // Notify the agent that new tick has begun
-            this.encapsulatedCall(agent.client, "onNewTick", [this.getAgentStatus(agent)]);
+            agent.client.onNewTick(this.getAgentStatus(agent));
 
             // Get and validate agent's decision
-            var decision = this.encapsulatedCall(agent.client, "decision", [this.getAgentStatus(agent)]);
+            var decision = agent.client.decision();
 
             decision = this.sanitizeDecision(agent, decision);
             decision.agent = agent;

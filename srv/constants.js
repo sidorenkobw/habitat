@@ -17,7 +17,7 @@ var constants = {
     "ERROR_WRONG_FORMAT"            : 1,
 
     "ERROR_MOVE_IMPASSABLE_TERRAIN" : 21,
-    "ERROR_MOVE_AGENT_IN_CELL"      : 22,
+    "ERROR_MOVE_CELL_OCCUPIED"      : 22,
 
     "ERROR_ATTACK_NO_AGENT"         : 31,
 
