@@ -290,7 +290,7 @@ var FoxelAgent = createClass({
     hungry: false,
 
     forgetAfter: 300,
-    hungerThreshold: 0.7,
+    hungerThreshold: 0.8,
     satietyThreshold: 0.95,
 
     'getNearestUnknownCoords': function(pos) {
@@ -430,20 +430,18 @@ var FoxelAgent = createClass({
             return Math.abs(pos.x - this.myPos.x) > 4 || Math.abs(pos.y - this.myPos.y) > 4;
         }, this);
 
-//        this.objectsAround.forEach(function(obj) {
-//            if (obj.class !== "food") {
-//                this.memMap.get(obj.x, obj.y).blocked = true;
-//            }
-//        }, this);
-
         this.objectsAround.forEach(function(obj) {
-            if (obj.class == "food") {
+            if (obj.class == 'food') {
                 this.memFood.push(new Pos(obj.x + this.myPos.x, obj.y + this.myPos.y));
+            }
+            // TODO: optimize
+            if (obj.class == 'agent') {
+                this.memMap.get(obj.x + this.myPos.x, obj.y + this.myPos.y).blocked = true;
             }
         }, this);
 
 //        console.log(this.status);
-//        console.log(this.getMapString());
+        console.log(this.getMapString());
     },
 
     'decision': function () {
@@ -457,9 +455,11 @@ var FoxelAgent = createClass({
             this.hungry = false;
         }
 
-        if (this.hungry || !!_.find(this.objectsAround, function(el) {
+        var nearestAgent = _.find(this.objectsAround, function (el) {
             return el.class == 'agent';
-        })) {
+        });
+
+        if (this.hungry || !!nearestAgent) {
             var foodItem = _.find(this.objectsAround, function(el) {
                 return (el.class == "food");
             });
@@ -471,9 +471,30 @@ var FoxelAgent = createClass({
                         "action" : 4,
                         "dir"    : getMovement(foodItem)
                     };
-                } else {
-                    this.setPathTo(foodItem);
                 }
+
+                this.setPathTo(new Pos(foodItem.x + this.myPos.x, foodItem.y + this.myPos.y));
+            }
+        }
+
+        if (nearestAgent) {
+            var isEnemyClose = Math.abs(nearestAgent.x) <= 1 && Math.abs(nearestAgent.y) <= 1;
+            var isCombatAcceptable = (this.status.satiety/this.status.maxSatiety > 0.4) && (this.status.health >= nearestAgent.health * 0.85);
+            if (isCombatAcceptable) {
+                if (isEnemyClose) {
+                    this.myPath = [];
+                    return {
+                        "action": 3,
+                        "dir": getMovement(nearestAgent)
+                    };
+                }
+
+                // HACK
+                this.memMap.get(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y).blocked = false;
+                this.setPathTo(new Pos(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y))
+            } else if (isEnemyClose) {
+                // TODO: needs improvements
+                this.myPath.length && this.setPathTo(this.myPath.pop());
             }
         }
 
