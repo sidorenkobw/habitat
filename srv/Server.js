@@ -286,7 +286,7 @@ Server.prototype.updateAgentStatus = function (agent) {
 Server.prototype.getEmptyDecision = function () {
     return {
         "isProcessed" : false,
-        "action" : 0
+        "action" : Constants.ACTION_IDLE
     };
 };
 
@@ -306,19 +306,24 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
         decision.action = parseInt(decision.action);
 
-        if (decision.action === 0) { // Idle
+        if (decision.action === Constants.ACTION_IDLE) {
 
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
             return this.getEmptyDecision();
 
-        } else if (decision.action === 1) { // Move
+        } else if (decision.action === Constants.ACTION_MOVE) {
             this.sanitizeDecisionDirection(decision);
+
+            if (decision.dir === Constants.DIR_CURRENT) {
+                this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
+                return this.getEmptyDecision();
+            }
 
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to go to " + decision.dir, 3);
 
             return {
                 "isProcessed"   : false,
-                "action"        : 1,
+                "action"        : Constants.ACTION_MOVE,
                 "dir"           : decision.dir
             };
 
@@ -326,18 +331,26 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
             throw new Error("action code: " + decision.action + " is reserved");
 
-        } else if (decision.action === 3) { // Attack
+        } else if (decision.action === Constants.ACTION_ATTACK) {
 
-            throw new Error("action code: " + decision.action + " is reserved");
+            this.sanitizeDecisionDirection(decision);
 
-        } else if (decision.action === 4) { // Eat food
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to attack in direction: " + decision.dir, 3);
+
+            return {
+                "isProcessed"   : false,
+                "action"        : Constants.ACTION_ATTACK,
+                "dir"           : decision.dir
+            };
+
+        } else if (decision.action === Constants.ACTION_EAT) {
             this.sanitizeDecisionDirection(decision);
 
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to eat food from " + decision.dir, 3);
 
             return {
                 "isProcessed"   : false,
-                "action"        : 4,
+                "action"        : Constants.ACTION_EAT,
                 "dir"           : decision.dir
             };
 
@@ -369,7 +382,7 @@ Server.prototype.processDecisionMove = function (decision) {
             agent.x = coords.x;
             agent.y = coords.y;
 
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y, 2);
+            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y + " dir:" + decision.dir, 2);
         } else {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (21)", 4);
             this.encapsulatedCall(agent.client, "onNotification", [21]);
@@ -409,10 +422,40 @@ Server.prototype.processDecisionEatFood = function (decision) {
     decision.isProcessed = true;
 };
 
+Server.prototype.processDecisionAttack = function (decision) {
+    var movementMap = this.map.getDirectionsMap(),
+        agent = decision.agent,
+        relCoords, coords, tmpAgent, damage;
+
+    relCoords = movementMap[decision.dir];
+    coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
+    tmpAgent = this.getAgentByXY(coords.x, coords.y);
+
+    if (!tmpAgent) {
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (" + Constants.ERROR_ATTACK_NO_AGENT + ")", 4);
+        this.encapsulatedCall(agent.client, "onNotification", [Constants.ERROR_ATTACK_NO_AGENT]);
+    } else {
+        damage = Math.floor(Math.random() * 3);
+        if (agent.satiety > Math.floor(agent.maxSatiety * 0.2) && agent.satiety < Math.floor(agent.maxSatiety * 0.9)) {
+            damage += 2;
+        }
+
+        tmpAgent.health -= damage;
+
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] attacked: " +
+            tmpAgent.name + "(" + tmpAgent.id + ") [" + tmpAgent.health + "/" + tmpAgent.satiety + "] on x:" +
+            coords.x + " y:" + coords.y + " with damage: " + damage, 2);
+    }
+
+    decision.isProcessed = true;
+};
+
 Server.prototype.processDecision = function (decision) {
-    if (decision.action === 1) {
+    if (decision.action === Constants.ACTION_MOVE) {
         this.processDecisionMove(decision);
-    } else if (decision.action === 4) {
+    } else if (decision.action === Constants.ACTION_ATTACK) {
+        this.processDecisionAttack(decision);
+    } else if (decision.action === Constants.ACTION_EAT) {
         this.processDecisionEatFood(decision);
     }
 };

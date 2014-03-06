@@ -77,13 +77,13 @@ DummyAgent.prototype.onNewTick = function (status) {
  * 0 - stay idle (do nothing. the same as return null|false|0|...)
  * 1 - move
  * 2 - reserved
- * 3 - reserved
+ * 3 - attack
  * 4 - eat food
  *
- * Movement options:
+ * Movement, eat, attack options:
  * key: dir - movement direction
  * values:
- *  0 - don't move
+ *  0 - don't move/eat from current cell/attack myself
  *  1 - go to N (North)
  *  2 - go to NE
  *  3 - go to E
@@ -98,25 +98,6 @@ DummyAgent.prototype.onNewTick = function (status) {
  *      "action" : 1
  *      "dir"    : 0
  * }; // go to the north
- *
- * Food eating options:
- * key: dir - eating direction
- * values:
- *  0 - eat food from the cell agent stands on
- *  1 - eat from N (North)
- *  2 - eat from  NE
- *  3 - eat from E
- *  4 - eat from SE
- *  5 - eat from S
- *  6 - eat from SW
- *  7 - eat from W
- *  8 - eat from NW
- *
- * Example:
- * return {
- *      "action" : 4
- *      "dir"    : 4
- * }; // eat from the south
  *
  * @returns {{}}
  */
@@ -138,15 +119,20 @@ DummyAgent.prototype.decision = function () {
         rel = movementMap[dir];
         for (var i in this.status.environment.objects) {
             var obj = this.status.environment.objects[i];
-            if (obj.class !== "food") {
-                continue;
-            }
-
             if (obj.x === rel.x && obj.y === rel.y) {
-                return {
-                    "action" : Constants.ACTION_EAT,
-                    "dir"    : dir
-                };
+                if (obj.class === "food") {
+                    return {
+                        "action" : Constants.ACTION_EAT,
+                        "dir"    : dir
+                    };
+                }
+
+                if (obj.class === "agent") {
+                    return {
+                        "action" : Constants.ACTION_ATTACK,
+                        "dir"    : dir
+                    };
+                }
             }
         }
     }

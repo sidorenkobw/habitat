@@ -15,8 +15,12 @@ var constants = {
     "ACTION_EAT"    : 4,
 
     "ERROR_WRONG_FORMAT"            : 1,
+
     "ERROR_MOVE_IMPASSABLE_TERRAIN" : 21,
     "ERROR_MOVE_AGENT_IN_CELL"      : 22,
+
+    "ERROR_ATTACK_NO_AGENT"         : 31,
+
     "ERROR_EAT_NO_FOOD"             : 41,
     "ERROR_EAT_STOMACH_FULL"        : 42
 };
