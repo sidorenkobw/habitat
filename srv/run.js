@@ -39,6 +39,7 @@ var serverModule = require("./Server"),
     ];
 
     var agents = [
+        require("./agents/Straight"),
         require("./agents/Foxel"),
         require("./agents/DummyAgent"),
         require("./agents/VeryDummy"),
