@@ -102,7 +102,7 @@ var InfiniteMap = createClass({
      * @param y {Number}
      * @return
      */
-    'getCell': function(x, y) {
+    'get': function(x, y) {
         var row = this._rows.get(y) || new InfiniteList();
         return row.get(x);
     },
@@ -114,7 +114,7 @@ var InfiniteMap = createClass({
      * @param y {Number}
      * @param cell
      */
-    'setCell': function(x, y, cell) {
+    'set': function(x, y, cell) {
         this._rows.get(y) || this._rows.set(y, new InfiniteList());
         this._rows.get(y).set(x, cell);
 
@@ -213,7 +213,7 @@ var getDistance = function(pos1, pos2) {
 };
 
 var aStarNeightbours = function(map, x, y) {
-//    if (!map.getCell(x, y)) {
+//    if (!map.get(x, y)) {
 //        return [];
 //    }
 
@@ -232,7 +232,7 @@ var aStarNeightbours = function(map, x, y) {
                 return null;
             }
 
-            var cell = map.getCell(cx, cy);
+            var cell = map.get(cx, cy);
             return (!cell || !cell.blocked)
                 ? new Pos(cx, cy)
                 : null;
@@ -246,21 +246,21 @@ var aStarAlgo = function(map, sPos, tPos) {
     var sx = sPos.x, sy = sPos.y, tx = tPos.x, ty = tPos.y;
     var parentMap = new InfiniteMap();
     var queue = [new Pos(sx, sy)];
-    parentMap.setCell(sx, sy, true);
+    parentMap.set(sx, sy, true);
 
     while (queue.length) {
         var node = queue.shift();
         var neightbours = aStarNeightbours(map, node.x, node.y);
         for (var i = 0; i < neightbours.length; i++) {
             var nnode = neightbours[i];
-            if (parentMap.getCell(nnode.x, nnode.y)) {
+            if (parentMap.get(nnode.x, nnode.y)) {
                 continue;
             }
-            parentMap.setCell(nnode.x, nnode.y, node);
+            parentMap.set(nnode.x, nnode.y, node);
             if (nnode.x == tx && nnode.y == ty) {
                 var tnode = nnode;
                 var path = [tnode];
-                while (tnode = parentMap.getCell(tnode.x, tnode.y)) {
+                while (tnode = parentMap.get(tnode.x, tnode.y)) {
                     if (tnode === true) {
                         break;
                     }
@@ -300,7 +300,7 @@ var FoxelAgent = createClass({
 
         for (var y = dims.by-1; y <= dims.ty+1; y++) {
             for (var x = dims.bx-1; x <= dims.tx+1; x++) {
-                var cell = this.memMap.getCell(x, y);
+                var cell = this.memMap.get(x, y);
                 if (!cell || (!cell.blocked && cell.lastSeen > this.forgetAfter)) {
                     var newDistance = getDistance(center, new Pos(x, y)) + getDistance(pos, new Pos(x, y))/2;
                     if (newDistance <= bestDistance) {
@@ -318,7 +318,7 @@ var FoxelAgent = createClass({
             dims = this.memMap.getDims();
         for (var y = dims.by-1; y <= dims.ty+1; y++) {
             for (var x = dims.bx-1; x <= dims.tx+1; x++) {
-                var cell = this.memMap.getCell(x, y);
+                var cell = this.memMap.get(x, y);
                 if (cell && cell.lastSeen > this.forgetAfter) {
                     xa += x;
                     ya += y;
@@ -354,7 +354,7 @@ var FoxelAgent = createClass({
                     s+= '+';
                     continue;
                 }
-                var cell = this.memMap.getCell(x, y);
+                var cell = this.memMap.get(x, y);
                 if (cell) {
                     if (cell.lastSeen > this.forgetAfter) {
                         s+= cell.blocked ? '"' : '.';
@@ -397,7 +397,7 @@ var FoxelAgent = createClass({
 
         status.environment.map.forEach(function(col, y) {
             col.forEach(function(c, x) {
-                this.memMap.setCell(x - 4 + this.myPos.x, y - 4 + this.myPos.y, new MapCell({
+                this.memMap.set(x - 4 + this.myPos.x, y - 4 + this.myPos.y, new MapCell({
                     blocked: !terrainMovements[c]
                 }));
             }, this)
@@ -409,7 +409,7 @@ var FoxelAgent = createClass({
 
 //        status.environment.objects.forEach(function(obj) {
 //            if (obj.class !== "food") {
-//                this.memMap.getCell(obj.x, obj.y).blocked = true;
+//                this.memMap.get(obj.x, obj.y).blocked = true;
 //            }
 //        }, this);
 
@@ -482,7 +482,7 @@ var FoxelAgent = createClass({
 
         var myStep, myStepCell;
         myStep = movementMap[direction];
-        myStepCell = this.memMap.getCell(this.myPos.x + myStep.x, this.myPos.y + myStep.y);
+        myStepCell = this.memMap.get(this.myPos.x + myStep.x, this.myPos.y + myStep.y);
 
         if (myStepCell && myStepCell.blocked) {
             direction = 0;
