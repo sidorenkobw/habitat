@@ -3,10 +3,10 @@ var serverModule = require("./Server"),
 
 (function () {
 
-    function initAgent(name, args) {
+    function initAgent(name, params) {
         return {
-            "class" : require("./agents/" + name + ".js"),
-            "args"  : args
+            "class"     : require("./agents/" + name + ".js"),
+            "params"    : params
         };
     };
 
