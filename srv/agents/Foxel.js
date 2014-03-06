@@ -30,6 +30,7 @@ var Pos = createClass({
         this.y = y || 0;
     }
 });
+Pos.center = new Pos();
 
 // CLASSES //
 // memory store
@@ -285,6 +286,7 @@ var FoxelAgent = createClass({
     oldPos: null,
     options: null,
     memFood: null,
+    objectsAround: null,
     hungry: false,
 
     forgetAfter: 300,
@@ -302,7 +304,7 @@ var FoxelAgent = createClass({
             for (var x = dims.bx-1; x <= dims.tx+1; x++) {
                 var cell = this.memMap.get(x, y);
                 if (!cell || (!cell.blocked && cell.lastSeen > this.forgetAfter)) {
-                    var newDistance = getDistance(center, new Pos(x, y)) + getDistance(pos, new Pos(x, y))/2;
+                    var newDistance = getDistance(center, new Pos(x, y)) + getDistance(pos, new Pos(x, y))*0.7;
                     if (newDistance <= bestDistance) {
                         tx = x; ty = y;
                         bestDistance = newDistance;
@@ -337,6 +339,7 @@ var FoxelAgent = createClass({
         for (var y = dims.by; y <= dims.ty; y++) {
             for (var x = dims.bx; x <= dims.tx; x++) {
                 if (!!_.find(this.myPath, function(pos) {
+                    //noinspection JSReferencingMutableVariableFromClosure
                     return pos.x == x && pos.y == y;
                 })) {
                     s+= '*';
@@ -344,6 +347,7 @@ var FoxelAgent = createClass({
                 }
 
                 if (!!_.find(this.memFood, function(pos) {
+                    //noinspection JSReferencingMutableVariableFromClosure
                     return pos.x == x && pos.y == y;
                 })) {
                     s+= '@';
@@ -371,9 +375,21 @@ var FoxelAgent = createClass({
         return s;
     },
 
+    'setPathTo': function(pos) {
+        var path = aStarAlgo(this.memMap, this.myPos, pos);
+
+        if (path.length > 1) {
+            this.myPath = path.slice(1);
+            return true;
+        }
+
+        return false;
+    },
+
     /** @constructs */
     'initialize': function() {
         this.status = {};
+        this.objectsAround = [];
         this.memMap = new InfiniteMap();
         this.myPos  = new Pos();
         this.oldPos = new Pos();
@@ -391,6 +407,12 @@ var FoxelAgent = createClass({
 
     'onNewTick': function (status) {
         _.extend(this.oldPos, this.myPos);
+
+        this.status = status;
+        this.objectsAround = _.sortBy(status.environment.objects, function(el) {
+            return getDistance(el, Pos.center);
+        });
+
         this.memMap.each(function(cell) {
             cell.lastSeen++;
         });
@@ -403,26 +425,25 @@ var FoxelAgent = createClass({
             }, this)
         }, this);
 
+        // remove old food data for current rect
         this.memFood = _.filter(this.memFood, function(pos) {
             return Math.abs(pos.x - this.myPos.x) > 4 || Math.abs(pos.y - this.myPos.y) > 4;
         }, this);
 
-//        status.environment.objects.forEach(function(obj) {
+//        this.objectsAround.forEach(function(obj) {
 //            if (obj.class !== "food") {
 //                this.memMap.get(obj.x, obj.y).blocked = true;
 //            }
 //        }, this);
 
-        status.environment.objects.forEach(function(obj) {
+        this.objectsAround.forEach(function(obj) {
             if (obj.class == "food") {
                 this.memFood.push(new Pos(obj.x + this.myPos.x, obj.y + this.myPos.y));
             }
         }, this);
 
-        this.status = status;
-
 //        console.log(this.status);
-//        console.log(this.getMapString());
+        console.log(this.getMapString());
     },
 
     'decision': function () {
@@ -436,42 +457,39 @@ var FoxelAgent = createClass({
             this.hungry = false;
         }
 
-        if (this.hungry) {
-            for (var i = 0; i < this.status.environment.objects.length; i++) {
-                var obj = this.status.environment.objects[i];
-                if (obj.class !== "food") {
-                    continue;
-                }
+        if (this.hungry || !!_.find(this.objectsAround, function(el) {
+            return el.class == 'agent';
+        })) {
+            var foodItem = _.find(this.objectsAround, function(el) {
+                return (el.class == "food");
+            });
 
-                if (Math.abs(obj.x) <= 1 && Math.abs(obj.y) <= 1) {
+            if (foodItem) {
+                if (Math.abs(foodItem.x) <= 1 && Math.abs(foodItem.y) <= 1) {
                     this.myPath = [];
                     return {
                         "action" : 4,
-                        "dir"    : getMovement(obj)
+                        "dir"    : getMovement(foodItem)
                     };
+                } else {
+                    this.setPathTo(foodItem);
                 }
             }
+        }
 
+        if (this.hungry) {
             var foodPos = _.sortBy(this.memFood, function(pos) {
                 return getDistance(pos, this.myPos)
             }, this).shift();
 
-            if (foodPos)
-            {
-                var pathToFood = aStarAlgo(this.memMap, this.myPos, foodPos);
-                if (pathToFood.length > 1) {
-                    this.myPath = pathToFood.slice(1);
-                }
-            }
+            foodPos && this.setPathTo(foodPos);
         }
 
         if (this.myPath.length) {
             myTarget = this.myPath[0];
         } else {
             myTarget = this.getNearestUnknownCoords(this.myPos);
-            var pathToTarget = aStarAlgo(this.memMap, this.myPos, myTarget);
-            if (pathToTarget.length > 1) {
-                this.myPath = pathToTarget.slice(1);
+            if (this.setPathTo(myTarget)) {
                 myTarget = this.myPath[0];
             }
         }
