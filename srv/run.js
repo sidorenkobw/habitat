@@ -2,6 +2,14 @@ var serverModule = require("./Server"),
     http = require('http');
 
 (function () {
+
+    function initAgent(name, args) {
+        return {
+            "class" : require("./agents/" + name + ".js"),
+            "args"  : args
+        };
+    };
+
     var mapModule = require("./Map");
     var map = new mapModule.Map();
 
@@ -55,11 +63,11 @@ var serverModule = require("./Server"),
 //    ];
 
     var agents = [
-        require("./agents/Straight"),
-        require("./agents/Foxel"),
-        require("./agents/DummyAgent"),
-        require("./agents/VeryDummy"),
-        require("./agents/ReAgent")
+        initAgent("Straight"),
+        initAgent("Foxel"),
+        initAgent("DummyAgent"),
+        initAgent("VeryDummy"),
+        initAgent("ReAgent")
     ];
 
     var srv = new serverModule.Server(agents, map);

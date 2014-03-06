@@ -46,14 +46,16 @@ Server.prototype.encapsulatedCall = function (client, method, args) {
     return client[method].apply(client, args);
 };
 
-Server.prototype.instantiateAgent = function (agentDefinition) {
-    var agent, agentClient, agentIntroduction, coords;
+Server.prototype.instantiateAgent = function (agentData) {
+    var agentClass, args, agent, agentClient, agentIntroduction, coords;
+    agentClass = agentData.class;
+    args       = agentData.args;
 
-    if (!("agentClass" in agentDefinition)) {
+    if (!("agentClass" in agentClass)) {
         throw new Error("exports.agentClass not found");
     }
 
-    agentClient = new agentDefinition.agentClass();
+    agentClient = new agentClass.agentClass(args);
 
     if (typeof agentClient.introduce !== 'function') {
         throw new Error("Agent has no method introduce");

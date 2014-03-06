@@ -1,6 +1,6 @@
 var Constants = {};
 
-var DummyAgent = function () {
+var DummyAgent = function (args) {
     var status;
     var constants = {};
 };
