@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Habitat</title>
+    <title>Habitat World Observer</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -31,7 +31,7 @@
 //            urlArgs : "build=<?php echo $this->config->build; ?>"
         });
         require(
-            ['jquery', 'underscore'],
+            ['jquery', 'underscore', 'jquery.panzoom'],
             function($, _) {
                 $.ajax('/map.json', {
                     dataType : 'json',
@@ -39,7 +39,11 @@
                         var templateMap = _.template($('#template-map').html()),
                             templateMob = _.template($('#template-mob').html()),
                             templateObj = _.template($('#template-object').html());
-                        $('#map').html(templateMap({data: data}));
+                        var map = $('#map');
+                        map.html(templateMap({data: data}));
+                        map.css('width', map.outerWidth());
+                        map.css('height', map.outerHeight());
+                        map.panzoom({contain: 'invert'});
                         var tickInterval = data.tickInterval;
                         var dynamicObjects = [];
                         var drawObjects = function() {
@@ -89,8 +93,8 @@
 </head>
 
 <body>
-
-<h1>World map</h1>
-<div id="map" style=""></div>
+<div id="topBar"><h1>World map</h1></div>
+<div id="sideBar"></div>
+<div id="mapViewport"><div id="map"></div>
 </body>
 </html>

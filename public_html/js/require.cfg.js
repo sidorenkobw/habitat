@@ -14,6 +14,7 @@ requirejs.config({
         }
     },
     paths : {
+        'jquery.panzoom' : "/libs/panzoom",
         jquery     : "/libs/jquery/jquery-1.10.2",
         underscore : "/libs/underscore/underscore",
         backbone   : "/libs/backbone/backbone",
