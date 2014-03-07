@@ -27,7 +27,7 @@ Server.prototype.log = function (msg, level) {
             util.log(msg);
         }
     }
-    fs.appendFileSync("./var/log", this.tickId + " " + msg + "\n");
+    //fs.appendFileSync("./var/log", this.tickId + " " + msg + "\n");
 };
 
 Server.prototype.stop = function () {

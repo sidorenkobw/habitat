@@ -1,3 +1,7 @@
+body {
+	overflow: hidden;
+	background-color: black;
+}
 .tiled-map {
 
 }
@@ -20,7 +24,78 @@
     background-image: url('transition-s.gif');
     background-position: 40px 40px;
 }
-/**************************/
+.mob {
+    width: 40px;
+    height:40px;
+    position: absolute;
+    background-image: url('animal.gif');
+}
+.mob .name {
+    position: absolute;
+    color: white;
+    font-size: 9px;
+    width: 120px;
+    text-align: center;
+    margin-top: -10px;
+    margin-left: -40px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+.mob .status {
+    position: absolute;
+    color: white;
+    font-size: 9px;
+    width: 50px;
+    text-align: center;
+    margin-top: 35px;
+    margin-left: -5px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+/**************************
+ *  Objects
+ **************************/
+ .tile .object {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    background-image: url('/img/map/39.gif');
+}
+.object.model-food-0 {
+    background-image: url('/img/objects/food-0.gif');
+}
+.object.model-food-1 {
+    background-image: url('/img/objects/food-1.gif');
+}
+.object.model-food-2 {
+    background-image: url('/img/objects/food-2.gif');
+}
+.object.model-food-3 {
+    background-image: url('/img/objects/food-3.gif');
+}
+.object.model-food-4 {
+    background-image: url('/img/objects/food-4.gif');
+}
+
+/**************************
+ *  Tiles
+ **************************/
+.tiled-map .tiles-row .tile.tile-1 {
+    background-position: -40px 0;
+}
+.tiled-map .tiles-row .tile.tile-2 {
+    background-position: -80px 0;
+}
+.tiled-map .tiles-row .tile.tile-3 {
+    background-position: -120px 0;
+}
+.tiled-map .tiles-row .tile.tile-4 {
+    background-position: -160px 0;
+}
+.tiled-map .tiles-row .tile.tile-5 {
+    background-position: -200px 0;
+}
+/**************************
+ *  Transitions
+ **************************/
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-8,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-8,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-8 {
@@ -426,18 +501,3 @@
     background-position: -200px -560px;
 }
 /**************************/
-.tiled-map .tiles-row .tile.tile-1 {
-    background-position: -40px 0;
-}
-.tiled-map .tiles-row .tile.tile-2 {
-    background-position: -80px 0;
-}
-.tiled-map .tiles-row .tile.tile-3 {
-    background-position: -120px 0;
-}
-.tiled-map .tiles-row .tile.tile-4 {
-    background-position: -160px 0;
-}
-.tiled-map .tiles-row .tile.tile-5 {
-    background-position: -200px 0;
-}

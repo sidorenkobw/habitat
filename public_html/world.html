@@ -12,16 +12,40 @@
 
     <!-- <link rel="shortcut icon" href="/favicon.png"> -->
     <link href="/css/default.css" rel="stylesheet">
-    <link href="/css/map.css" rel="stylesheet" />
+    <link href="/theme/default/map.css" rel="stylesheet" />
 
     <script src="/libs/require/require.js" type="text/javascript"></script>
     <script src="/js/require.cfg.js" type="text/javascript"></script>
 
     <script type="text/template" id="template-map">
-        <div class="tiled-map"><% var x, y = 0; _.each(data.map, function(row) { x = 0; %><div class="tiles-row"><% _.each(row, function(tile) { %><div class="tile tile-<%= tile %>" id="tile-<%= x %>x<%= y %>"></div><% x++;}) %></div><% y++;}) %></div>
+        <div class="tiled-map"><%
+            var tt, tl, x, y = 0;
+            _.each(data.map, function(row) {
+                x = 0;
+                %><div class="tiles-row"><%
+                _.each(row, function(tile) {
+                    var tr = trans(data.map, x, y);
+                    %><div class="tile tile-<%= tile %>" id="tile-<%= x %>x<%= y %>"><%
+                    for(tt = 0, tl = tr.length; tt < tl; tt++) {
+                        if (tr[tt]) {
+                            if(tr[tt][0]) {
+                                %><div class="tile-transition side-<%= tile %>-<%= tt %>-<%= tr[tt][0] %>"></div><%
+                            }
+                            if(tr[tt][1]) {
+                                %><div class="tile-transition corner-<%= tile %>-<%= tt %>-<%= tr[tt][1] %>"></div><%
+                            }
+                        }
+                    }
+                    %></div><%
+                    x++;
+                })
+                %></div><%
+                y++;
+            })
+        %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-<%= o.id %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status">[<%-o.health%>/<%-o.satiety%>]</div></div>
+        <div class="mob model-<%= o.id %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
     </script>
     <script type="text/template" id="template-object">
         <div class="object model-<%= o.class %>-<%= (o.x + o.y) % 5 %>"></div>
@@ -39,13 +63,64 @@
                         var templateMap = _.template($('#template-map').html()),
                             templateMob = _.template($('#template-mob').html()),
                             templateObj = _.template($('#template-object').html());
+						var tMap = {
+							s : [[0, -1], [1, 0], [0, 1], [-1, 0]],
+							c : [[ 1, -1,  3], [ 1,  1,  6], [-1,  1, 12], [-1, -1,  9]]
+						};
                         var map = $('#map');
-                        map.html(templateMap({data: data}));
+                        map.html(templateMap({
+							data: data,
+							trans: function(map, x, y) {
+								var
+									ct = map[y][x],
+									my = map.length - 1,
+									mx = my >= 0 ? map[0].length - 1 : 0,
+									r = [],
+									dx, dy, nx, ny, b, ct, nt, i, l, m;
+								for(i = 0, l = tMap.s.length; i < l; i++) {
+									dx = tMap.s[i][0];
+									dy = tMap.s[i][1];
+									nx = (x + dx > mx ? 0 : (x + dx < 0 ? mx : x + dx));
+									ny = (y + dy > my ? 0 : (y + dy < 0 ? my : y + dy));
+									b = 1 << i;
+									nt = map[ny][nx];
+									if (ct != nt) {
+										if (r[nt]) {
+											r[nt][0] = r[nt][0] | b;
+										} else {
+											r[nt] = [b, 0];
+										}
+									}
+								}
+								for(i = 0, l = tMap.c.length; i< l; i++) {
+									dx = tMap.c[i][0];
+									dy = tMap.c[i][1];
+									m = tMap.c[i][2];
+									nx = (x + dx > mx ? 0 : (x + dx < 0 ? mx : x + dx));
+									ny = (y + dy > my ? 0 : (y + dy < 0 ? my : y + dy));
+									b = 1 << i;
+									nt = map[ny][nx];
+									if (ct != nt) {
+										if (r[nt]) {
+											if ((r[nt][0] & m) == 0) {
+												r[nt][1] = r[nt][1] | b;
+											}
+										} else {
+											r[nt] = [0, b];
+										}
+									}
+								}
+								return r;
+							}
+						}));
                         map.css('width', map.outerWidth());
                         map.css('height', map.outerHeight());
-                        map.panzoom({contain: 'invert'});
+                        map.panzoom({contain:false});
                         var tickInterval = data.tickInterval;
+						var tile = map.find('.tile').first();
+						var dx = tile.outerWidth(), dy = tile.outerHeight();
                         var dynamicObjects = [];
+						var mobs = {};
                         var drawObjects = function() {
                             $.ajax('/state.json', {
                                 dataType : 'json',
@@ -57,12 +132,36 @@
                                             el : $(templateObj({o:object}))
                                         });
                                     });
-                                    _.each(data['agents'], function(agent) {
-                                        newObjects.push({
-                                            xy : agent.x + 'x' + agent.y,
-                                            el : $(templateMob({o:agent}))
-                                        });
+									var aliveMobs = {};
+                                    _.each(data['agents'], function(mob) {
+										var nx = mob.x * dx, ny = mob.y * dy;
+									    if (_.isUndefined(mobs[mob.id])) {
+											mobs[mob.id] = $(templateMob({o:mob}));
+											mobs[mob.id].css('left', nx);
+											mobs[mob.id].css('top', ny);
+											map.append(mobs[mob.id]);
+										} else {
+											var cx = parseInt(mobs[mob.id].css('left')), cy = parseInt(mobs[mob.id].css('top'));
+											//console.log(mob.id + ': ' + cx + 'x' + cy + ' => ' + nx + 'x' + ny);
+											if (Math.abs(cx - nx) >= dx * 2 || Math.abs(cy - ny) >= dy * 2 ) {
+												mobs[mob.id].css('left', nx);
+												mobs[mob.id].css('top', ny);
+											} else {
+												mobs[mob.id].animate({
+													left: nx,
+													top: ny
+												}, parseInt(tickInterval * 0.6));
+											}
+										}
+										mobs[mob.id].find('.status').html(mob.health + ' / ' + mob.satiety);
+										aliveMobs[mob.id] = 1;
                                     });
+									_.each(mobs, function(mob, id){
+										if (_.isUndefined(aliveMobs[id])) {
+											mob.detach();
+											delete mobs[id];
+										}
+									});
                                     _.each(dynamicObjects, function(object){
                                         object.el.detach();
                                     });
@@ -93,8 +192,6 @@
 </head>
 
 <body>
-<div id="topBar"><h1>World map</h1></div>
-<div id="sideBar"></div>
-<div id="mapViewport"><div id="map"></div>
+<div id="map"></div>
 </body>
 </html>
