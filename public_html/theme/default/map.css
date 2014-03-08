@@ -51,6 +51,60 @@ body {
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 /**************************
+ *  Mobs
+ **************************/
+.mob.model-1 ,
+.mob.model-1.dir-E,
+.mob.model-1.dir-N.dir-E {
+    background-position: 0 0;
+}
+.mob.model-1.dir-N,
+.mob.model-1.dir-N.dir-W {
+    background-position: 0 -40px;
+}
+.mob.model-1.dir-S,
+.mob.model-1.dir-S.dir-E {
+    background-position: 0 -80px;
+}
+.mob.model-1.dir-W,
+.mob.model-1.dir-S.dir-W {
+    background-position: 0 -120px;
+}
+.mob.model-2 ,
+.mob.model-2.dir-E,
+.mob.model-2.dir-N.dir-E {
+    background-position: -40px 0;
+}
+.mob.model-2.dir-N,
+.mob.model-2.dir-N.dir-W {
+    background-position: -40px -40px;
+}
+.mob.model-2.dir-S,
+.mob.model-2.dir-S.dir-E {
+    background-position: -40px -80px;
+}
+.mob.model-2.dir-W,
+.mob.model-2.dir-S.dir-W {
+    background-position: -40px -120px;
+}
+.mob.model-3 ,
+.mob.model-3.dir-E,
+.mob.model-3.dir-N.dir-E {
+    background-position: -80px 0;
+}
+.mob.model-3.dir-N,
+.mob.model-3.dir-N.dir-W {
+    background-position: -80px -40px;
+}
+.mob.model-3.dir-S,
+.mob.model-3.dir-S.dir-E {
+    background-position: -80px -80px;
+}
+.mob.model-3.dir-W,
+.mob.model-3.dir-S.dir-W {
+    background-position: -80px -120px;
+}
+/**************************
  *  Objects
  **************************/
  .tile .object {

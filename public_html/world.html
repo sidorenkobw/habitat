@@ -45,7 +45,7 @@
         %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-<%= o.id %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
+        <div class="mob model-1" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
     </script>
     <script type="text/template" id="template-object">
         <div class="object model-<%= o.class %>-<%= (o.x + o.y) % 5 %>"></div>
@@ -142,15 +142,18 @@
 											map.append(mobs[mob.id]);
 										} else {
 											var cx = parseInt(mobs[mob.id].css('left')), cy = parseInt(mobs[mob.id].css('top'));
-											//console.log(mob.id + ': ' + cx + 'x' + cy + ' => ' + nx + 'x' + ny);
-											if (Math.abs(cx - nx) >= dx * 2 || Math.abs(cy - ny) >= dy * 2 ) {
+											if (Math.abs(cx - nx) >= dx * 2 || Math.abs(cy - ny) >= dy * 2) {
 												mobs[mob.id].css('left', nx);
 												mobs[mob.id].css('top', ny);
 											} else {
+												var ix = nx - cx, iy = ny - cy,
+													dir = (ix == 0 && iy == 0) ? 'dir-S' : ((iy > 0 ? 'dir-S ' : (iy < 0 ? 'dir-N ' : '')) + (ix > 0 ? 'dir-E ' : (ix < 0 ? 'dir-W' : '')));
+												mobs[mob.id].removeClass('dir-S dir-W dir-E dir-N');
+												mobs[mob.id].addClass(dir);
 												mobs[mob.id].animate({
 													left: nx,
 													top: ny
-												}, parseInt(tickInterval * 0.6));
+												}, parseInt(tickInterval * 0.75));
 											}
 										}
 										mobs[mob.id].find('.status').html(mob.health + ' / ' + mob.satiety);
@@ -170,7 +173,7 @@
                                         $('#tile-' + object.xy).append(object.el);
                                     });
                                     dynamicObjects = newObjects;
-                                    setTimeout(drawObjects, tickInterval);
+                                    setTimeout(drawObjects, tickInterval-15);
                                 },
                                 error: function() {
                                     setTimeout(drawObjects, tickInterval*5);
