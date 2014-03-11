@@ -66,8 +66,6 @@ var serverModule = require("./Server"),
     var agents = [
         initAgent("Straight"),
         initAgent("Foxel"),
-        initAgent("Foxel"),
-        initAgent("Foxel"),
         initAgent("DummyAgent"),
         initAgent("VeryDummy"),
         initAgent("ReAgent")

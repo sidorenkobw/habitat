@@ -274,15 +274,28 @@ var FoxelAgent = createClass({
             tx = pos.x,
             ty = pos.y,
             center = this.getKnownCenter(),
-            dims = this.memMap.getDims();
+            sx = pos.x, sy = pos.y,
+            closedMap = new InfiniteMap(),
+            queue = [new Pos(sx, sy)];
 
-        for (var y = dims.by-1; y <= dims.ty+1; y++) {
-            for (var x = dims.bx-1; x <= dims.tx+1; x++) {
-                var cell = this.memMap.get(x, y);
+        closedMap.set(sx, sy, true);
+
+        while (queue.length) {
+            var node = queue.shift();
+            var neightbours = aStarNeightbours(this.memMap, node.x, node.y);
+            for (var i = 0; i < neightbours.length; i++) {
+                var nNode = neightbours[i];
+                if (closedMap.get(nNode.x, nNode.y)) {
+                    continue;
+                }
+                closedMap.set(nNode.x, nNode.y, true);
+                queue.push(nNode);
+
+                var cell = this.memMap.get(nNode.x, nNode.y);
                 if (!cell || (!cell.blocked && cell.lastSeen > this.forgetAfter)) {
-                    var newDistance = getDistance(center, new Pos(x, y)) + getDistance(pos, new Pos(x, y))*0.7;
+                    var newDistance = getDistance(center, nNode) + getDistance(pos, nNode)*0.7;
                     if (newDistance <= bestDistance) {
-                        tx = x; ty = y;
+                        tx = nNode.x; ty = nNode.y;
                         bestDistance = newDistance;
                     }
                 }
