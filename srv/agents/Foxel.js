@@ -267,8 +267,8 @@ var FoxelAgent = createClass({
     chaseStatus: null,
 
     forgetAfter: 300,
-    hungerThreshold: 0.8,
-    satietyThreshold: 0.95,
+    hungerThreshold: 0.75,
+    satietyThreshold: 0.85,
     maxChaseTime: 20,
 
     'getNearestUnknownCoords': function(pos) {
@@ -439,6 +439,20 @@ var FoxelAgent = createClass({
 //        console.log(this.getMapString());
     },
 
+    setChasingEnemy: function (enemyName) {
+        if (this.chaseStatus.enemy != enemyName) {
+            this.chaseStatus.enemy = enemyName;
+            this.chaseStatus.time  = 0;
+        } else {
+            this.chaseStatus.time++;
+        }
+    },
+
+    setCombatEnemy: function (enemyName) {
+        this.chaseStatus.enemy = enemyName;
+        this.chaseStatus.time  = 0;
+    },
+
     'decision': function () {
         // default movement
         var myTarget, direction, doPathShift = true;
@@ -480,18 +494,15 @@ var FoxelAgent = createClass({
 
             if (isCombatAcceptable) {
                 if (isEnemyClose) {
+                    this.setCombatEnemy(nearestAgent.subClass);
+
                     this.myPath = [];
                     return {
                         "action": 3,
                         "dir": getMovement(nearestAgent)
                     };
                 } else if (isChaseAcceptable) {
-                    if (this.chaseStatus.enemy != nearestAgent.subClass) {
-                        this.chaseStatus.enemy = nearestAgent.subClass;
-                        this.chaseStatus.time = 0;
-                    } else {
-                        this.chaseStatus.time++;
-                    }
+                    this.setChasingEnemy(nearestAgent.subClass);
 
                     // HACK
                     this.memMap.get(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y).blocked = false;
@@ -503,6 +514,8 @@ var FoxelAgent = createClass({
                 // TODO: needs improvements
                 this.myPath.length && pathSetTargets.unshift(this.myPath.pop());
             }
+        } else {
+            this.setChasingEnemy(null);
         }
 
         if (this.hungry) {
