@@ -25,7 +25,7 @@
                 %><div class="tiles-row"><%
                 _.each(row, function(tile) {
                     var tr = trans(data.map, x, y);
-                    %><div class="tile tile-<%= tile %>" id="tile-<%= x %>x<%= y %>"><%
+                    %><div class="tile tile-<%= tile %> var-<%= Math.round(Math.random()*3) + (Math.random() < 0.1 ? 5 : 1) %>" id="tile-<%= x %>x<%= y %>"><%
                     for(tt = 0, tl = tr.length; tt < tl; tt++) {
                         if (tr[tt]) {
                             if(tr[tt][0]) {

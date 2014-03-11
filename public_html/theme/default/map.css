@@ -132,20 +132,130 @@ body {
 /**************************
  *  Tiles
  **************************/
-.tiled-map .tiles-row .tile.tile-1 {
+.tiled-map .tiles-row .tile.tile-1,
+.tiled-map .tiles-row .tile.tile-1.var-1 {
     background-position: -40px 0;
 }
-.tiled-map .tiles-row .tile.tile-2 {
+.tiled-map .tiles-row .tile.tile-1.var-2 {
+    background-position: -40px -40px;
+}
+.tiled-map .tiles-row .tile.tile-1.var-3 {
+    background-position: -40px -80px;
+}
+.tiled-map .tiles-row .tile.tile-1.var-4 {
+    background-position: -40px -120px;
+}
+.tiled-map .tiles-row .tile.tile-1.var-5 {
+    background-position: -40px -160px;
+}
+.tiled-map .tiles-row .tile.tile-1.var-6 {
+    background-position: -40px -200px;
+}
+.tiled-map .tiles-row .tile.tile-1.var-7 {
+    background-position: -40px -240px;
+}
+.tiled-map .tiles-row .tile.tile-1.var-8 {
+    background-position: -40px -280px;
+}
+.tiled-map .tiles-row .tile.tile-2,
+.tiled-map .tiles-row .tile.tile-2.var-1 {
     background-position: -80px 0;
 }
-.tiled-map .tiles-row .tile.tile-3 {
+.tiled-map .tiles-row .tile.tile-2.var-2 {
+    background-position: -80px -40px;
+}
+.tiled-map .tiles-row .tile.tile-2.var-3 {
+    background-position: -80px -80px;
+}
+.tiled-map .tiles-row .tile.tile-2.var-4 {
+    background-position: -80px -120px;
+}
+.tiled-map .tiles-row .tile.tile-2.var-5 {
+    background-position: -80px -160px;
+}
+.tiled-map .tiles-row .tile.tile-2.var-6 {
+    background-position: -80px -200px;
+}
+.tiled-map .tiles-row .tile.tile-2.var-7 {
+    background-position: -80px -240px;
+}
+.tiled-map .tiles-row .tile.tile-2.var-8 {
+    background-position: -80px -280px;
+}
+.tiled-map .tiles-row .tile.tile-3,
+.tiled-map .tiles-row .tile.tile-3.var-1 {
     background-position: -120px 0;
 }
-.tiled-map .tiles-row .tile.tile-4 {
+.tiled-map .tiles-row .tile.tile-3.var-2 {
+    background-position: -120px -40px;
+}
+.tiled-map .tiles-row .tile.tile-3.var-3 {
+    background-position: -120px -80px;
+}
+.tiled-map .tiles-row .tile.tile-3.var-4 {
+    background-position: -120px -120px;
+}
+.tiled-map .tiles-row .tile.tile-3.var-5 {
+    background-position: -120px -160px;
+}
+.tiled-map .tiles-row .tile.tile-3.var-6 {
+    background-position: -120px -200px;
+}
+.tiled-map .tiles-row .tile.tile-3.var-7 {
+    background-position: -120px -240px;
+}
+.tiled-map .tiles-row .tile.tile-3.var-8 {
+    background-position: -120px -280px;
+}
+.tiled-map .tiles-row .tile.tile-4,
+.tiled-map .tiles-row .tile.tile-4.var-1 {
     background-position: -160px 0;
 }
-.tiled-map .tiles-row .tile.tile-5 {
+.tiled-map .tiles-row .tile.tile-4.var-2 {
+    background-position: -160px -40px;
+}
+.tiled-map .tiles-row .tile.tile-4.var-3 {
+    background-position: -160px -80px;
+}
+.tiled-map .tiles-row .tile.tile-4.var-4 {
+    background-position: -160px -120px;
+}
+.tiled-map .tiles-row .tile.tile-4.var-5 {
+    background-position: -160px -160px;
+}
+.tiled-map .tiles-row .tile.tile-4.var-6 {
+    background-position: -160px -200px;
+}
+.tiled-map .tiles-row .tile.tile-4.var-7 {
+    background-position: -160px -240px;
+}
+.tiled-map .tiles-row .tile.tile-4.var-8 {
+    background-position: -160px -280px;
+}
+.tiled-map .tiles-row .tile.tile-5,
+.tiled-map .tiles-row .tile.tile-5.var-1 {
     background-position: -200px 0;
+}
+.tiled-map .tiles-row .tile.tile-5.var-2 {
+    background-position: -200px -40px;
+}
+.tiled-map .tiles-row .tile.tile-5.var-3 {
+    background-position: -200px -80px;
+}
+.tiled-map .tiles-row .tile.tile-5.var-4 {
+    background-position: -200px -120px;
+}
+.tiled-map .tiles-row .tile.tile-5.var-5 {
+    background-position: -200px -160px;
+}
+.tiled-map .tiles-row .tile.tile-5.var-6 {
+    background-position: -200px -200px;
+}
+.tiled-map .tiles-row .tile.tile-5.var-7 {
+    background-position: -200px -240px;
+}
+.tiled-map .tiles-row .tile.tile-5.var-8 {
+    background-position: -200px -280px;
 }
 /**************************
  *  Transitions
