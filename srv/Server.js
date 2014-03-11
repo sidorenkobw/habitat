@@ -502,6 +502,11 @@ Server.prototype.tick = function () {
     this.saveServerState();
     //this.printWorld();
 
+    if (this.agents.length == 1) {
+        this.log("The one who lived: " + this.agents[0].class, 1);
+        this.initAgents();
+    }
+
     if (!this.agents.length) {
         this.log("All agents died", 1);
         this.stop();
