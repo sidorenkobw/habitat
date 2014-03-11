@@ -45,7 +45,7 @@
         %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-1" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
+        <div class="mob model-<%= Math.round(Math.random()*2 + 1) %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
     </script>
     <script type="text/template" id="template-object">
         <div class="object model-<%= o.class %>-<%= (o.x + o.y) % 5 %>"></div>
