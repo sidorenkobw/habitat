@@ -18,7 +18,7 @@ var Server = function (agents, map) {
 };
 
 Server.prototype.initLog = function () {
-    fs.writeFileSync("./var/log", "");
+    fs.writeFileSync("../var/log", "");
 };
 
 Server.prototype.log = function (msg, level) {
@@ -27,7 +27,7 @@ Server.prototype.log = function (msg, level) {
             util.log(msg);
         }
     }
-    //fs.appendFileSync("./var/log", this.tickId + " " + msg + "\n");
+    //fs.appendFileSync("../var/log", this.tickId + " " + msg + "\n");
 };
 
 Server.prototype.stop = function () {
@@ -538,7 +538,7 @@ Server.prototype.getServerState = function() {
 
 Server.prototype.saveServerState = function () {
     var state = this.getServerState();
-    fs.writeFileSync("./var/state.json", JSON.stringify(state));
+    fs.writeFileSync("../var/state.json", JSON.stringify(state));
 };
 
 Server.prototype.printWorld = function () {
