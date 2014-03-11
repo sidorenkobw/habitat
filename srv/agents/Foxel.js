@@ -436,6 +436,7 @@ var FoxelAgent = createClass({
     'decision': function () {
         // default movement
         var myTarget, direction, doPathShift = true;
+        var pathSetTargets = [];
 
         // Scan surrounding cells (all directions) for food and make decision to eat it if found
         if (this.status.satiety < this.hungerThreshold * this.status.maxSatiety) {
@@ -462,7 +463,7 @@ var FoxelAgent = createClass({
                     };
                 }
 
-                this.setPathTo(new Pos(foodItem.x + this.myPos.x, foodItem.y + this.myPos.y));
+                pathSetTargets.push(new Pos(foodItem.x + this.myPos.x, foodItem.y + this.myPos.y));
             }
         }
 
@@ -480,21 +481,24 @@ var FoxelAgent = createClass({
 
                 // HACK
                 this.memMap.get(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y).blocked = false;
-                this.setPathTo(new Pos(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y))
+                pathSetTargets.push(new Pos(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y))
             } else if (isEnemyClose) {
                 // TODO: needs improvements
-                this.myPath.length && this.setPathTo(this.myPath.pop());
+                this.myPath.length && pathSetTargets.unshift(this.myPath.pop());
             }
         }
 
         if (this.hungry) {
-            var foodPos = _.sortBy(this.memFood, function(pos) {
+            pathSetTargets.push.apply(pathSetTargets, _.sortBy(this.memFood, function(pos) {
                 return getDistance(pos, this.myPos)
-            }, this).shift();
+            }, this));
 
-            foodPos && this.setPathTo(foodPos);
         }
 
+        while ((myTarget = pathSetTargets.shift()) && !this.setPathTo(myTarget)) {}
+
+
+        // direction decision
         if (this.myPath.length) {
             myTarget = this.myPath[0];
         } else {
