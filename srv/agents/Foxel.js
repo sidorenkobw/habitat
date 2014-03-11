@@ -264,10 +264,12 @@ var FoxelAgent = createClass({
     memFood: null,
     objectsAround: null,
     hungry: false,
+    chaseStatus: null,
 
     forgetAfter: 300,
     hungerThreshold: 0.8,
     satietyThreshold: 0.95,
+    maxChaseTime: 20,
 
     'getNearestUnknownCoords': function(pos) {
         var bestDistance = Infinity,
@@ -384,6 +386,10 @@ var FoxelAgent = createClass({
         this.oldPos = new Pos();
         this.myPath = [];
         this.memFood = [];
+        this.chaseStatus = {
+            "enemy": null,
+            "time": 0
+        }
     },
 
     'introduce': function () {
@@ -470,6 +476,8 @@ var FoxelAgent = createClass({
         if (nearestAgent) {
             var isEnemyClose = Math.abs(nearestAgent.x) <= 1 && Math.abs(nearestAgent.y) <= 1;
             var isCombatAcceptable = (this.status.satiety/this.status.maxSatiety > 0.4) && (this.status.health >= nearestAgent.health * 0.85);
+            var isChaseAcceptable = (this.chaseStatus.enemy != nearestAgent.subClass) || this.chaseStatus.time < this.maxChaseTime;
+
             if (isCombatAcceptable) {
                 if (isEnemyClose) {
                     this.myPath = [];
@@ -477,11 +485,20 @@ var FoxelAgent = createClass({
                         "action": 3,
                         "dir": getMovement(nearestAgent)
                     };
-                }
+                } else if (isChaseAcceptable) {
+                    if (this.chaseStatus.enemy != nearestAgent.subClass) {
+                        this.chaseStatus.enemy = nearestAgent.subClass;
+                        this.chaseStatus.time = 0;
+                    } else {
+                        this.chaseStatus.time++;
+                    }
 
-                // HACK
-                this.memMap.get(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y).blocked = false;
-                pathSetTargets.push(new Pos(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y))
+                    // HACK
+                    this.memMap.get(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y).blocked = false;
+                    // END HACK
+
+                    pathSetTargets.push(new Pos(nearestAgent.x + this.myPos.x, nearestAgent.y + this.myPos.y))
+                }
             } else if (isEnemyClose) {
                 // TODO: needs improvements
                 this.myPath.length && pathSetTargets.unshift(this.myPath.pop());
