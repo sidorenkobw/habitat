@@ -14,6 +14,8 @@ var Agent = function () {
     this.satiety    = 100;
     this.maxSatiety = 3000;
 
+    this.lastDecision = null;
+
     this.terrainMovements = {
         0 : false,
         1 : true,
@@ -30,7 +32,7 @@ var Agent = function () {
         12 : false,
         13 : false,
         14 : false,
-		15 : false
+        15 : false
     };
 };
 
@@ -54,6 +56,8 @@ Agent.prototype.setLocation = function (x, y)
 {
     this.x = parseInt(x);
     this.y = parseInt(y);
+
+    return this;
 };
 
 Agent.prototype.isAlive = function () {
@@ -62,6 +66,19 @@ Agent.prototype.isAlive = function () {
 
 Agent.prototype.canMoveToTerrainType = function (terrainType) {
     return terrainType in this.terrainMovements && this.terrainMovements[terrainType];
+};
+
+Agent.prototype.updateSatietyWith = function (value) {
+    var newVal = this.satiety + value;
+    if (newVal > this.maxSatiety) {
+        this.satiety = this.maxSatiety;
+    } else if (newVal < 0) {
+        this.satiety = 0;
+    } else {
+        this.satiety = newVal;
+    }
+
+    return this;
 };
 
 exports.create = function () {

@@ -18,12 +18,12 @@ var Server = function (agents, map) {
 };
 
 Server.prototype.initLog = function () {
-    fs.writeFileSync("../var/log", "");
+//    fs.writeFileSync("../var/log", "");
 };
 
 Server.prototype.log = function (msg, level) {
     if (this.displayLogs) {
-        if (level < 3) {
+        if (level < 2) {
             util.log(msg);
         }
     }
@@ -261,14 +261,21 @@ Server.prototype.getAgentStatus = function (agent) {
 };
 
 Server.prototype.updateAgentStatus = function (agent) {
-    agent.satiety = agent.satiety - 1 < 0 ? 0 : agent.satiety - 1;
+    agent.updateSatietyWith(-1);
 
-    if (agent.satiety > Math.floor(agent.maxSatiety * 0.8)) {
-        agent.health = agent.health + 1 > agent.maxHealth ? agent.maxHealth : agent.health + 1;
-    } else if (agent.satiety == 0) {
+    // Regeneration
+    if (agent.lastDecision.action === Constants.ACTION_IDLE) {
+        if (agent.satiety > Math.floor(agent.maxSatiety * 0.8)) {
+            agent.health = agent.health + 1 > agent.maxHealth ? agent.maxHealth : agent.health + 1;
+        }
+    }
+
+    // Starving
+    if (agent.satiety == 0) {
         agent.health = agent.health - 1;
     }
 
+    // Death
     if (!agent.isAlive()) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety +  "] has died at x:" + agent.x + " y:" + agent.y + " on tick " + this.tickId, 1);
 
@@ -374,6 +381,13 @@ Server.prototype.processDecisionMove = function (decision) {
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
 
+    if (decision.dir % 2) {
+        // straight direction
+        agent.updateSatietyWith(-2);
+    } else {
+        agent.updateSatietyWith(-3);
+    }
+
     if (tmpAgent && tmpAgent !== agent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (cell is occupied)", 4);
         agent.client.onNotification(Constants.ERROR_MOVE_CELL_OCCUPIED);
@@ -388,8 +402,6 @@ Server.prototype.processDecisionMove = function (decision) {
             agent.client.onNotification(Constants.ERROR_MOVE_IMPASSABLE_TERRAIN);
         }
     }
-
-    decision.isProcessed = true;
 };
 
 Server.prototype.processDecisionEatFood = function (decision) {
@@ -418,8 +430,6 @@ Server.prototype.processDecisionEatFood = function (decision) {
         // Remove food
         this.objects.splice(this.objects.indexOf(food), 1);
     }
-
-    decision.isProcessed = true;
 };
 
 Server.prototype.processDecisionAttack = function (decision) {
@@ -430,6 +440,13 @@ Server.prototype.processDecisionAttack = function (decision) {
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
+
+    if (decision.dir % 2) {
+        // straight direction
+        agent.updateSatietyWith(-5);
+    } else {
+        agent.updateSatietyWith(-6);
+    }
 
     if (!tmpAgent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (no agent in cell)", 4);
@@ -446,11 +463,12 @@ Server.prototype.processDecisionAttack = function (decision) {
             tmpAgent.name + "(" + tmpAgent.id + ") [" + tmpAgent.health + "/" + tmpAgent.satiety + "] on x:" +
             coords.x + " y:" + coords.y + " with damage: " + damage, 2);
     }
-
-    decision.isProcessed = true;
 };
 
 Server.prototype.processDecision = function (decision) {
+    decision.isProcessed = true;
+    decision.agent.lastDecision = decision;
+
     if (decision.action === Constants.ACTION_MOVE) {
         this.processDecisionMove(decision);
     } else if (decision.action === Constants.ACTION_ATTACK) {
@@ -503,7 +521,7 @@ Server.prototype.tick = function () {
     //this.printWorld();
 
     if (this.agents.length == 1) {
-        this.log("The one who lived: " + this.agents[0].class, 1);
+        this.log("The one who survived: " + this.agents[0].class, 1);
         this.initAgents();
     }
 
@@ -543,7 +561,7 @@ Server.prototype.getServerState = function() {
 
 Server.prototype.saveServerState = function () {
     var state = this.getServerState();
-    fs.writeFileSync("../var/state.json", JSON.stringify(state));
+//    fs.writeFileSync("../var/state.json", JSON.stringify(state));
 };
 
 Server.prototype.printWorld = function () {
