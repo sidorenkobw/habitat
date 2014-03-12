@@ -196,11 +196,10 @@ Server.prototype.getObjectsForEnvironmentByXY = function (agent, x, y, shift_x, 
 
     if (objects.length) {
         objects = _.map(objects, function (obj) {
-            return {
-                "class" : obj.class,
-                "x"     : shift_x,
-                "y"     : shift_y
-            };
+            obj = obj.toJson();
+            obj.x = shift_x;
+            obj.y = shift_y;
+            return obj;
         });
     }
 
@@ -407,7 +406,7 @@ Server.prototype.processDecisionMove = function (decision) {
 Server.prototype.processDecisionEatFood = function (decision) {
     var movementMap = this.map.getDirectionsMap(),
         agent = decision.agent,
-        relCoords, coords, food;
+        relCoords, coords, food, value;
 
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
@@ -422,13 +421,22 @@ Server.prototype.processDecisionEatFood = function (decision) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (stomach is full)", 4);
         agent.client.onNotification(Constants.ERROR_EAT_STOMACH_FULL);
     } else {
+        value = Constants.AGENT_EAT_AMOUNT;
+        if (food.richness < value) {
+            value = food.richness;
+        } else if ((agent.maxSatiety - agent.satiety) < value) {
+            value = agent.maxSatiety - agent.satiety;
+        }
+
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
-            + " satiety: (+" + food.richness + ")", 2);
+            + " satiety: (+" + value + ")", 2);
 
-        agent.satiety = (agent.satiety + food.richness > agent.maxSatiety) ? agent.maxSatiety : agent.satiety + food.richness;
-
-        // Remove food
-        this.objects.splice(this.objects.indexOf(food), 1);
+        agent.updateSatietyWith(value);
+        food.richness -= value;
+        if (food.richness < 1) {
+            // Remove food
+            this.objects.splice(this.objects.indexOf(food), 1);
+        }
     }
 };
 
@@ -550,11 +558,7 @@ Server.prototype.getServerState = function() {
     });
 
     state.objects = _.map(this.objects, function (obj) {
-        return {
-            "class" : obj.class,
-            "x"     : obj.x,
-            "y"     : obj.y
-        };
+        return obj.toJson();
     });
     return state;
 };

@@ -38,17 +38,19 @@ var Agent = function () {
 
 Agent.prototype.toJson = function () {
     return {
-        "id"            : this.id,
-        "class"         : this.class,
-        "client"        : this.client,
-        "name"          : this.name,
-        "author"        : this.author,
-        "x"             : this.x,
-        "y"             : this.y,
-        "health"        : this.health,
-        "maxHealth"     : this.maxHealth,
-        "satiety"       : this.satiety,
-        "maxSatiety"    : this.maxSatiety
+        "id"             : this.id,
+        "class"          : this.class,
+        "client"         : this.client,
+        "name"           : this.name,
+        "author"         : this.author,
+        "x"              : this.x,
+        "y"              : this.y,
+        "health"         : this.health,
+        "maxHealth"      : this.maxHealth,
+        "healthPercent"  : Math.round(this.health * 100 / this.maxHealth),
+        "satiety"        : this.satiety,
+        "maxSatiety"     : this.maxSatiety,
+        "satietyPercent" : Math.round(this.satiety * 100 / this.maxSatiety)
     };
 };
 

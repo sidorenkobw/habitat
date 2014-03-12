@@ -9,6 +9,8 @@ var constants = {
     "DIR_W"         : 7,
     "DIR_NW"        : 8,
 
+    "AGENT_EAT_AMOUNT" : 100,
+
     "ACTION_IDLE"   : 0,
     "ACTION_MOVE"   : 1,
     "ACTION_ATTACK" : 3,
