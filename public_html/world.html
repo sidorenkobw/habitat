@@ -121,6 +121,27 @@
                         var dx = tile.outerWidth(), dy = tile.outerHeight();
                         var dynamicObjects = [];
                         var mobs = {};
+                        var trackingMob = null;
+                        var trackMob = function(mobId) {
+                            if (trackingMob == mobId) {
+                                return true;
+                            }
+                            if (trackingMob && !_.isEmpty(mobs[trackingMob])) {
+                                mobs[trackingMob].removeClass('selected');
+                                trackingMob = null;
+                            }
+                            if (mobId && !_.isEmpty(mobs[mobId])) {
+                                mobs[mobId].addClass('selected');
+                                trackingMob = mobId;
+                                return true;
+                            }
+                            return false;
+                        }
+                        jQuery(document).keyup(function(event){
+                            if (event.keyCode == 27 && trackingMob) {
+                                trackMob(null);
+                            }
+                        });
                         var drawObjects = function() {
                             $.ajax('/state.json', {
                                 dataType : 'json',
@@ -137,6 +158,9 @@
                                         var nx = mob.x * dx, ny = mob.y * dy;
                                         if (_.isUndefined(mobs[mob.id])) {
                                             mobs[mob.id] = $(templateMob({o:mob}));
+                                            mobs[mob.id].on('click', function(){
+                                                trackMob(mob.id);
+                                            });
                                             mobs[mob.id].css('left', nx);
                                             mobs[mob.id].css('top', ny);
                                             map.append(mobs[mob.id]);
@@ -153,7 +177,20 @@
                                                 mobs[mob.id].animate({
                                                     left: nx,
                                                     top: ny
-                                                }, parseInt(tickInterval * 0.75));
+                                                }, {
+                                                    step: function() {
+                                                        if (trackingMob) {
+                                                            if (_.isEmpty(mobs[trackingMob])) {
+                                                                trackingMob = null;
+                                                            } else {
+                                                                var viewX = parseInt(-parseInt(mobs[trackingMob].css('left')) + (jQuery(window).width() / 2)),
+                                                                        viewY = parseInt(-parseInt(mobs[trackingMob].css('top')) + (jQuery(window).height() / 2));
+                                                                map.panzoom('pan', viewX, viewY);
+                                                            }
+                                                        }
+                                                    },
+                                                    duration: parseInt(tickInterval * 0.75)
+                                                });
                                             }
                                         }
                                         mobs[mob.id].find('.status').html(mob.health + ' / ' + mob.satiety);
@@ -173,6 +210,16 @@
                                         $('#tile-' + object.xy).append(object.el);
                                     });
                                     dynamicObjects = newObjects;
+                                    if (trackingMob) {
+                                        if (_.isEmpty(mobs[trackingMob])) {
+                                            trackingMob = null;
+                                        } else {
+                                            var viewX = parseInt(-parseInt(mobs[trackingMob].css('left')) + (jQuery(window).width() / 2)),
+                                                viewY = parseInt(-parseInt(mobs[trackingMob].css('top')) + (jQuery(window).height() / 2));
+                                            map.panzoom('pan', viewX, viewY);
+                                        }
+                                    }
+
                                     setTimeout(drawObjects, tickInterval-15);
                                 },
                                 error: function() {
