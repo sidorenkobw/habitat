@@ -469,7 +469,7 @@ var FoxelAgent = createClass({
             return el.class == 'agent';
         });
 
-        if (this.hungry || !!nearestAgent) {
+        if (this.hungry) {
             var foodItem = _.find(this.objectsAround, function(el) {
                 return (el.class == "food");
             });
