@@ -264,11 +264,14 @@ var FoxelAgent = createClass({
     memFood: null,
     objectsAround: null,
     hungry: false,
+    wounded: false,
     chaseStatus: null,
 
     forgetAfter: 300,
     hungerThreshold: 0.75,
     satietyThreshold: 0.85,
+    woundedThreshold: 0.3,
+    healthyThreshold: 0.9,
     maxChaseTime: 20,
 
     'getNearestUnknownCoords': function(pos) {
@@ -458,8 +461,18 @@ var FoxelAgent = createClass({
         var myTarget, direction, doPathShift = true;
         var pathSetTargets = [];
 
-        // Scan surrounding cells (all directions) for food and make decision to eat it if found
-        if (this.status.satiety < this.hungerThreshold * this.status.maxSatiety) {
+        // wounded
+        if (this.status.health < this.woundedThreshold * this.status.maxHealth) {
+            this.wounded = true;
+        } else if (this.status.health > this.healthyThreshold * this.status.maxHealth) {
+            this.wounded = false;
+        }
+
+        var needToRegenerate = this.wounded || this.status.health < this.healthyThreshold * this.status.maxHealth;
+        var canRegenerate    = this.status.satiety > 0.8*this.status.maxSatiety;
+
+        // hunger
+        if ((needToRegenerate && !canRegenerate) || this.status.satiety < this.hungerThreshold * this.status.maxSatiety) {
             this.hungry = true;
         } else if (this.status.satiety > this.satietyThreshold * this.status.maxSatiety) {
             this.hungry = false;
@@ -489,7 +502,7 @@ var FoxelAgent = createClass({
 
         if (nearestAgent) {
             var isEnemyClose = Math.abs(nearestAgent.x) <= 1 && Math.abs(nearestAgent.y) <= 1;
-            var isCombatAcceptable = (this.status.satiety/this.status.maxSatiety > 0.4) && (this.status.health >= nearestAgent.health * 0.85);
+            var isCombatAcceptable = !this.wounded && (this.status.satiety/this.status.maxSatiety > 0.4) && (this.status.health >= nearestAgent.health * 0.85);
             var isChaseAcceptable = (this.chaseStatus.enemy != nearestAgent.subClass) || this.chaseStatus.time < this.maxChaseTime;
 
             if (isCombatAcceptable) {
@@ -546,7 +559,9 @@ var FoxelAgent = createClass({
         myStep = movementMap[direction];
         myStepCell = this.memMap.get(this.myPos.x + myStep.x, this.myPos.y + myStep.y);
 
-        if (myStepCell && myStepCell.blocked) {
+        var stopMoving = (myStepCell && myStepCell.blocked) || (!nearestAgent && needToRegenerate && canRegenerate);
+
+        if (stopMoving) {
             direction = 0;
             doPathShift = false;
             this.myPath = [];
