@@ -611,62 +611,77 @@ body {
     background-position: -160px -560px;
 }
 /**************************/
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-8,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-8 {
     background-position: -200px 0;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-1,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-1 {
     background-position: -200px -40px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-9,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-9 {
     background-position: -200px -80px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-2,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-2 {
     background-position: -200px -120px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-10,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-10 {
     background-position: -200px -160px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-3,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-3 {
     background-position: -200px -200px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-11,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-11 {
     background-position: -200px -240px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-4,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-4 {
     background-position: -200px -280px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-12,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-12 {
     background-position: -200px -320px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-5,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-5 {
     background-position: -200px -360px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-13,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-13 {
     background-position: -200px -400px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-6,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-6 {
     background-position: -200px -440px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-14,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-14 {
     background-position: -200px -480px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-7,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-7 {
     background-position: -200px -520px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-2-5-15,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-15 {
     background-position: -200px -560px;
 }
