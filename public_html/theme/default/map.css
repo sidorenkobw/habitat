@@ -266,166 +266,212 @@ body {
 /**************************
  *  Transitions
  **************************/
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-8,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-8,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-8,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-8 {
     background-position: 0 0;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-1,
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-1,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-1,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-1,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-1 {
     background-position: 0 -40px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-9,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-9,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-9,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-9 {
     background-position: 0 -80px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-2,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-2,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-2,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-2 {
     background-position: 0 -120px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-10,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-10,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-10,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-10 {
     background-position: 0 -160px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-3,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-3,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-3,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-3 {
     background-position: 0 -200px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-11,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-11,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-11,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-11 {
     background-position: 0 -240px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-4,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-4,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-4,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-4 {
     background-position: 0 -280px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-12,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-12,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-12,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-12 {
     background-position: 0 -320px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-5,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-5,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-5,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-5 {
     background-position: 0 -360px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-13,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-13,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-13,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-13 {
     background-position: 0 -400px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-6,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-6,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-6,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-6 {
     background-position: 0 -440px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-14,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-14,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-14,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-14 {
     background-position: 0 -480px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-7,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-7,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-7,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-7 {
     background-position: 0 -520px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-2-15,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-15,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-15,
 .tiled-map .tiles-row .tile .tile-transition.side-0-1-15 {
     background-position: 0 -560px;
 }
 /**************************/
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-8,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-8,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-8,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-8 {
     background-position: -40px 0;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-1,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-1,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-1,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-1 {
     background-position: -40px -40px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-9,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-9,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-9,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-9 {
     background-position: -40px -80px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-2,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-2,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-2,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-2 {
     background-position: -40px -120px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-10,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-10,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-10,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-10 {
     background-position: -40px -160px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-3,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-3,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-3,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-3 {
     background-position: -40px -200px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-11,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-11,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-11,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-11 {
     background-position: -40px -240px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-4,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-4,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-4,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-4 {
     background-position: -40px -280px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-12,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-12,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-12,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-12 {
     background-position: -40px -320px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-5,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-5,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-5,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-5 {
     background-position: -40px -360px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-13,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-13,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-13,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-13 {
     background-position: -40px -400px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-6,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-6,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-6,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-6 {
     background-position: -40px -440px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-14,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-14,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-14,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-14 {
     background-position: -40px -480px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-7,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-7,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-7,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-7 {
     background-position: -40px -520px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-0-15,
+.tiled-map .tiles-row .tile .tile-transition.side-2-0-15,
 .tiled-map .tiles-row .tile .tile-transition.side-1-4-15,
 .tiled-map .tiles-row .tile .tile-transition.side-1-0-15 {
     background-position: -40px -560px;
@@ -611,78 +657,213 @@ body {
     background-position: -160px -560px;
 }
 /**************************/
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-8,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-8,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-8,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-8 {
     background-position: -200px 0;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-1,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-1,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-1,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-1 {
     background-position: -200px -40px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-9,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-9,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-9,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-9 {
     background-position: -200px -80px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-2,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-2,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-2,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-2 {
     background-position: -200px -120px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-10,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-10,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-10,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-10 {
     background-position: -200px -160px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-3,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-3,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-3,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-3 {
     background-position: -200px -200px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-11,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-11,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-11,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-11 {
     background-position: -200px -240px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-4,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-4,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-4,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-4 {
     background-position: -200px -280px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-12,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-12,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-12,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-12 {
     background-position: -200px -320px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-5,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-5,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-5,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-5 {
     background-position: -200px -360px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-13,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-13,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-13,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-13 {
     background-position: -200px -400px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-6,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-6,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-6,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-6 {
     background-position: -200px -440px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-14,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-14,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-14,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-14 {
     background-position: -200px -480px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-7,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-7,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-7,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-7 {
     background-position: -200px -520px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-3-5-15,
+.tiled-map .tiles-row .tile .tile-transition.side-3-1-15,
 .tiled-map .tiles-row .tile .tile-transition.side-2-5-15,
 .tiled-map .tiles-row .tile .tile-transition.side-2-1-15 {
     background-position: -200px -560px;
+}
+/**************************/
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-8,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-8,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-8,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-8 {
+    background-position: -240px 0;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-1,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-1,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-1,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-1 {
+    background-position: -240px -40px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-9,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-9,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-9,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-9 {
+    background-position: -240px -80px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-2,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-2,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-2,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-2 {
+    background-position: -240px -120px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-10,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-10,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-10,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-10 {
+    background-position: -240px -160px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-3,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-3,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-3,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-3 {
+    background-position: -240px -200px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-11,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-11,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-11,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-11 {
+    background-position: -240px -240px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-4,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-4,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-4,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-4 {
+    background-position: -240px -280px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-12,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-12,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-12,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-12 {
+    background-position: -240px -320px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-5,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-5,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-5,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-5 {
+    background-position: -240px -360px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-13,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-13,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-13,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-13 {
+    background-position: -240px -400px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-6,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-6,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-6,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-6 {
+    background-position: -240px -440px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-14,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-14,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-14,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-14 {
+    background-position: -240px -480px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-7,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-7,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-7,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-7 {
+    background-position: -240px -520px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-4-3-15,
+.tiled-map .tiles-row .tile .tile-transition.side-4-2-15,
+.tiled-map .tiles-row .tile .tile-transition.side-2-3-15,
+.tiled-map .tiles-row .tile .tile-transition.side-2-4-15 {
+    background-position: -240px -560px;
 }
 /**************************/
