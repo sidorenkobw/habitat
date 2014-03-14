@@ -52,7 +52,7 @@ body {
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 .mob.selected {
-    border: 1px dotted #666;
+    border: 1px dotted #cccccc;
     margin-top: -1px;
     margin-left: -1px;
 }
