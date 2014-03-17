@@ -3,14 +3,15 @@ var url  = require('url'),
     _    = require('underscore'),
     mime = require('mime'),
     http = require('http');
-
+var Constants = require('./constants');
+	
 var WebObserver = function(serverObject, port) {
     this.server = serverObject;
     this.port = port;
     this.staticDir = '../public_html';
     this.uriMap = {
         '^/state.json$' : this.processServerState,
-        '^/map.json$' : this.processServerMap,
+        '^/init.json$' : this.processServerInit,
         '^\\/?$' : function(request, response) {this.set302(response, '/world.html'); return true;},
         '^\\/.+$' : this.processStatic
     };
@@ -48,10 +49,12 @@ WebObserver.prototype.processServerState = function(request, response) {
     response.end();
     return true;
 };
-WebObserver.prototype.processServerMap = function(request, response) {
-    var map = this.server.map.getMap();
-    map.tickInterval = this.server.tickInterval;
-    var str = JSON.stringify(map);
+WebObserver.prototype.processServerInit = function(request, response) {
+    var str = JSON.stringify({
+		map: this.server.map.getMap(),
+		constants: Constants,
+		tickInterval: this.server.tickInterval
+	});
     response.writeHead(200, {'Content-Type':'text/javascript'})
     response.write(str, 'utf8');
     response.end();

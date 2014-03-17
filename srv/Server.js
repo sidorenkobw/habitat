@@ -12,9 +12,10 @@ var Server = function (agents, map) {
     this.tickId         = 0;
     this.map            = map;
     this.lastAgentId    = 0;
-    this.tickInterval   = 300;
+    this.tickInterval   = 500;
     this.objects        = [];
     this.displayLogs    = true;
+	this.agentsActions  = [];
 };
 
 Server.prototype.initLog = function () {
@@ -267,7 +268,7 @@ Server.prototype.updateAgentStatus = function (agent) {
 
     // Regeneration
     if (agent.lastDecision.action === Constants.ACTION_IDLE) {
-        if (agent.satiety > Math.floor(agent.maxSatiety * 0.8)) {
+        if (agent.satiety > Math.floor(agent.maxSatiety * Constants.balance.AGENT_SATIETY_LEVEL_REGENERATION)) {
             agent.health = agent.health + 1 > agent.maxHealth ? agent.maxHealth : agent.health + 1;
         }
     }
@@ -282,7 +283,7 @@ Server.prototype.updateAgentStatus = function (agent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety +  "] has died at x:" + agent.x + " y:" + agent.y + " on tick " + this.tickId, 1);
 
         // Create food instead of died agent
-        var food = Food.create(1000);
+        var food = Food.create(Constants.balance.AGENT_DEAD_BODY_SATIETY);
         food.setLocation(agent.x, agent.y);
         this.objects.push(food);
         this.log("Food with richness: " + food.richness + " was created instead of died agent at x:" + food.x + " y:" + food.y, 2);
@@ -382,12 +383,18 @@ Server.prototype.processDecisionMove = function (decision) {
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
-
+	var actionLogRecord = {
+			'tickId' : this.tickId,
+			'agentId' : agent.id,
+			'action' : Constants.ACTION_MOVE,
+			'result' : false,
+			'target' : coords,
+	};
     if (decision.dir % 2) {
         // straight direction
-        agent.updateSatietyWith(-2);
+        agent.updateSatietyWith(-Constants.balance.AGENT_MOVE_COST_STRAIGHT);
     } else {
-        agent.updateSatietyWith(-3);
+        agent.updateSatietyWith(-Constants.balance.AGENT_MOVE_COST_DIAGONAL);
     }
 
     if (tmpAgent && tmpAgent !== agent) {
@@ -399,24 +406,31 @@ Server.prototype.processDecisionMove = function (decision) {
             agent.y = coords.y;
 
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y + " dir:" + decision.dir, 2);
+			actionLogRecord.result = true;
         } else {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (impassible terrain)", 4);
             agent.client.onNotification(Constants.ERROR_MOVE_IMPASSABLE_TERRAIN);
         }
     }
+	this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecisionEatFood = function (decision) {
     var movementMap = this.map.getDirectionsMap(),
         agent = decision.agent,
         relCoords, coords, food, value;
-
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     food = _.first(_.filter(this.getObjectsByXY(coords.x, coords.y), function (obj) {
         return obj.class === "food";
     }));
-
+	var actionLogRecord = {
+			'tickId' : this.tickId,
+			'agentId' : agent.id,
+			'action' : Constants.ACTION_EAT,
+			'result' : false,
+			'target' : coords,
+	};
     if (!food) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (no food in cell)", 4);
         agent.client.onNotification(Constants.ERROR_EAT_NO_FOOD);
@@ -424,7 +438,7 @@ Server.prototype.processDecisionEatFood = function (decision) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (stomach is full)", 4);
         agent.client.onNotification(Constants.ERROR_EAT_STOMACH_FULL);
     } else {
-        value = Constants.AGENT_EAT_AMOUNT;
+        value = Constants.balance.AGENT_EAT_AMOUNT;
         if (food.richness < value) {
             value = food.richness;
         } else if ((agent.maxSatiety - agent.satiety) < value) {
@@ -440,7 +454,21 @@ Server.prototype.processDecisionEatFood = function (decision) {
             // Remove food
             this.objects.splice(this.objects.indexOf(food), 1);
         }
+		actionLogRecord.result = true;
     }
+	this.agentsActions.push(actionLogRecord);
+};
+
+Server.prototype.processDecisionIdle = function (decision) {
+	// TODO: Move regeneration here?
+	var actionLogRecord = {
+			'tickId' : this.tickId,
+			'agentId' : decision.agent.id,
+			'action' : Constants.ACTION_IDLE,
+			'result' : true,
+			'target' : {x : decision.agent.x, y : decision.agent.y},
+	};
+	this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecisionAttack = function (decision) {
@@ -451,20 +479,26 @@ Server.prototype.processDecisionAttack = function (decision) {
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
-
+	var actionLogRecord = {
+			'tickId' : this.tickId,
+			'agentId' : agent.id,
+			'action' : Constants.ACTION_ATTACK,
+			'result' : false,
+			'target' : coords,
+	};
     if (decision.dir % 2) {
         // straight direction
-        agent.updateSatietyWith(-5);
+        agent.updateSatietyWith(-Constants.balance.AGENT_ATTACK_COST_STRAIGHT);
     } else {
-        agent.updateSatietyWith(-6);
+        agent.updateSatietyWith(-Constants.balance.AGENT_ATTACK_COST_DIAGONAL);
     }
 
     if (!tmpAgent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (no agent in cell)", 4);
         agent.client.onNotification(Constants.ERROR_ATTACK_NO_AGENT);
     } else {
-        damage = Math.floor(Math.random() * 3);
-        if (agent.satiety > Math.floor(agent.maxSatiety * 0.2) && agent.satiety < Math.floor(agent.maxSatiety * 0.9)) {
+        damage = Math.floor(Math.random() * Constants.balance.AGENT_BASE_DAMAGE);
+        if (agent.satiety > Math.floor(agent.maxSatiety * Constants.balance.AGENT_HUNGRY_FACTOR) && agent.satiety < Math.floor(agent.maxSatiety * Constants.balance.AGENT_BLOATED_FACTOR)) {
             damage += 2;
         }
 
@@ -473,7 +507,9 @@ Server.prototype.processDecisionAttack = function (decision) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] attacked: " +
             tmpAgent.name + "(" + tmpAgent.id + ") [" + tmpAgent.health + "/" + tmpAgent.satiety + "] on x:" +
             coords.x + " y:" + coords.y + " with damage: " + damage, 2);
+		actionLogRecord.result = true;
     }
+	this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecision = function (decision) {
@@ -486,7 +522,9 @@ Server.prototype.processDecision = function (decision) {
         this.processDecisionAttack(decision);
     } else if (decision.action === Constants.ACTION_EAT) {
         this.processDecisionEatFood(decision);
-    }
+    } else if (decision.action === Constants.ACTION_IDLE) {
+		this.processDecisionIdle(decision);
+	}
 };
 
 Server.prototype.tick = function () {
@@ -497,7 +535,7 @@ Server.prototype.tick = function () {
     if (!(this.tickId % 100)) {
         this.generateFood();
     }
-
+	this.agentsActions = [];
     _.each(agents, function (agent) {
         try {
 
@@ -553,7 +591,7 @@ Server.prototype.getServerState = function() {
         "map"    : this.map.getMap(),
         "agents"  : [],
         "objects" : [],
-        "log"     : []
+        "log"     : this.agentsActions
     };
 
     state.agents = _.map(this.agents, function (agent) {

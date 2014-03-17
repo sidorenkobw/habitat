@@ -51,6 +51,9 @@
         <div class="healthbar" style="width: <%= Math.ceil(o.health * 100 / o.maxHealth) %>%"></div>
         <div class="satietybar" style="width: <%= Math.ceil(o.satiety * 100 / o.maxSatiety) %>%"></div>
     </script>
+	<script type="text/template" id="template-mob-action">
+		<div class="action type-<%= action %>"></div>
+	</script>
     <script type="text/template" id="template-object">
         <div class="object model-<%= o.class %>-<%= o.maxRichness >= 1000 ? 2 : 1%> <% if (o.class == 'food') { %> eaten-<%= Math.ceil((o.richness * 100 / o.maxRichness) / 10) %><% } %>"></div>
     </script>
@@ -61,20 +64,22 @@
         require(
             ['jquery', 'underscore', 'jquery.panzoom'],
             function($, _) {
-                $.ajax('/map.json', {
+                $.ajax('/init.json', {
                     dataType : 'json',
                     success: function(data) {
                         var templateMap = _.template($('#template-map').html()),
                             templateMob = _.template($('#template-mob').html()),
                             templateMobStatus = _.template($('#template-mob-status').html()),
+							templateMobAction = _.template($('#template-mob-action').html())
                             templateObj = _.template($('#template-object').html());
                         var tMap = {
                             s : [[0, -1], [1, 0], [0, 1], [-1, 0]],
                             c : [[ 1, -1,  3], [ 1,  1,  6], [-1,  1, 12], [-1, -1,  9]]
                         };
                         var map = $('#map');
+						var Constants = data.constants;
                         map.html(templateMap({
-                            data: data,
+                            data: data.map,
                             trans: function(map, x, y) {
                                 var
                                     ct = map[y][x],
@@ -122,6 +127,7 @@
                         map.css('height', map.outerHeight());
                         map.panzoom({contain:false});
                         var tickInterval = data.tickInterval;
+						var animationDuration = parseInt(tickInterval * 0.75);
                         var tile = map.find('.tile').first();
                         var dx = tile.outerWidth(), dy = tile.outerHeight();
                         var dynamicObjects = [];
@@ -147,17 +153,40 @@
                                 trackMob(null);
                             }
                         });
+
                         var drawObjects = function() {
                             $.ajax('/state.json', {
                                 dataType : 'json',
                                 success: function(data) {
                                     var newObjects = [];
+									var animationDuration = parseInt(tickInterval * 0.75);
                                     _.each(data['objects'], function(object) {
                                         newObjects.push({
                                             xy : object.x + 'x' + object.y,
                                             el : $(templateObj({o:object}))
                                         });
                                     });
+									_.each(data['log'], function(log){
+										var actionEl, animation;
+										if (log.result) {
+											if (log.action == Constants.ACTION_IDLE || log.action == Constants.ACTION_ATTACK) {
+												actionEl = $(templateMobAction(log));
+												actionEl.css('left', log.target.x * dx);
+												actionEl.css('top', log.target.y * dy);
+												animation = log.action == Constants.ACTION_IDLE ? {top:'-=10px'} : {top: "+=5px",left:'-=10px',opacity:0.3};
+												actionEl.animate(animation, {
+													duration: animationDuration,
+													start: function(){
+														map.append(actionEl);
+													},
+													always: function() {
+														actionEl.detach();
+													}
+												});
+											}
+										} else {
+										}
+									});
                                     var aliveMobs = {};
                                     _.each(data['agents'], function(mob) {
                                         var nx = mob.x * dx, ny = mob.y * dy;
@@ -194,7 +223,7 @@
                                                             }
                                                         }
                                                     },
-                                                    duration: parseInt(tickInterval * 0.75)
+                                                    duration: animationDuration
                                                 });
                                             }
                                         }

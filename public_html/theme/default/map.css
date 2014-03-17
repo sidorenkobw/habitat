@@ -69,6 +69,22 @@ body {
     margin-left: -1px;
 }
 /**************************
+ *  Actions
+ **************************/
+ .action {
+    position: absolute;
+	background-image: url('actions.gif');
+	width: 40px;
+	height: 40px;
+ }
+ .action.type-0 {
+	background-position: 0 0;
+	margin-top: -20px;
+ }
+ .action.type-3 {
+	background-position: 0 -40px;
+ }
+/**************************
  *  Mobs
  **************************/
 .mob.model-1 ,

@@ -9,8 +9,6 @@ var constants = {
     "DIR_W"         : 7,
     "DIR_NW"        : 8,
 
-    "AGENT_EAT_AMOUNT" : 100,
-
     "ACTION_IDLE"   : 0,
     "ACTION_MOVE"   : 1,
     "ACTION_ATTACK" : 3,
@@ -24,7 +22,24 @@ var constants = {
     "ERROR_ATTACK_NO_AGENT"         : 31,
 
     "ERROR_EAT_NO_FOOD"             : 41,
-    "ERROR_EAT_STOMACH_FULL"        : 42
+    "ERROR_EAT_STOMACH_FULL"        : 42,
+	
+	balance: {
+		"AGENT_EAT_AMOUNT" : 100,
+		"AGENT_BLOATED_FACTOR": 0.9,
+		"AGENT_HUNGRY_FACTOR": 0.2,
+		"AGENT_SATIETY_LEVEL_REGENERATION": 0.8,
+		
+		"AGENT_DEAD_BODY_SATIETY": 1000,
+		
+		"AGENT_MOVE_COST_STRAIGHT": 2,
+		"AGENT_MOVE_COST_DIAGONAL": 3,
+		
+		"AGENT_ATTACK_COST_STRAIGHT" : 5,
+		"AGENT_ATTACK_COST_DIAGONAL": 6,
+		
+		"AGENT_BASE_DAMAGE": 3
+	}
 };
 
 module.exports = Object.freeze(constants);
