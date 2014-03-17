@@ -105,8 +105,11 @@ Server.prototype.instantiateAgent = function (agentData) {
     return agent;
 };
 
-Server.prototype.initAgents = function () {
-    this.agents = [];
+Server.prototype.initAgents = function (resetAgents) {
+    if (resetAgents) {
+        this.lastAgentId = 0;
+        this.agents = [];
+    }
 
     var agent;
 
@@ -530,7 +533,7 @@ Server.prototype.tick = function () {
 
     if (this.agents.length == 1) {
         this.log("The one who survived: " + this.agents[0].class, 1);
-        this.initAgents();
+        this.initAgents(false);
     }
 
     if (!this.agents.length) {
@@ -596,7 +599,7 @@ Server.prototype.run = function () {
 
     this.log("Server started", 1);
 
-    this.initAgents();
+    this.initAgents(true);
     this.initFood();
 
     var self = this;
