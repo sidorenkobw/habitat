@@ -136,7 +136,7 @@ Server.prototype.generateFood = function () {
 
     do {
         coords = this.getRandomLocation();
-    } while (!_.contains([1, 9, 10, 11, 12, 15, 16, 17, 18], this.map.getTerrainTypeByXY(coords.x, coords.y)));
+    } while (!_.contains([1, 2, 3], this.map.getTerrainTypeByXY(coords.x, coords.y)));
 
     food = Food.create(Math.floor(Math.random() * 300) + 100);
     food.setLocation(coords.x, coords.y);
