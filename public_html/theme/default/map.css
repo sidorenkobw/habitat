@@ -312,6 +312,7 @@ body {
 /**************************
  *  Transitions
  **************************/
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-8,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-8,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-8,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-8,
@@ -327,6 +328,7 @@ body {
     background-position: 0 -40px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-9,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-9,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-9,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-9,
@@ -334,6 +336,7 @@ body {
     background-position: 0 -80px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-2,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-2,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-2,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-2,
@@ -341,6 +344,7 @@ body {
     background-position: 0 -120px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-10,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-10,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-10,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-10,
@@ -348,6 +352,7 @@ body {
     background-position: 0 -160px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-3,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-3,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-3,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-3,
@@ -355,6 +360,7 @@ body {
     background-position: 0 -200px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-11,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-11,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-11,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-11,
@@ -362,6 +368,7 @@ body {
     background-position: 0 -240px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-4,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-4,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-4,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-4,
@@ -369,6 +376,7 @@ body {
     background-position: 0 -280px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-12,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-12,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-12,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-12,
@@ -376,6 +384,7 @@ body {
     background-position: 0 -320px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-5,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-5,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-5,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-5,
@@ -383,6 +392,7 @@ body {
     background-position: 0 -360px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-13,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-13,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-13,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-13,
@@ -390,6 +400,7 @@ body {
     background-position: 0 -400px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-6,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-6,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-6,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-6,
@@ -397,6 +408,7 @@ body {
     background-position: 0 -440px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-14,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-14,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-14,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-14,
@@ -404,6 +416,7 @@ body {
     background-position: 0 -480px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-7,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-7,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-7,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-7,
@@ -411,6 +424,7 @@ body {
     background-position: 0 -520px;
 }
 
+.tiled-map .tiles-row .tile .tile-transition.side-0-3-15,
 .tiled-map .tiles-row .tile .tile-transition.side-0-2-15,
 .tiled-map .tiles-row .tile .tile-transition.side-4-5-15,
 .tiled-map .tiles-row .tile .tile-transition.side-4-1-15,
