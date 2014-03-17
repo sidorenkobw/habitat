@@ -119,22 +119,43 @@ body {
     position: absolute;
     background-image: url('/img/map/39.gif');
 }
-.object.model-food-0 {
-    background-image: url('/img/objects/food-0.gif');
-}
 .object.model-food-1 {
-    background-image: url('/img/objects/food-1.gif');
+    background-image: url('food/apple.gif');
 }
 .object.model-food-2 {
-    background-image: url('/img/objects/food-2.gif');
-}
-.object.model-food-3 {
-    background-image: url('/img/objects/food-3.gif');
-}
-.object.model-food-4 {
-    background-image: url('/img/objects/food-4.gif');
+    background-image: url('food/ham.gif');
 }
 
+.object.eaten-10 {
+    background-position: 0 0;
+}
+.object.eaten-9 {
+    background-position: 0 -40px;
+}
+.object.eaten-8 {
+    background-position: 0 -80px;
+}
+.object.eaten-7 {
+    background-position: 0 -120px;
+}
+.object.eaten-6 {
+    background-position: 0 -160px;
+}
+.object.eaten-5 {
+    background-position: 0 -200px;
+}
+.object.eaten-4 {
+    background-position: 0 -240px;
+}
+.object.eaten-3 {
+    background-position: 0 -280px;
+}
+.object.eaten-2 {
+    background-position: 0 -320px;
+}
+.object.eaten-1 {
+    background-position: 0 -360px;
+}
 /**************************
  *  Tiles
  **************************/
@@ -865,5 +886,65 @@ body {
 .tiled-map .tiles-row .tile .tile-transition.side-2-3-15,
 .tiled-map .tiles-row .tile .tile-transition.side-2-4-15 {
     background-position: -240px -560px;
+}
+/**************************/
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-8 {
+    background-position: -280px 0;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-1 {
+    background-position: -280px -40px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-9 {
+    background-position: -280px -80px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-2 {
+    background-position: -280px -120px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-10 {
+    background-position: -280px -160px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-3 {
+    background-position: -280px -200px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-11 {
+    background-position: -280px -240px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-4 {
+    background-position: -280px -280px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-12 {
+    background-position: -280px -320px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-5 {
+    background-position: -280px -360px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-13 {
+    background-position: -280px -400px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-6 {
+    background-position: -280px -440px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-14 {
+    background-position: -280px -480px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-7 {
+    background-position: -280px -520px;
+}
+
+.tiled-map .tiles-row .tile .tile-transition.side-0-4-15 {
+    background-position: -280px -560px;
 }
 /**************************/

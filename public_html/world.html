@@ -48,7 +48,7 @@
         <div class="mob model-<%= Math.round(Math.random()*2 + 1) %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
     </script>
     <script type="text/template" id="template-object">
-        <div class="object model-<%= o.class %>-<%= (o.x + o.y) % 5 %>"></div>
+        <div class="object model-<%= o.class %>-<%= o.maxRichness > 1000 ? 2 : 1%> <% if (o.class == 'food') { %> eaten-<%= Math.round((o.richness * 100 / o.maxRichness) / 10) %><% } %>"></div>
     </script>
     <script type="text/javascript">
         require.config({
