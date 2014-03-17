@@ -1,6 +1,6 @@
 body {
 	overflow: hidden;
-	background-color: black;
+	background-color: #01033b;
 }
 .tiled-map {
 
@@ -159,6 +159,31 @@ body {
 /**************************
  *  Tiles
  **************************/
+.tiled-map .tiles-row .tile.tile-0,
+.tiled-map .tiles-row .tile.tile-0.var-1 {
+    background-position: 0px 0;
+}
+.tiled-map .tiles-row .tile.tile-0.var-2 {
+    background-position: 0px -40px;
+}
+.tiled-map .tiles-row .tile.tile-0.var-3 {
+    background-position: 0px -80px;
+}
+.tiled-map .tiles-row .tile.tile-0.var-4 {
+    background-position: 0px -120px;
+}
+.tiled-map .tiles-row .tile.tile-0.var-5 {
+    background-position: 0px -160px;
+}
+.tiled-map .tiles-row .tile.tile-0.var-6 {
+    background-position: 0px -200px;
+}
+.tiled-map .tiles-row .tile.tile-0.var-7 {
+    background-position: 0px -240px;
+}
+.tiled-map .tiles-row .tile.tile-0.var-8 {
+    background-position: 0px -280px;
+}
 .tiled-map .tiles-row .tile.tile-1,
 .tiled-map .tiles-row .tile.tile-1.var-1 {
     background-position: -40px 0;
