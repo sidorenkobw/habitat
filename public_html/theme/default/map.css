@@ -117,7 +117,6 @@ body {
     width: 40px;
     height: 40px;
     position: absolute;
-    background-image: url('/img/map/39.gif');
 }
 .object.model-food-1 {
     background-image: url('food/apple.gif');
@@ -161,28 +160,28 @@ body {
  **************************/
 .tiled-map .tiles-row .tile.tile-0,
 .tiled-map .tiles-row .tile.tile-0.var-1 {
-    background-position: 0px 0;
+    background-position: 0 0;
 }
 .tiled-map .tiles-row .tile.tile-0.var-2 {
-    background-position: 0px -40px;
+    background-position: 0 -40px;
 }
 .tiled-map .tiles-row .tile.tile-0.var-3 {
-    background-position: 0px -80px;
+    background-position: 0 -80px;
 }
 .tiled-map .tiles-row .tile.tile-0.var-4 {
-    background-position: 0px -120px;
+    background-position: 0 -120px;
 }
 .tiled-map .tiles-row .tile.tile-0.var-5 {
-    background-position: 0px -160px;
+    background-position: 0 -160px;
 }
 .tiled-map .tiles-row .tile.tile-0.var-6 {
-    background-position: 0px -200px;
+    background-position: 0 -200px;
 }
 .tiled-map .tiles-row .tile.tile-0.var-7 {
-    background-position: 0px -240px;
+    background-position: 0 -240px;
 }
 .tiled-map .tiles-row .tile.tile-0.var-8 {
-    background-position: 0px -280px;
+    background-position: 0 -280px;
 }
 .tiled-map .tiles-row .tile.tile-1,
 .tiled-map .tiles-row .tile.tile-1.var-1 {
