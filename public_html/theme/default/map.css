@@ -40,16 +40,28 @@ body {
     margin-top: -10px;
     margin-left: -40px;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    z-index: 10;
 }
 .mob .status {
     position: absolute;
-    color: white;
-    font-size: 9px;
-    width: 50px;
+    border: 1px solid #444;
+    height: 5px;
+    width: 40px;
     text-align: center;
     margin-top: 35px;
-    margin-left: -5px;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    margin-left: 0;
+    background-color: #666;
+    padding: 1px;
+    z-index: 5;
+}
+.mob .status .healthbar {
+    height: 2px;
+    background-color: #ff1111;
+    margin-bottom: 1px;
+}
+.mob .status .satietybar {
+    height: 2px;
+    background-color: #ffff66;
 }
 .mob.selected {
     border: 1px dotted #cccccc;

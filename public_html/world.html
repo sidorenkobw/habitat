@@ -47,6 +47,10 @@
     <script type="text/template" id="template-mob">
         <div class="mob model-<%= Math.round(Math.random()*2 + 1) %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
     </script>
+    <script type="text/template" id="template-mob-status">
+        <div class="healthbar" style="width: <%= Math.ceil(o.health * 100 / o.maxHealth) %>%"></div>
+        <div class="satietybar" style="width: <%= Math.ceil(o.satiety * 100 / o.maxSatiety) %>%"></div>
+    </script>
     <script type="text/template" id="template-object">
         <div class="object model-<%= o.class %>-<%= o.maxRichness >= 1000 ? 2 : 1%> <% if (o.class == 'food') { %> eaten-<%= Math.ceil((o.richness * 100 / o.maxRichness) / 10) %><% } %>"></div>
     </script>
@@ -62,6 +66,7 @@
                     success: function(data) {
                         var templateMap = _.template($('#template-map').html()),
                             templateMob = _.template($('#template-mob').html()),
+                            templateMobStatus = _.template($('#template-mob-status').html()),
                             templateObj = _.template($('#template-object').html());
                         var tMap = {
                             s : [[0, -1], [1, 0], [0, 1], [-1, 0]],
@@ -193,7 +198,7 @@
                                                 });
                                             }
                                         }
-                                        mobs[mob.id].find('.status').html(mob.health + ' / ' + mob.satiety);
+                                        mobs[mob.id].find('.status').html(templateMobStatus({o:mob}));
                                         aliveMobs[mob.id] = 1;
                                     });
                                     _.each(mobs, function(mob, id){
