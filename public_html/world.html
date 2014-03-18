@@ -29,11 +29,11 @@
                     for(tt = 0, tl = tr.length; tt < tl; tt++) {
                         if (tr[tt]) {
                             if(tr[tt][0]) {
-                                %><div class="tile-transition side-<%= tile %>-<%= tt %>-<%= tr[tt][0] %>"></div><%
+                                %><div class="transition type-<%= tile %>-<%= tt %> side-<%= tr[tt][0] %>"></div><%
                             }
-                            if(tr[tt][1]) {
-                                %><div class="tile-transition corner-<%= tile %>-<%= tt %>-<%= tr[tt][1] %>"></div><%
-                            }
+                            /* if(tr[tt][1]) {
+                                %><div class="transition corner-<%= tile %>-<%= tt %>-<%= tr[tt][1] %>"></div><%
+                            } */
                         }
                     }
                     %></div><%
