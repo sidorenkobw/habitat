@@ -1,21 +1,21 @@
-var util  = require("util"),
-    _     = require("underscore"),
-    fs    = require("fs");
+var util = require("util"),
+    _ = require("underscore"),
+    fs = require("fs");
 
 var Agent = require("./Agent"),
-    Food  = require("./Food"),
+    Food = require("./Food"),
     Constants = require("./constants");
 
 var Server = function (agents, map) {
-    this.agentsClasses  = agents;
-    this.agents         = [];
-    this.tickId         = 0;
-    this.map            = map;
-    this.lastAgentId    = 0;
-    this.tickInterval   = 500;
-    this.objects        = [];
-    this.displayLogs    = true;
-	this.agentsActions  = [];
+    this.agentsClasses = agents;
+    this.agents = [];
+    this.tickId = 0;
+    this.map = map;
+    this.lastAgentId = 0;
+    this.tickInterval = 500;
+    this.objects = [];
+    this.displayLogs = true;
+    this.agentsActions = [];
 };
 
 Server.prototype.initLog = function () {
@@ -38,15 +38,15 @@ Server.prototype.stop = function () {
 
 Server.prototype.getRandomLocation = function () {
     return {
-        "x" : Math.floor(Math.random() * this.map.width),
-        "y" : Math.floor(Math.random() * this.map.height)
+        "x": Math.floor(Math.random() * this.map.width),
+        "y": Math.floor(Math.random() * this.map.height)
     };
 };
 
 Server.prototype.instantiateAgent = function (agentData) {
     var agentModule, params, agent, agentClient, agentIntroduction, coords;
     agentModule = agentData.module;
-    params      = agentData.params;
+    params = agentData.params;
 
     if (!("agentClass" in agentModule)) {
         throw new Error("exports.agentClass not found");
@@ -87,12 +87,12 @@ Server.prototype.instantiateAgent = function (agentData) {
         throw new Error("Agent has no method onNotification");
     }
 
-    agent           = Agent.create();
-    agent.id        = ++this.lastAgentId;
-    agent.class     = agentData.class;
-    agent.client    = agentClient;
-    agent.name      = agentIntroduction.name;
-    agent.author    = agentIntroduction.author;
+    agent = Agent.create();
+    agent.id = ++this.lastAgentId;
+    agent.class = agentData.class;
+    agent.client = agentClient;
+    agent.name = agentIntroduction.name;
+    agent.author = agentIntroduction.author;
 
     do {
         coords = this.getRandomLocation();
@@ -175,12 +175,12 @@ Server.prototype.getAgentForEnvironmentByXY = function (agent, x, y, shift_x, sh
     // Exclude current agents from agents list
     if (tmpAgent && tmpAgent !== agent) {
         agentObj = {
-            "class"     : "agent",
-            "subClass"  : tmpAgent.class,
-            "health"    : tmpAgent.health,
-            "maxHealth" : tmpAgent.maxHealth,
-            "x"         : shift_x,
-            "y"         : shift_y
+            "class": "agent",
+            "subClass": tmpAgent.class,
+            "health": tmpAgent.health,
+            "maxHealth": tmpAgent.maxHealth,
+            "x": shift_x,
+            "y": shift_y
         };
 
         return agentObj;
@@ -210,18 +210,17 @@ Server.prototype.getObjectsForEnvironmentByXY = function (agent, x, y, shift_x, 
     return objects;
 }
 
-Server.prototype.getEnvironmentForAgent = function(agent)
-{
+Server.prototype.getEnvironmentForAgent = function (agent) {
     var radius = 4, env, coords, terrain, row, agentObj, objects, shift_x, shift_y;
     env = {
-        "map"       : [],
-        "objects"   : []
+        "map": [],
+        "objects": []
     };
 
-    for (shift_y = -radius ; shift_y < radius + 1 ; shift_y++) {
+    for (shift_y = -radius; shift_y < radius + 1; shift_y++) {
         row = [];
 
-        for (shift_x = -radius ; shift_x < radius + 1 ; shift_x++) {
+        for (shift_x = -radius; shift_x < radius + 1; shift_x++) {
             coords = this.map.getXYByRel(agent.x, agent.y, shift_x, shift_y);
             terrain = this.map.getTerrainTypeByXY(coords.x, coords.y);
 
@@ -246,11 +245,11 @@ Server.prototype.getEnvironmentForAgent = function(agent)
 
 Server.prototype.getAgentStatus = function (agent) {
     var status = {
-        "health"        : agent.health,
-        "maxHealth"     : agent.maxHealth,
-        "satiety"       : agent.satiety,
-        "maxSatiety"    : agent.maxSatiety,
-        "environment"   : this.getEnvironmentForAgent(agent)
+        "health": agent.health,
+        "maxHealth": agent.maxHealth,
+        "satiety": agent.satiety,
+        "maxSatiety": agent.maxSatiety,
+        "environment": this.getEnvironmentForAgent(agent)
     };
 
 //    if (agent.id == 1) {
@@ -280,7 +279,7 @@ Server.prototype.updateAgentStatus = function (agent) {
 
     // Death
     if (!agent.isAlive()) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety +  "] has died at x:" + agent.x + " y:" + agent.y + " on tick " + this.tickId, 1);
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] has died at x:" + agent.x + " y:" + agent.y + " on tick " + this.tickId, 1);
 
         // Create food instead of died agent
         var food = Food.create(Constants.balance.AGENT_DEAD_BODY_SATIETY);
@@ -295,8 +294,8 @@ Server.prototype.updateAgentStatus = function (agent) {
 
 Server.prototype.getEmptyDecision = function () {
     return {
-        "isProcessed" : false,
-        "action" : Constants.ACTION_IDLE
+        "isProcessed": false,
+        "action": Constants.ACTION_IDLE
     };
 };
 
@@ -332,9 +331,9 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to go to " + decision.dir, 3);
 
             return {
-                "isProcessed"   : false,
-                "action"        : Constants.ACTION_MOVE,
-                "dir"           : decision.dir
+                "isProcessed": false,
+                "action": Constants.ACTION_MOVE,
+                "dir": decision.dir
             };
 
         } else if (decision.action === 2) { // Reserved
@@ -348,9 +347,9 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to attack in direction: " + decision.dir, 3);
 
             return {
-                "isProcessed"   : false,
-                "action"        : Constants.ACTION_ATTACK,
-                "dir"           : decision.dir
+                "isProcessed": false,
+                "action": Constants.ACTION_ATTACK,
+                "dir": decision.dir
             };
 
         } else if (decision.action === Constants.ACTION_EAT) {
@@ -359,9 +358,9 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to eat food from " + decision.dir, 3);
 
             return {
-                "isProcessed"   : false,
-                "action"        : Constants.ACTION_EAT,
-                "dir"           : decision.dir
+                "isProcessed": false,
+                "action": Constants.ACTION_EAT,
+                "dir": decision.dir
             };
 
         } else {
@@ -383,13 +382,14 @@ Server.prototype.processDecisionMove = function (decision) {
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
-	var actionLogRecord = {
-			'tickId' : this.tickId,
-			'agentId' : agent.id,
-			'action' : Constants.ACTION_MOVE,
-			'result' : false,
-			'target' : coords,
-	};
+    var actionLogRecord = {
+        'tickId': this.tickId,
+        'agentId': agent.id,
+        'action': Constants.ACTION_MOVE,
+        'result': false,
+        'target': coords,
+        'source': {x: agent.x, y: agent.y}
+    };
     if (decision.dir % 2) {
         // straight direction
         agent.updateSatietyWith(-Constants.balance.AGENT_MOVE_COST_STRAIGHT);
@@ -406,13 +406,13 @@ Server.prototype.processDecisionMove = function (decision) {
             agent.y = coords.y;
 
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y + " dir:" + decision.dir, 2);
-			actionLogRecord.result = true;
+            actionLogRecord.result = true;
         } else {
             this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (impassible terrain)", 4);
             agent.client.onNotification(Constants.ERROR_MOVE_IMPASSABLE_TERRAIN);
         }
     }
-	this.agentsActions.push(actionLogRecord);
+    this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecisionEatFood = function (decision) {
@@ -424,13 +424,14 @@ Server.prototype.processDecisionEatFood = function (decision) {
     food = _.first(_.filter(this.getObjectsByXY(coords.x, coords.y), function (obj) {
         return obj.class === "food";
     }));
-	var actionLogRecord = {
-			'tickId' : this.tickId,
-			'agentId' : agent.id,
-			'action' : Constants.ACTION_EAT,
-			'result' : false,
-			'target' : coords,
-	};
+    var actionLogRecord = {
+        'tickId': this.tickId,
+        'agentId': agent.id,
+        'action': Constants.ACTION_EAT,
+        'result': false,
+        'target': coords,
+        'source': {x: agent.x, y: agent.y}
+    };
     if (!food) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (no food in cell)", 4);
         agent.client.onNotification(Constants.ERROR_EAT_NO_FOOD);
@@ -454,21 +455,22 @@ Server.prototype.processDecisionEatFood = function (decision) {
             // Remove food
             this.objects.splice(this.objects.indexOf(food), 1);
         }
-		actionLogRecord.result = true;
+        actionLogRecord.result = true;
     }
-	this.agentsActions.push(actionLogRecord);
+    this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecisionIdle = function (decision) {
-	// TODO: Move regeneration here?
-	var actionLogRecord = {
-			'tickId' : this.tickId,
-			'agentId' : decision.agent.id,
-			'action' : Constants.ACTION_IDLE,
-			'result' : true,
-			'target' : {x : decision.agent.x, y : decision.agent.y},
-	};
-	this.agentsActions.push(actionLogRecord);
+    // TODO: Move regeneration here?
+    var actionLogRecord = {
+        'tickId': this.tickId,
+        'agentId': decision.agent.id,
+        'action': Constants.ACTION_IDLE,
+        'result': true,
+        'target': {x: decision.agent.x, y: decision.agent.y},
+        'source': {x: decision.agent.x, y: decision.agent.y}
+    };
+    this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecisionAttack = function (decision) {
@@ -479,13 +481,14 @@ Server.prototype.processDecisionAttack = function (decision) {
     relCoords = movementMap[decision.dir];
     coords = this.map.getXYByRel(agent.x, agent.y, relCoords.x, relCoords.y);
     tmpAgent = this.getAgentByXY(coords.x, coords.y);
-	var actionLogRecord = {
-			'tickId' : this.tickId,
-			'agentId' : agent.id,
-			'action' : Constants.ACTION_ATTACK,
-			'result' : false,
-			'target' : coords,
-	};
+    var actionLogRecord = {
+        'tickId': this.tickId,
+        'agentId': agent.id,
+        'action': Constants.ACTION_ATTACK,
+        'result': false,
+        'target': coords,
+        'source': {x: agent.x, y: agent.y}
+    };
     if (decision.dir % 2) {
         // straight direction
         agent.updateSatietyWith(-Constants.balance.AGENT_ATTACK_COST_STRAIGHT);
@@ -507,9 +510,9 @@ Server.prototype.processDecisionAttack = function (decision) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] attacked: " +
             tmpAgent.name + "(" + tmpAgent.id + ") [" + tmpAgent.health + "/" + tmpAgent.satiety + "] on x:" +
             coords.x + " y:" + coords.y + " with damage: " + damage, 2);
-		actionLogRecord.result = true;
+        actionLogRecord.result = true;
     }
-	this.agentsActions.push(actionLogRecord);
+    this.agentsActions.push(actionLogRecord);
 };
 
 Server.prototype.processDecision = function (decision) {
@@ -523,8 +526,8 @@ Server.prototype.processDecision = function (decision) {
     } else if (decision.action === Constants.ACTION_EAT) {
         this.processDecisionEatFood(decision);
     } else if (decision.action === Constants.ACTION_IDLE) {
-		this.processDecisionIdle(decision);
-	}
+        this.processDecisionIdle(decision);
+    }
 };
 
 Server.prototype.tick = function () {
@@ -535,7 +538,7 @@ Server.prototype.tick = function () {
     if (!(this.tickId % 100)) {
         this.generateFood();
     }
-	this.agentsActions = [];
+    this.agentsActions = [];
     _.each(agents, function (agent) {
         try {
 
@@ -585,13 +588,13 @@ Server.prototype.tick = function () {
     }, this.tickInterval);
 };
 
-Server.prototype.getServerState = function() {
+Server.prototype.getServerState = function () {
     var state = {
-        "tickId" : this.tickId,
-        "map"    : this.map.getMap(),
-        "agents"  : [],
-        "objects" : [],
-        "log"     : this.agentsActions
+        "tickId": this.tickId,
+        "map": this.map.getMap(),
+        "agents": [],
+        "objects": [],
+        "log": this.agentsActions
     };
 
     state.agents = _.map(this.agents, function (agent) {
@@ -611,22 +614,22 @@ Server.prototype.saveServerState = function () {
 
 Server.prototype.printWorld = function () {
     process.stdout.write("\n");
-    process.stdout.write(""+this.tickId);
+    process.stdout.write("" + this.tickId);
     process.stdout.write("\n");
-    for (var y = 0 ; y < this.map.height ; y++) {
-        for (var x = 0 ; x < this.map.width ; x++) {
+    for (var y = 0; y < this.map.height; y++) {
+        for (var x = 0; x < this.map.width; x++) {
             if (this.getAgentByXY(x, y)) {
                 process.stdout.write("@");
             } else if (this.getObjectsByXY(x, y).length) {
                 process.stdout.write("#");
             } else {
-                process.stdout.write(_.contains([1,2,3,5,6,7,8,9,10,11,12,14,15,16,17,18,35], this.map.getTerrainTypeByXY(x, y)) ? " " : ".");
+                process.stdout.write(_.contains([1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 35], this.map.getTerrainTypeByXY(x, y)) ? " " : ".");
             }
         }
         process.stdout.write("\n");
     }
 
-    for (var x = 0 ; x < this.map.width ; x++) {
+    for (var x = 0; x < this.map.width; x++) {
         process.stdout.write("-");
     }
     process.stdout.write("\n");

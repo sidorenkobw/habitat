@@ -71,6 +71,11 @@ body {
  .action.type-3 {
 	background-position: 0 -40px;
  }
+.action.type-err {
+    margin-top: -25px;
+    margin-left: 10px;
+    background-position: 0 -80px;
+}
 /**************************
  *  Mobs
  **************************/
