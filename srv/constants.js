@@ -20,6 +20,7 @@ var constants = {
     "ERROR_MOVE_CELL_OCCUPIED"      : 22,
 
     "ERROR_ATTACK_NO_AGENT"         : 31,
+    "ERROR_ATTACK_TOO_YOUNG"        : 32,
 
     "ERROR_EAT_NO_FOOD"             : 41,
     "ERROR_EAT_STOMACH_FULL"        : 42,
@@ -38,7 +39,14 @@ var constants = {
 		"AGENT_ATTACK_COST_STRAIGHT" : 5,
 		"AGENT_ATTACK_COST_DIAGONAL": 6,
 		
-		"AGENT_BASE_DAMAGE": 3
+		"AGENT_BASE_DAMAGE": 3,
+        "AGENT_BONUS_DAMAGE_SATIETY_NORMAL": 2,
+        "AGENT_BONUS_DAMAGE_AGE_ADULT" : 1,
+
+        "AGENT_AGE_TEEN"  : 250,
+        "AGENT_AGE_ADULT" : 700,
+        "AGENT_AGE_OLD"   : 3000,
+        "AGENT_AGE_DEATH" : 3500
 	}
 };
 

@@ -1,3 +1,5 @@
+var Constants = require("./constants");
+
 var Agent = function () {
     this.id         = null;
     this.class      = null;
@@ -10,6 +12,8 @@ var Agent = function () {
 
     this.health     = 100;
     this.maxHealth  = 100;
+
+    this.age        = 0;
 
     this.satiety    = 100;
     this.maxSatiety = 3000;
@@ -40,19 +44,32 @@ Agent.prototype.toJson = function () {
     return {
         "id"             : this.id,
         "class"          : this.class,
-        "client"         : this.client,
+        //"client"         : this.client,
         "name"           : this.name,
         "author"         : this.author,
         "x"              : this.x,
         "y"              : this.y,
         "health"         : this.health,
         "maxHealth"      : this.maxHealth,
+        "age"            : this.age,
+        "agePhase"       : this.getAgePhase(),
         "healthPercent"  : Math.round(this.health * 100 / this.maxHealth),
         "satiety"        : this.satiety,
         "maxSatiety"     : this.maxSatiety,
         "satietyPercent" : Math.round(this.satiety * 100 / this.maxSatiety)
     };
 };
+
+Agent.prototype.getAgePhase = function() {
+    if (this.age >= Constants.balance.AGENT_AGE_OLD) {
+        return 'old';
+    } else if (this.age >= Constants.balance.AGENT_AGE_ADULT) {
+        return 'adult';
+    } else if (this.age >= Constants.balance.AGENT_AGE_TEEN) {
+        return 'teen';
+    }
+    return 'baby';
+}
 
 Agent.prototype.setLocation = function (x, y)
 {

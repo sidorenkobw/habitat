@@ -45,7 +45,7 @@
         %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-<%= Math.round(Math.random()*2 + 1) %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
+        <div class="mob model-monkey age-<%= o.agePhase %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
     </script>
     <script type="text/template" id="template-mob-status">
         <div class="healthbar" style="width: <%= Math.ceil(o.health * 100 / o.maxHealth) %>%"></div>
@@ -230,6 +230,10 @@
                                             map.append(mobs[mob.id]);
                                         } else {
                                             var cx = parseInt(mobs[mob.id].css('left')), cy = parseInt(mobs[mob.id].css('top'));
+                                            if (!mobs[mob.id].hasClass('age-' + mob.agePhase)) {
+                                                mobs[mob.id].removeClass('age-baby age-teen age-adult age-old');
+                                                mobs[mob.id].addClass('age-' + mob.agePhase);
+                                            }
                                             if (Math.abs(cx - nx) >= dx * 2 || Math.abs(cy - ny) >= dy * 2) {
                                                 mobs[mob.id].css('left', nx);
                                                 mobs[mob.id].css('top', ny);

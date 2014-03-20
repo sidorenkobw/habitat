@@ -11,12 +11,35 @@ body {
     padding: 0;
     height: 40px;
 }
+/**************************
+ *  Actions
+ **************************/
+ .action {
+    position: absolute;
+	background-image: url('actions.gif');
+	width: 40px;
+	height: 40px;
+ }
+ .action.type-0 {
+	background-position: 0 0;
+	margin-top: -20px;
+ }
+ .action.type-3 {
+	background-position: 0 -40px;
+ }
+.action.type-err {
+    margin-top: -25px;
+    margin-left: 10px;
+    background-position: 0 -80px;
+}
+/**************************
+ *  Mobs
+ **************************/
 .mob {
     cursor: pointer;
     width: 40px;
     height:40px;
     position: absolute;
-    background-image: url('animal.gif');
 }
 .mob .name {
     position: absolute;
@@ -55,80 +78,34 @@ body {
     margin-top: -1px;
     margin-left: -1px;
 }
-/**************************
- *  Actions
- **************************/
- .action {
-    position: absolute;
-	background-image: url('actions.gif');
-	width: 40px;
-	height: 40px;
- }
- .action.type-0 {
-	background-position: 0 0;
-	margin-top: -20px;
- }
- .action.type-3 {
-	background-position: 0 -40px;
- }
-.action.type-err {
-    margin-top: -25px;
-    margin-left: 10px;
-    background-position: 0 -80px;
+/** Models **/
+.mob.model-monkey,
+.mob.model-monkey.age-adult {
+    background-image: url('mob/monkey/3.gif');
 }
-/**************************
- *  Mobs
- **************************/
-.mob.model-1 ,
-.mob.model-1.dir-E,
-.mob.model-1.dir-N.dir-E {
+.mob.model-monkey.age-baby,
+.mob.model-monkey.age-teen {
+    background-image: url('mob/monkey/1.gif');
+}
+.mob.model-monkey.age-old {
+    background-image: url('mob/monkey/4.gif');
+}
+/** Directions **/
+.mob.dir-E,
+.mob.dir-N.dir-E {
     background-position: 0 0;
 }
-.mob.model-1.dir-N,
-.mob.model-1.dir-N.dir-W {
+.mob.dir-N,
+.mob.dir-N.dir-W {
     background-position: 0 -40px;
 }
-.mob.model-1.dir-S,
-.mob.model-1.dir-S.dir-E {
+.mob.dir-S,
+.mob.dir-S.dir-E {
     background-position: 0 -80px;
 }
-.mob.model-1.dir-W,
-.mob.model-1.dir-S.dir-W {
+.mob.dir-W,
+.mob.dir-S.dir-W {
     background-position: 0 -120px;
-}
-.mob.model-2 ,
-.mob.model-2.dir-E,
-.mob.model-2.dir-N.dir-E {
-    background-position: -40px 0;
-}
-.mob.model-2.dir-N,
-.mob.model-2.dir-N.dir-W {
-    background-position: -40px -40px;
-}
-.mob.model-2.dir-S,
-.mob.model-2.dir-S.dir-E {
-    background-position: -40px -80px;
-}
-.mob.model-2.dir-W,
-.mob.model-2.dir-S.dir-W {
-    background-position: -40px -120px;
-}
-.mob.model-3 ,
-.mob.model-3.dir-E,
-.mob.model-3.dir-N.dir-E {
-    background-position: -80px 0;
-}
-.mob.model-3.dir-N,
-.mob.model-3.dir-N.dir-W {
-    background-position: -80px -40px;
-}
-.mob.model-3.dir-S,
-.mob.model-3.dir-S.dir-E {
-    background-position: -80px -80px;
-}
-.mob.model-3.dir-W,
-.mob.model-3.dir-S.dir-W {
-    background-position: -80px -120px;
 }
 /**************************
  *  Objects

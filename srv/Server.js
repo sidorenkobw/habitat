@@ -94,6 +94,7 @@ Server.prototype.instantiateAgent = function (agentData) {
     agent.name = agentIntroduction.name;
     agent.author = agentIntroduction.author;
 
+    agent.age = Constants.balance.AGENT_AGE_TEEN + Math.round(Math.random() * 20 - 5);
     do {
         coords = this.getRandomLocation();
     } while (this.getAgentByXY(coords.x, coords.y) || !agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y)));
@@ -265,6 +266,8 @@ Server.prototype.getAgentStatus = function (agent) {
 Server.prototype.updateAgentStatus = function (agent) {
     agent.updateSatietyWith(-1);
 
+    agent.age = agent.age + 1;
+
     // Regeneration
     if (agent.lastDecision.action === Constants.ACTION_IDLE) {
         if (agent.satiety > Math.floor(agent.maxSatiety * Constants.balance.AGENT_SATIETY_LEVEL_REGENERATION)) {
@@ -275,6 +278,11 @@ Server.prototype.updateAgentStatus = function (agent) {
     // Starving
     if (agent.satiety == 0) {
         agent.health = agent.health - 1;
+    }
+
+    // Dying by age
+    if (agent.age > Constants.AGENT_AGE_DEATH) {
+        agent.health = agent.health - 5;
     }
 
     // Death
@@ -496,13 +504,19 @@ Server.prototype.processDecisionAttack = function (decision) {
         agent.updateSatietyWith(-Constants.balance.AGENT_ATTACK_COST_DIAGONAL);
     }
 
-    if (!tmpAgent) {
+    if (agent.age < Constants.AGENT_AGE_TEEN) {
+        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (too young)", 4);
+        agent.client.onNotification(Constants.ERROR_ATTACK_TOO_YOUNG);
+    } else if (!tmpAgent) {
         this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (no agent in cell)", 4);
         agent.client.onNotification(Constants.ERROR_ATTACK_NO_AGENT);
     } else {
         damage = Math.floor(Math.random() * Constants.balance.AGENT_BASE_DAMAGE);
         if (agent.satiety > Math.floor(agent.maxSatiety * Constants.balance.AGENT_HUNGRY_FACTOR) && agent.satiety < Math.floor(agent.maxSatiety * Constants.balance.AGENT_BLOATED_FACTOR)) {
-            damage += 2;
+            damage += Constants.balance.AGENT_BONUS_DAMAGE_SATIETY_NORMAL;
+        }
+        if (agent.getAgePhase() == 'adult') {
+            damage += Constants.balance.AGENT_BONUS_DAMAGE_AGE_ADULT;
         }
 
         tmpAgent.health -= damage;
