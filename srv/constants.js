@@ -25,12 +25,13 @@ var constants = {
     "ERROR_EAT_NO_FOOD"             : 41,
     "ERROR_EAT_STOMACH_FULL"        : 42,
 	
-	balance: {
+	balance: Object.freeze({
 		"AGENT_EAT_AMOUNT" : 100,
 		"AGENT_BLOATED_FACTOR": 0.9,
 		"AGENT_HUNGRY_FACTOR": 0.2,
 		"AGENT_SATIETY_LEVEL_REGENERATION": 0.8,
-		
+
+        "AGENT_IDLE_REGENERATION_AMOUNT" : 1,
 		"AGENT_DEAD_BODY_SATIETY": 1000,
 		
 		"AGENT_MOVE_COST_STRAIGHT": 2,
@@ -45,9 +46,9 @@ var constants = {
 
         "AGENT_AGE_TEEN"  : 250,
         "AGENT_AGE_ADULT" : 700,
-        "AGENT_AGE_OLD"   : 3000,
-        "AGENT_AGE_DEATH" : 3500
-	}
+        "AGENT_AGE_OLD"   : 1500,
+        "AGENT_AGE_DEATH" : 2000
+	})
 };
 
 module.exports = Object.freeze(constants);

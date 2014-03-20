@@ -71,6 +71,16 @@ Agent.prototype.getAgePhase = function() {
     return 'baby';
 }
 
+Agent.prototype.getName = function() {
+    return this.class + '(' + this.id + ')';
+}
+
+Agent.prototype.getStatusString = function() {
+    return 'HP:' + this.health + '/' + this.maxHealth +
+        ' Sat:' + this.satiety + '/' + this.maxSatiety +
+        ' Age:' + this.age + '/' + Constants.balance.AGENT_AGE_DEATH;
+}
+
 Agent.prototype.setLocation = function (x, y)
 {
     this.x = parseInt(x);

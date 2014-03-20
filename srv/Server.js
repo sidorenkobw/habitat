@@ -25,7 +25,7 @@ Server.prototype.initLog = function () {
 Server.prototype.log = function (msg, level) {
     if (this.displayLogs) {
         if (level < 2) {
-            util.log(msg);
+            util.log('Tick ' + this.tickId + ': ' + msg);
         }
     }
     //fs.appendFileSync("../var/log", this.tickId + " " + msg + "\n");
@@ -124,7 +124,7 @@ Server.prototype.initAgents = function (resetAgents) {
             continue;
         }
 
-        this.log(agent.name + "(" + agent.id + ")" + " was born at x:" + agent.x + " y:" + agent.y, 1);
+        this.log(agent.getName()+ " was born at x:" + agent.x + " y:" + agent.y, 1);
         this.agents.push(agent);
 
         // Add food for the newborn agent
@@ -271,7 +271,7 @@ Server.prototype.updateAgentStatus = function (agent) {
     // Regeneration
     if (agent.lastDecision.action === Constants.ACTION_IDLE) {
         if (agent.satiety > Math.floor(agent.maxSatiety * Constants.balance.AGENT_SATIETY_LEVEL_REGENERATION)) {
-            agent.health = agent.health + 1 > agent.maxHealth ? agent.maxHealth : agent.health + 1;
+            agent.health = agent.health + Constants.balance.AGENT_IDLE_REGENERATION_AMOUNT > agent.maxHealth ? agent.maxHealth : agent.health + Constants.balance.AGENT_IDLE_REGENERATION_AMOUNT;
         }
     }
 
@@ -281,13 +281,14 @@ Server.prototype.updateAgentStatus = function (agent) {
     }
 
     // Dying by age
-    if (agent.age > Constants.AGENT_AGE_DEATH) {
+    if (agent.age > Constants.balance.AGENT_AGE_DEATH) {
         agent.health = agent.health - 5;
     }
 
     // Death
     if (!agent.isAlive()) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] has died at x:" + agent.x + " y:" + agent.y + " on tick " + this.tickId, 1);
+        var deathReason = (agent.satiety <= 0 ? 'starvation' : (agent.age >= Constants.balance.AGENT_AGE_DEATH ? 'oldness' : 'wounds'));
+        this.log( agent.getName() + " has died (" + deathReason + ") at x:" + agent.x + " y:" + agent.y, 1);
 
         // Create food instead of died agent
         var food = Food.create(Constants.balance.AGENT_DEAD_BODY_SATIETY);
@@ -317,7 +318,7 @@ Server.prototype.sanitizeDecisionDirection = function (decision) {
 Server.prototype.sanitizeDecision = function (agent, decision) {
     try {
         if (decision !== Object(decision)) {
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
             return this.getEmptyDecision();
         }
 
@@ -325,18 +326,18 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
         if (decision.action === Constants.ACTION_IDLE) {
 
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
             return this.getEmptyDecision();
 
         } else if (decision.action === Constants.ACTION_MOVE) {
             this.sanitizeDecisionDirection(decision);
 
             if (decision.dir === Constants.DIR_CURRENT) {
-                this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
+                this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] decided to stay idle", 3);
                 return this.getEmptyDecision();
             }
 
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to go to " + decision.dir, 3);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] decided to go to " + decision.dir, 3);
 
             return {
                 "isProcessed": false,
@@ -352,7 +353,7 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
 
             this.sanitizeDecisionDirection(decision);
 
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to attack in direction: " + decision.dir, 3);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] decided to attack in direction: " + decision.dir, 3);
 
             return {
                 "isProcessed": false,
@@ -363,7 +364,7 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
         } else if (decision.action === Constants.ACTION_EAT) {
             this.sanitizeDecisionDirection(decision);
 
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] decided to eat food from " + decision.dir, 3);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] decided to eat food from " + decision.dir, 3);
 
             return {
                 "isProcessed": false,
@@ -376,7 +377,7 @@ Server.prototype.sanitizeDecision = function (agent, decision) {
         }
 
     } catch (e) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] was notified with (1)", 4);
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] was notified with (1)", 4);
         agent.client.onNotification(Constants.ERROR_WRONG_FORMAT);
         throw e;
     }
@@ -406,17 +407,17 @@ Server.prototype.processDecisionMove = function (decision) {
     }
 
     if (tmpAgent && tmpAgent !== agent) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (cell is occupied)", 4);
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] can't move (cell is occupied)", 4);
         agent.client.onNotification(Constants.ERROR_MOVE_CELL_OCCUPIED);
     } else {
         if (agent.canMoveToTerrainType(this.map.getTerrainTypeByXY(coords.x, coords.y))) {
             agent.x = coords.x;
             agent.y = coords.y;
 
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y + " dir:" + decision.dir, 2);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] moved to x:" + agent.x + " y:" + agent.y + " dir:" + decision.dir, 2);
             actionLogRecord.result = true;
         } else {
-            this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't move (impassible terrain)", 4);
+            this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] can't move (impassible terrain)", 4);
             agent.client.onNotification(Constants.ERROR_MOVE_IMPASSABLE_TERRAIN);
         }
     }
@@ -441,10 +442,10 @@ Server.prototype.processDecisionEatFood = function (decision) {
         'source': {x: agent.x, y: agent.y}
     };
     if (!food) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (no food in cell)", 4);
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] can't eat food (no food in cell)", 4);
         agent.client.onNotification(Constants.ERROR_EAT_NO_FOOD);
     } else if (agent.satiety === agent.maxSatiety) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't eat food (stomach is full)", 4);
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] can't eat food (stomach is full)", 4);
         agent.client.onNotification(Constants.ERROR_EAT_STOMACH_FULL);
     } else {
         value = Constants.balance.AGENT_EAT_AMOUNT;
@@ -454,7 +455,7 @@ Server.prototype.processDecisionEatFood = function (decision) {
             value = agent.maxSatiety - agent.satiety;
         }
 
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] ate food from x:" + coords.x + " y:" + coords.y
             + " satiety: (+" + value + ")", 2);
 
         agent.updateSatietyWith(value);
@@ -505,10 +506,10 @@ Server.prototype.processDecisionAttack = function (decision) {
     }
 
     if (agent.age < Constants.AGENT_AGE_TEEN) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (too young)", 4);
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] can't attack (too young)", 4);
         agent.client.onNotification(Constants.ERROR_ATTACK_TOO_YOUNG);
     } else if (!tmpAgent) {
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] can't attack (no agent in cell)", 4);
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] can't attack (no agent in cell)", 4);
         agent.client.onNotification(Constants.ERROR_ATTACK_NO_AGENT);
     } else {
         damage = Math.floor(Math.random() * Constants.balance.AGENT_BASE_DAMAGE);
@@ -521,7 +522,7 @@ Server.prototype.processDecisionAttack = function (decision) {
 
         tmpAgent.health -= damage;
 
-        this.log(agent.name + "(" + agent.id + ") [" + agent.health + "/" + agent.satiety + "] attacked: " +
+        this.log(agent.getName() + " [" + agent.health + "/" + agent.satiety + "] attacked: " +
             tmpAgent.name + "(" + tmpAgent.id + ") [" + tmpAgent.health + "/" + tmpAgent.satiety + "] on x:" +
             coords.x + " y:" + coords.y + " with damage: " + damage, 2);
         actionLogRecord.result = true;
@@ -549,7 +550,8 @@ Server.prototype.tick = function () {
 
     this.tickId++;
 
-    if (!(this.tickId % 100)) {
+    var freeFoodFrequency = 350 / ((Constants.balance.AGENT_MOVE_COST_STRAIGHT + Constants.balance.AGENT_MOVE_COST_DIAGONAL) / 2 * this.agents.length);
+    if (!(this.tickId % parseInt(freeFoodFrequency))) {
         this.generateFood();
     }
     this.agentsActions = [];
@@ -566,7 +568,7 @@ Server.prototype.tick = function () {
             decision.agent = agent;
 
         } catch (e) {
-            this.log(agent.name + "(" + agent.id + ")" + " skipped on tick " + this.tickId + " because of error: " + e.message, 1);
+            this.log(agent.getName() + " skipped because of error: " + e.message, 1);
             decision = this.getEmptyDecision();
         }
 
@@ -587,7 +589,7 @@ Server.prototype.tick = function () {
     //this.printWorld();
 
     if (this.agents.length == 1) {
-        this.log("The one who survived: " + this.agents[0].class, 1);
+        this.log("The one who survived: " + this.agents[0].getName(), 1);
         this.initAgents(false);
     }
 
