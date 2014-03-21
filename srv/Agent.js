@@ -10,13 +10,13 @@ var Agent = function () {
     this.x          = null;
     this.y          = null;
 
-    this.health     = 100;
-    this.maxHealth  = 100;
+    this.health     = Constants.balance.AGENT_MAX_HEALTH;
+    this.maxHealth  = Constants.balance.AGENT_MAX_HEALTH;
 
     this.age        = 0;
 
     this.satiety    = 100;
-    this.maxSatiety = 3000;
+    this.maxSatiety = Constants.balance.AGENT_MAX_SATIETY;
 
     this.lastDecision = null;
 

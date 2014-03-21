@@ -26,6 +26,9 @@ var constants = {
     "ERROR_EAT_STOMACH_FULL"        : 42,
 	
 	balance: Object.freeze({
+        "AGENT_MAX_HEALTH" : 100,
+        "AGENT_MAX_SATIETY" : 3000,
+
 		"AGENT_EAT_AMOUNT" : 100,
 		"AGENT_BLOATED_FACTOR": 0.9,
 		"AGENT_HUNGRY_FACTOR": 0.2,
