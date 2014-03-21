@@ -83,9 +83,11 @@ body {
 .mob.model-monkey.age-adult {
     background-image: url('mob/monkey/3.gif');
 }
-.mob.model-monkey.age-baby,
-.mob.model-monkey.age-teen {
+.mob.model-monkey.age-baby {
     background-image: url('mob/monkey/1.gif');
+}
+.mob.model-monkey.age-teen {
+    background-image: url('mob/monkey/2.gif');
 }
 .mob.model-monkey.age-old {
     background-image: url('mob/monkey/4.gif');
