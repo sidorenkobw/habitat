@@ -45,7 +45,7 @@
         %></div>
     </script>
     <script type="text/template" id="template-mob">
-        <div class="mob model-monkey age-<%= o.agePhase %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %> (<%= o.id %>)</div><div class="status"></div></div>
+        <div class="mob model-monkey age-<%= o.agePhase %>" title="<%= o.name%> by <%= o.author %>"><div class="name"><%= o.name %></div><div class="status"></div></div>
     </script>
     <script type="text/template" id="template-mob-status">
         <div class="healthbar" style="width: <%= Math.ceil(o.health * 100 / o.maxHealth) %>%"></div>
@@ -183,7 +183,7 @@
                                     });
                                     _.each(data['log'], function(log){
                                         var actionEl, animation;
-                                        if (!_.isUndefined(mobs[log.agentId]) && isVisible(mobs[log.agentId])) {
+                                        if (!_.isUndefined(mobs[log.mobId]) && isVisible(mobs[log.mobId])) {
                                             if (log.result) {
                                                 if (log.action == Constants.ACTION_IDLE || log.action == Constants.ACTION_ATTACK) {
                                                     actionEl = $(templateMobAction(log));
@@ -218,7 +218,7 @@
                                         }
                                     });
                                     var aliveMobs = {};
-                                    _.each(data['agents'], function(mob) {
+                                    _.each(data['mobs'], function(mob) {
                                         var nx = mob.x * dx, ny = mob.y * dy;
                                         if (_.isUndefined(mobs[mob.id])) {
                                             mobs[mob.id] = $(templateMob({o:mob}));
@@ -304,10 +304,7 @@
 
                     }
                 });
-                //map.setCenter(new OpenLayers.LonLat(1, 4), 2);
-                //map.addControl( new OpenLayers.Control.LayerSwitcher() );
-    //            function drawMap() {
-    //            }
+
             }
         );
     </script>

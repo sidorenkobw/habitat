@@ -1,4 +1,4 @@
-var constants = {
+var constants = Object.freeze({
     "DIR_CURRENT"   : 0,
     "DIR_N"         : 1,
     "DIR_NE"        : 2,
@@ -34,7 +34,7 @@ var constants = {
 		"AGENT_HUNGRY_FACTOR": 0.2,
 		"AGENT_SATIETY_LEVEL_REGENERATION": 0.8,
 
-        "AGENT_IDLE_REGENERATION_AMOUNT" : 1,
+        "AGENT_IDLE_REGENERATION_AMOUNT" : 3,
 		"AGENT_DEAD_BODY_SATIETY": 1000,
 		
 		"AGENT_MOVE_COST_STRAIGHT": 2,
@@ -52,6 +52,6 @@ var constants = {
         "AGENT_AGE_OLD"   : 1500,
         "AGENT_AGE_DEATH" : 2000
 	})
-};
+});
 
-module.exports = Object.freeze(constants);
+module.exports = constants;

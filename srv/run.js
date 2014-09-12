@@ -1,4 +1,4 @@
-var serverModule = require("./Server"),
+var serverModule = require("./classes/Server"),
     http = require('http');
 
 (function () {
@@ -11,8 +11,8 @@ var serverModule = require("./Server"),
         };
     };
 
-    var mapModule = require("./Map");
-    var map = new mapModule.Map();
+    var Map = require("./classes/Map").Map;
+    var map = new Map();
 
     map.setSize(50, 50);
     map.map = [
@@ -69,19 +69,19 @@ var serverModule = require("./Server"),
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     ];
 
-//    Small test map
+    //Small test map
 //    map.setSize(10, 10);
 //    map.map = [
-//        [0,0,0,0,0,0,0,0,0,0],
-//        [0,0,0,0,0,0,0,0,0,0],
-//        [0,0,0,0,0,0,0,0,0,0],
-//        [0,0,0,0,1,1,1,0,0,0],
-//        [0,0,0,0,1,1,1,0,0,0],
-//        [0,0,0,0,1,1,1,0,0,0],
-//        [0,0,0,0,0,0,0,0,0,0],
-//        [0,0,0,0,0,0,0,0,0,0],
-//        [0,0,0,0,0,0,0,0,0,0],
-//        [0,0,0,0,0,0,0,0,0,0]
+//        [0,0,0,0,0,1,1,1,0,0],
+//        [0,0,0,1,1,1,5,1,1,0],
+//        [0,0,1,1,1,5,5,1,5,1],
+//        [0,2,1,1,5,5,5,1,5,1],
+//        [2,2,1,1,1,1,1,1,5,1],
+//        [4,2,2,1,1,4,4,1,1,1],
+//        [4,4,2,2,1,4,1,1,1,1],
+//        [4,4,3,3,1,1,1,1,0,0],
+//        [0,4,4,3,3,1,0,0,0,1],
+//        [0,0,0,0,0,0,0,0,1,1]
 //    ];
 
     var agents = [
@@ -99,7 +99,7 @@ var serverModule = require("./Server"),
 
     var srv = new serverModule.Server(agents, map);
     srv.run();
-    var observerModule = require('./WebObserver');
+    var observerModule = require('./classes/WebObserver');
     var observer = new observerModule.WebObserver(srv, 8090);
     observer.run();
 })();

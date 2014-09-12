@@ -51,7 +51,7 @@ WebObserver.prototype.processServerState = function(request, response) {
 };
 WebObserver.prototype.processServerInit = function(request, response) {
     var str = JSON.stringify({
-		map: this.server.map.getMap(),
+		map: this.server.world.map.toJson(),
 		constants: Constants,
 		tickInterval: this.server.tickInterval
 	});
