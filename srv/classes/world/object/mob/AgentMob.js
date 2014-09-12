@@ -18,7 +18,7 @@ AgentMob.prototype = new Mob({});
 AgentMob.prototype.tick = function(environment)
 {
     Mob.prototype.tick.call(this);
-    var decision, i, l, object;
+    var decision, object, actionOptions = {}, error = null;
     /**
      * Prepare data for client
      */
@@ -37,10 +37,8 @@ AgentMob.prototype.tick = function(environment)
      * Validate and do action
      *
      */
-    var actionOptions = {};
     var sourcePos = {x: this.x, y: this.y};
     this.lastAction.source = sourcePos;
-    var error = null;
     if (typeof(decision) != 'object' || decision == null) {
         this.lastAction.action = Constants.ACTION_IDLE;
         this.idle(actionOptions);

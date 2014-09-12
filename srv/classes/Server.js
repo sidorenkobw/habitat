@@ -3,8 +3,6 @@ var util = require("util"),
     fs = require("fs");
 
 var World = require("./World"),
-    Agent = require("./Agent"),
-    Mob = require("./world/object/Mob").Mob,
     Food = require("./world/object/Food"),
     Constants = require("./constants");
 
@@ -89,11 +87,6 @@ Server.prototype.instantiateAgent = function (agentData) {
     }
     var firstName = this._names.pop();
 
-    agent = Agent.create();
-    agent.class = agentData.class;
-    agent.client = agentClient;
-    agent.name = agentIntroduction.name;
-    agent.author = agentIntroduction.author;
     var mob = this.world.spawnMob({
         name: firstName,
         subClass: 'agent',
@@ -280,7 +273,7 @@ Server.prototype.getServerState = function () {
 };
 
 Server.prototype.saveServerState = function () {
-    var state = this.getServerState();
+//    var state = this.getServerState();
 //    fs.writeFileSync("../var/state.json", JSON.stringify(state));
 };
 

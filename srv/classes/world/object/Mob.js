@@ -173,7 +173,7 @@ Mob.prototype.toJson = function()
     }
     json.id = this.id;
     json.class = 'mob';
-    json.name = this.getName();
+    json.name = this.getName(false);
     json.health = this.health;
     json.maxHealth = this.maxHealth;
     json.age = this.lifeTime;
@@ -188,6 +188,6 @@ Mob.prototype.toJson = function()
 Mob.prototype.getName = function(withId)
 {
     return this.name + ' ' + this.family + (withId ? ' (' + this.id + ')' : '');
-}
+};
 
 exports.Mob = Mob;
