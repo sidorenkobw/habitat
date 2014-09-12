@@ -78,7 +78,6 @@ AgentMob.prototype.tick = function(environment)
                     if (object) {
                         error = Constants.ERROR_MOVE_CELL_OCCUPIED;
                     } else {
-                        // FIXME: check for passable terrain
                         if (this._isDestinationPassable(environment, decision.dir)) {
                             actionOptions.target = targetPos;
                             this.move(actionOptions);

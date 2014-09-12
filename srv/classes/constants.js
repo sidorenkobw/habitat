@@ -46,6 +46,8 @@ var constants = Object.freeze({
 		"AGENT_BASE_DAMAGE": 3,
         "AGENT_BONUS_DAMAGE_SATIETY_NORMAL": 2,
         "AGENT_BONUS_DAMAGE_AGE_ADULT" : 1,
+        "AGENT_OLDNESS_DAMAGE": 5,
+        "AGENT_STARVATION_DAMAGE": 1,
 
         "AGENT_AGE_TEEN"  : 250,
         "AGENT_AGE_ADULT" : 700,

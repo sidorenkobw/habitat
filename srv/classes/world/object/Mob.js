@@ -152,11 +152,11 @@ Mob.prototype.tick = function(environment)
     this.updateSatietyWith(-1);
     // Starving
     if (this.satiety == 0) {
-        this.updateHealthWith(-1);  // TODO: Move number to Constants
+        this.updateHealthWith(-Constants.balance.AGENT_STARVATION_DAMAGE);
     }
     // Dying by age
     if (this.age > Constants.balance.AGENT_AGE_DEATH) {
-        this.updateHealthWith(-5);  // TODO: Move number to Constants
+        this.updateHealthWith(-Constants.balance.AGENT_OLDNESS_DAMAGE);
     }
 };
 
