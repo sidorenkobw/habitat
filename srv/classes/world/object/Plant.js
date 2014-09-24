@@ -8,7 +8,4 @@ function Plant()
 Plant.prototype = new objModule.Object();
 
 
-exports.create = function ()
-{
-    return new Plant();
-};
+module.exports.Plant = Plant;

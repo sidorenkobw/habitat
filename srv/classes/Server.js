@@ -288,4 +288,4 @@ Server.prototype.run = function () {
     this.tick();
 };
 
-exports.Server = Server;
+module.exports.Server = Server;

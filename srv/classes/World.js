@@ -194,6 +194,6 @@ World.prototype.getEnvironmentForObject = function (object)
     };
 };
 
-exports.create = function(map) {
+module.exports.create = function(map) {
     return new World(map);
 };

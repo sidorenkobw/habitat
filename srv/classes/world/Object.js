@@ -27,4 +27,4 @@ WorldObject.prototype.setLocation = function (x, y)
     this.y = parseInt(y);
 };
 
-exports.Object = WorldObject;
+module.exports.Object = WorldObject;

@@ -81,4 +81,4 @@ WebObserver.prototype.run = function() {
     server.listen(this.port);
 };
 
-exports.WebObserver = WebObserver;
+module.exports.WebObserver = WebObserver;

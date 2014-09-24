@@ -209,4 +209,4 @@ AgentMob.prototype._getTarget = function(list, options)
 };
 
 
-exports.AgentMob = AgentMob;
+module.exports.AgentMob = AgentMob;

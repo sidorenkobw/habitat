@@ -190,4 +190,4 @@ Mob.prototype.getName = function(withId)
     return this.name + ' ' + this.family + (withId ? ' (' + this.id + ')' : '');
 };
 
-exports.Mob = Mob;
+module.exports.Mob = Mob;
