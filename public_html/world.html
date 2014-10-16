@@ -12,8 +12,7 @@
 
     <!-- <link rel="shortcut icon" href="/favicon.png"> -->
     <link href="/css/default.css" rel="stylesheet">
-    <link href="/theme/default/map.css" rel="stylesheet" />
-
+    <!--link href="/theme/default/map.css" rel="stylesheet" /-->
     <script src="/libs/require/require.js" type="text/javascript"></script>
     <script src="/js/require.cfg.js" type="text/javascript"></script>
 
@@ -310,8 +309,24 @@
     </script>
 
 </head>
-
 <body>
+<script type="text/javascript">
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(document.location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    var theme = getParameterByName('theme');
+    if (!theme) {
+        theme = 'default';
+    }
+    var styles = document.createElement('link');
+    styles.type = 'text/css';
+    styles.rel = 'stylesheet';
+    styles.href = '/theme/' + theme + '/map.css';
+    document.getElementsByTagName('head')[0].appendChild(styles);
+</script>
 <div id="map"></div>
 </body>
 </html>

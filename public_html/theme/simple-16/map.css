@@ -1,0 +1,214 @@
+body {
+    overflow: hidden;
+    background-color: #01033b;
+}
+.tiled-map {
+
+}
+.tiled-map .tiles-row {
+    white-space:nowrap;
+    margin: 0;
+    padding: 0;
+    height: 16px;
+}
+/**************************
+ *  Actions
+ **************************/
+.action {
+    position: absolute;
+    background-image: url('actions.gif');
+    width: 16px;
+    height: 16px;
+}
+.action.type-0 {
+    background-position: 0 0;
+    margin-top: -8px;
+}
+.action.type-3 {
+    background-position: 0 -16px;
+}
+.action.type-err {
+    margin-top: -10px;
+    margin-left: 3px;
+    background-position: 0 -32px;
+}
+/**************************
+ *  Mobs
+ **************************/
+.mob {
+    cursor: pointer;
+    width: 16px;
+    height:16px;
+    position: absolute;
+}
+.mob .name {
+    position: absolute;
+    color: white;
+    font-size: 9px;
+    width: 48px;
+    white-space: nowrap;
+    text-align: center;
+    margin-top: -20px;
+    margin-left: -16px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    z-index: 10;
+}
+.mob .status {
+    position: absolute;
+    border: 1px solid #444;
+    height: 3px;
+    width: 16px;
+    text-align: center;
+    margin-top: 18px;
+    margin-left: 0;
+    background-color: #666;
+    padding: 1px;
+    z-index: 5;
+}
+.mob .status .healthbar {
+    height: 1px;
+    background-color: #ff1111;
+    margin-bottom: 1px;
+}
+.mob .status .satietybar {
+    height: 1px;
+    background-color: #ffff66;
+}
+.mob.selected {
+    border: 1px dotted #cccccc;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+/** Models **/
+.mob.model-monkey,
+.mob.model-monkey.age-adult {
+    background-image: url('mob/monkey/3.gif');
+}
+.mob.model-monkey.age-baby {
+    background-image: url('mob/monkey/1.gif');
+}
+.mob.model-monkey.age-teen {
+    background-image: url('mob/monkey/2.gif');
+}
+.mob.model-monkey.age-old {
+    background-image: url('mob/monkey/4.gif');
+}
+/** Directions **/
+.mob.dir-E,
+.mob.dir-N.dir-E {
+    background-position: 0 0;
+}
+.mob.dir-N,
+.mob.dir-N.dir-W {
+    background-position: 0 -16px;
+}
+.mob.dir-S,
+.mob.dir-S.dir-E {
+    background-position: 0 -32px;
+}
+.mob.dir-W,
+.mob.dir-S.dir-W {
+    background-position: 0 -48px;
+}
+/**************************
+ *  Objects
+ **************************/
+.tile .object {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+}
+.object.model-food-1 {
+    background-image: url('food/apple.gif');
+}
+.object.model-food-2 {
+    background-image: url('food/ham.gif');
+}
+
+.object.eaten-10 {
+    background-position: 0 0;
+}
+.object.eaten-9 {
+    background-position: 0 -16px;
+}
+.object.eaten-8 {
+    background-position: 0 -32px;
+}
+.object.eaten-7 {
+    background-position: 0 -48px;
+}
+.object.eaten-6 {
+    background-position: 0 -64px;
+}
+.object.eaten-5 {
+    background-position: 0 -80px;
+}
+.object.eaten-4 {
+    background-position: 0 -96px;
+}
+.object.eaten-3 {
+    background-position: 0 -112px;
+}
+.object.eaten-2 {
+    background-position: 0 -128px;
+}
+.object.eaten-1 {
+    background-position: 0 -144px;
+}
+/**************************
+ *  Tiles
+ **************************/
+.tiled-map .tiles-row .tile {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+.tiled-map .tiles-row .tile.tile-0 {
+    background-image: url('terrain/0.gif');
+}
+.tiled-map .tiles-row .tile.tile-1 {
+    background-image: url('terrain/1.gif');
+}
+.tiled-map .tiles-row .tile.tile-2 {
+    background-image: url('terrain/2.gif');
+}
+.tiled-map .tiles-row .tile.tile-3 {
+    background-image: url('terrain/3.gif');
+}
+.tiled-map .tiles-row .tile.tile-4 {
+    background-image: url('terrain/4.gif');
+}
+.tiled-map .tiles-row .tile.tile-5 {
+    background-image: url('terrain/5.gif');
+}
+.tiled-map .tiles-row .tile.var-1 {
+    background-position: 0 0;
+}
+.tiled-map .tiles-row .tile.var-2 {
+    background-position: 0 -16px;
+}
+.tiled-map .tiles-row .tile.var-3 {
+    background-position: 0 -32px;
+}
+.tiled-map .tiles-row .tile.var-4 {
+    background-position: 0 -48px;
+}
+.tiled-map .tiles-row .tile.var-5 {
+    background-position: 0 -64px;
+}
+.tiled-map .tiles-row .tile.var-6 {
+    background-position: 0 -80px;
+}
+.tiled-map .tiles-row .tile.var-7 {
+    background-position: 0 -96px;
+}
+.tiled-map .tiles-row .tile.var-8 {
+    background-position: 0 -112px;
+}
+/**************************
+ *  Transitions
+ **************************/
+.tiled-map .tiles-row .tile .transition {
+    position: absolute;
+    width: 16px;
+    height: 16px;}
