@@ -92,7 +92,7 @@ var serverModule = require("./classes/Server"),
         initAgent("Foxel"),
         initAgent("Foxel"),
         initAgent("Foxel"),
-        initAgent("DummyAgent"),
+        initAgent("Dummy"),
         initAgent("VeryDummy"),
         initAgent("ReAgent")
     ];

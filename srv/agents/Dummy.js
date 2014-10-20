@@ -1,6 +1,5 @@
-var Constants = {};
-
-var DummyAgent = function (args) {
+var Dummy = function (args) {
+    var Constants = {};
     var status;
 };
 
@@ -9,7 +8,7 @@ var DummyAgent = function (args) {
  *
  * @returns {{}}
  */
-DummyAgent.prototype.introduce = function () {
+Dummy.prototype.introduce = function () {
     return {
         "name"   : "Dummy",
         "author" : "Andrew Sidorenko",
@@ -17,8 +16,8 @@ DummyAgent.prototype.introduce = function () {
     };
 };
 
-DummyAgent.prototype.init = function (constants) {
-    Constants = constants;
+Dummy.prototype.init = function (constants) {
+    this.Constants = constants;
 };
 
 /**
@@ -59,7 +58,7 @@ DummyAgent.prototype.init = function (constants) {
  *     }
  * }
  */
-DummyAgent.prototype.onNewTick = function (status) {
+Dummy.prototype.onNewTick = function (status) {
     this.status = status;
 };
 
@@ -100,7 +99,7 @@ DummyAgent.prototype.onNewTick = function (status) {
  *
  * @returns {{}}
  */
-DummyAgent.prototype.decision = function () {
+Dummy.prototype.decision = function () {
     var rel, movementMap = [];
 
     movementMap[0] = { "x" :  0, "y" :  0 }; // Idle
@@ -121,14 +120,14 @@ DummyAgent.prototype.decision = function () {
             if (obj.x === rel.x && obj.y === rel.y) {
                 if (obj.class === "food") {
                     return {
-                        "action" : Constants.ACTION_EAT,
+                        "action" : this.Constants.ACTION_EAT,
                         "dir"    : dir
                     };
                 }
 
                 if (obj.class === "agent") {
                     return {
-                        "action" : Constants.ACTION_ATTACK,
+                        "action" : this.Constants.ACTION_ATTACK,
                         "dir"    : dir
                     };
                 }
@@ -138,7 +137,7 @@ DummyAgent.prototype.decision = function () {
 
     // Otherwise move in random direction
     return {
-        "action" : Constants.ACTION_MOVE,
+        "action" : this.Constants.ACTION_MOVE,
         "dir"    : Math.floor(Math.random() * 9)
     };
 };
@@ -155,8 +154,8 @@ DummyAgent.prototype.decision = function () {
  * 41 - can't eat food (no food in the cell)
  * 42 - can't eat more food (your stomach is full)
  */
-DummyAgent.prototype.onNotification = function (notificationCode) {
+Dummy.prototype.onNotification = function (notificationCode) {
 
 };
 
-exports.agentClass = DummyAgent;
+exports.agentClass = Dummy;
