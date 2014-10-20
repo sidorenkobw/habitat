@@ -1,5 +1,5 @@
 var DummyAgent = function () {
-
+    this.Constants = {};
 };
 
 DummyAgent.prototype.introduce = function () {
@@ -10,13 +10,20 @@ DummyAgent.prototype.introduce = function () {
     };
 };
 
+DummyAgent.prototype.init = function (constants) {
+    this.Constants = constants;
+};
+
+
 DummyAgent.prototype.onNewTick = function (status) {
 
 };
 
 
 DummyAgent.prototype.decision = function () {
-    return null;
+    return {
+        action: this.Constants.ACTION_IDLE
+    };
 };
 
 DummyAgent.prototype.onNotification = function (notificationCode) {
