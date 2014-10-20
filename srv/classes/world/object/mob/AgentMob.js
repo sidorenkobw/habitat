@@ -133,6 +133,7 @@ AgentMob.prototype._getClientData = function(environment)
         }
         objectData = {
             class: object.class,
+            impassable: object.impassable,
             x: object.x - this.x,
             y: object.y - this.y
         };
@@ -149,8 +150,7 @@ AgentMob.prototype._getClientData = function(environment)
 
 AgentMob.prototype._getPositionByDir = function(environment, dir)
 {
-    var rel_x = environment.dir[dir].x
-    var rel_y = environment.dir[dir].y;
+    var rel_x = environment.dir[dir].x, rel_y = environment.dir[dir].y;
 
     if (rel_x > environment.map.width) {
         throw new Error('shift_x is bigger the map size');
