@@ -14,7 +14,34 @@ var Server = function (agents, map) {
     this.displayLogs = true;
     this.world = World.create(map);
 
-    this.agentFirstNames = ['Alice','Alex','Amelia','Bob','Cynthia','Celesta','Daria','Dorothy','Dan','Evan','Earl','Greg','Hanna','Ivan','Jack','John','Jane','Kim','Lisa','Luke','Mary','Max','Nino','Oleg','Olga','Pat','Queen','Rose','Rick','Stan','Tanya','Ted','Urist','Vix','Wendy','Yan','Zed'];
+    this.agentFirstNames = [
+        'Alice', 'Alex', 'Amelia',
+        'Bob', 'Barbara', 'Bart', 'Bella',
+        'Cynthia', 'Celesta', 'Clara', 'Carl',
+        'Daria', 'Dorothy', 'Dan', 'Drew',
+        'Evan', 'Earl',
+        'Frank',
+        'Greg', 'Gina',
+        'Hanna', 'Harry',
+        'Ivan', 'Irene',
+        'Jack', 'John', 'Jane', 'Jim',
+        'Kim', 'Kate',
+        'Lisa', 'Luke',
+        'Mary', 'Max',
+        'Nino', 'Ned',
+        'Oleg',' Olga', 'Oprah',
+        'Pat',
+        'Queen',
+        'Rose', 'Rick', 'Ruth',
+        'Stan', 'Sam',
+        'Tanya', 'Ted', 'Tim',
+        'Urist',
+        'Vix',
+        'Wendy',
+        'Xena',
+        'Yan',
+        'Zed',
+    ];
     this._names = [];
 };
 
@@ -147,7 +174,6 @@ Server.prototype.initFood = function () {
 
 
 Server.prototype.tick = function () {
-    //var agents = _.shuffle(this.agents);
 
     this.tickId++;
 
@@ -155,68 +181,6 @@ Server.prototype.tick = function () {
     if (!(this.tickId % parseInt(freeFoodFrequency))) {
         this.generateFood();
     }
-//    _.each(this.agents, function (agent) {
-//        try {
-//            // Notify the agent that new tick has begun
-//            agent.client.onNewTick(this.getAgentStatus(agent));
-//
-//            // Get and validate agent's decision
-//            var decision = agent.client.decision();
-//
-//            decision = this.sanitizeDecision(agent, decision);
-//            decision.agent = agent;
-//
-//        } catch (e) {
-//            this.log(agent.getName() + " skipped because of error: " + e.message, 1);
-//            decision = this.getEmptyDecision();
-//        }
-//
-//        var mobName = agent.getName() + " [" + agent.mob.health + "/" + agent.mob.satiety + "]";
-//        var result = this.world.registerAction(agent.mob.id, decision.action, decision);
-//        if (result) {
-//            switch (result) {
-//                case Constants.ERROR_ATTACK_NO_AGENT:
-//                    this.log(mobName + " can't attack (no agent in cell)", 4);
-//                    break;
-//                case Constants.ERROR_ATTACK_TOO_YOUNG:
-//                    this.log(mobName + " can't attack (too young)", 4);
-//                    break;
-//                case Constants.ERROR_MOVE_IMPASSABLE_TERRAIN:
-//                    this.log(mobName + " can't move (impassible terrain)", 4);
-//                    break;
-//                case Constants.ERROR_MOVE_CELL_OCCUPIED:
-//                    this.log(mobName + " can't move (cell is occupied)", 4);
-//                    break;
-//                case Constants.ERROR_EAT_NO_FOOD:
-//                    this.log(mobName + " can't eat food (no food in cell)", 4);
-//                    break;
-//                case Constants.ERROR_EAT_STOMACH_FULL:
-//                    this.log(mobName + " can't eat food (stomach is full)", 4);
-//                    break;
-//                default:
-//                    break;
-//            }
-//            agent.client.onNotification(result);
-//        } else {
-//            switch(decision.action) {
-//                case Constants.ACTION_IDLE:
-//                    break;
-//                case Constants.ACTION_MOVE:
-//                    this.log(mobName + " moved to x:" + agent.mob.x + " y:" + agent.mob.y + " dir:" + decision.dir, 2);
-//                    break;
-//                case Constants.ACTION_EAT:
-//                    this.log(mobName + " ate food", 2);
-//                    break;
-//                case Constants.ACTION_ATTACK:
-//                    this.log(mobName + " attacked mob", 2);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//
-//    }, this);
-//    this.mobActions = this.world.mobActionsLog;
 
     this.world.tick();
 
