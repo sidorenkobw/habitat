@@ -133,7 +133,7 @@ Mob.prototype.eat = function(options)
 Mob.prototype.idle = function(options)
 {
     // Regeneration
-    if (this.satiety > Math.floor(this.maxSatiety * Constants.balance.AGENT_SATIETY_LEVEL_REGENERATION)) {
+    if (this.satiety >= Math.floor(this.maxSatiety * Constants.balance.AGENT_SATIETY_LEVEL_REGENERATION)) {
         this.updateHealthWith(Constants.balance.AGENT_IDLE_REGENERATION_AMOUNT);
     }
     return true;
