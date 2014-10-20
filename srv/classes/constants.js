@@ -14,6 +14,18 @@ var constants = Object.freeze({
     "ACTION_ATTACK" : 3,
     "ACTION_EAT"    : 4,
 
+    'DIRECTIONS': {
+        '0' : {x:  0, y: -1},
+        '1' : {x:  1, y: -1},
+        '2' : {x:  1, y:  0},
+        '3' : {x:  1, y:  1},
+        '4' : {x:  0, y:  1},
+        '5' : {x: -1, y:  1},
+        '6' : {x: -1, y:  0},
+        '7' : {x: -1, y: -1},
+        '8' : {x:  0, y:  0}
+    },
+
     "ERROR_WRONG_FORMAT"            : 1,
 
     "ERROR_MOVE_IMPASSABLE_TERRAIN" : 21,
@@ -32,7 +44,7 @@ var constants = Object.freeze({
 		"AGENT_EAT_AMOUNT" : 100,
 		"AGENT_BLOATED_FACTOR": 0.9,
 		"AGENT_HUNGRY_FACTOR": 0.2,
-		"AGENT_SATIETY_LEVEL_REGENERATION": 0.8,
+		"AGENT_SATIETY_LEVEL_REGENERATION": 0.5,
 
         "AGENT_IDLE_REGENERATION_AMOUNT" : 3,
 		"AGENT_DEAD_BODY_SATIETY": 1000,
