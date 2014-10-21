@@ -114,31 +114,36 @@ Dummy.prototype.decision = function () {
 
     // Scan surrounding cells (all directions) for food and make decision to eat it if found
     for (var dir in movementMap) {
-        rel = movementMap[dir];
-        for (var i in this.status.environment.objects) {
-            var obj = this.status.environment.objects[i];
-            if (obj.x === rel.x && obj.y === rel.y) {
-                if (obj.class === "food") {
-                    return {
-                        "action" : this.Constants.ACTION_EAT,
-                        "dir"    : dir
-                    };
-                }
+        if (movementMap.hasOwnProperty(dir)) {
+            rel = movementMap[dir];
+            for (var i in this.status.environment.objects) {
+                if (this.status.environment.objects.hasOwnProperty(i)) {
+                    var obj = this.status.environment.objects[i];
+                    if (obj.x === rel.x && obj.y === rel.y) {
+                        if (obj.class === "food") {
+                            return {
+                                "action" : this.Constants.ACTION_EAT,
+                                "dir"    : dir
+                            };
+                        }
 
-                if (obj.class === "agent") {
-                    return {
-                        "action" : this.Constants.ACTION_ATTACK,
-                        "dir"    : dir
-                    };
+                        if (obj.class === "agent") {
+                            return {
+                                "action" : this.Constants.ACTION_ATTACK,
+                                "dir"    : dir
+                            };
+                        }
+                    }
                 }
             }
         }
     }
 
     // Otherwise move in random direction
+    var randomDirection = Math.floor(Math.random() * 9);
     return {
-        "action" : this.Constants.ACTION_MOVE,
-        "dir"    : Math.floor(Math.random() * 9)
+        "action" : randomDirection ? this.Constants.ACTION_MOVE : this.Constants.ACTION_IDLE,
+        "dir"    : randomDirection
     };
 };
 

@@ -574,7 +574,7 @@ var FoxelAgent = createClass({
         this.myPos.x += movementMap[direction].x;
         this.myPos.y += movementMap[direction].y;
         return {
-            "action" : 1,
+            "action" : direction ? 1 : 0,
             "dir"    : direction
         };
     },
