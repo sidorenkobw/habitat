@@ -49,7 +49,7 @@ AgentMob.prototype.tick = function(environment)
         } else {
             decision.action = parseInt(decision.action);
             var targetPos = sourcePos;
-            if (typeof(decision.dir) != 'undefined') {
+            if (typeof(decision.dir) != 'undefined' && typeof(environment.dir[decision.dir]) != 'undefined') {
                 targetPos = this._getPositionByDir(environment, decision.dir);
                 actionOptions.dir = decision.dir;
             }
@@ -111,6 +111,9 @@ AgentMob.prototype.tick = function(environment)
         }
     }
     //--------------------------------------------------------------------------------------------------------------
+    if (error !== null) {
+        this.client.onNotification(error);
+    }
     return error;
 };
 
