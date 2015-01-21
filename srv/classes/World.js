@@ -152,29 +152,26 @@ World.prototype.tick = function()
     for (i = 0, l = this._objects.length; i < l; i++) {
         object = this._objects[i];
 
+        object.tick(this.getEnvironmentForObject(object));
         if (object.class == 'mob') {
-            object.tick(this.getEnvironmentForObject(object));
             this.mobLastActions.push(object.lastAction);
-
-            // Check if mob dies
-            if (object.health <= 0) {
+        }
+        if (!object.isAlive()) {
+            if (object.class == 'mob') {
                 // Create food instead of died mob
                 this.spawnObject(new Food(Constants.balance.AGENT_DEAD_BODY_SATIETY), {x: object.x, y: object.y});
-                // Remove mob
-                this._objects.splice(i, 1); l--;
             }
-        } else {
-            object.tick();
-            if (object.class == 'food' && object.richness < 1) {
-                // Remove food
-                this._objects.splice(i, 1); l--;
-            }
+            // Remove object from world
+            this._objects.splice(i, 1); l--;
         }
     }
 };
 
 World.prototype.getEnvironmentForObject = function (object)
 {
+    if (object.class != 'mob') {
+        return {};
+    }
     var radius = 4;
     var filter = {
         min_x: object.x - radius,

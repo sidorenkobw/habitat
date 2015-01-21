@@ -10,6 +10,11 @@ var Food = function (richness)
 };
 Food.prototype = new objModule.Object();
 
+Food.prototype.isAlive = function()
+{
+    return this.richness > 0;
+};
+
 Food.prototype.toJson = function ()
 {
     var json = objModule.Object.prototype.toJson.call(this);

@@ -12,6 +12,11 @@ WorldObject.prototype.tick = function()
     this.lifeTime++;
 };
 
+WorldObject.prototype.isAlive = function()
+{
+    return true;
+};
+
 WorldObject.prototype.toJson = function()
 {
     return {
