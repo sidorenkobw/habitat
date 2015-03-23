@@ -169,26 +169,25 @@ World.prototype.tick = function()
 
 World.prototype.getEnvironmentForObject = function (object)
 {
-    if (object.class != 'mob') {
-        return {};
-    }
-    var radius = 4;
-    var filter = {
-        min_x: object.x - radius,
-        max_x: object.x + radius,
-        min_y: object.y - radius,
-        max_y: object.y + radius
-    };
-    return {
-        map: {
+    var environment = {};
+    if (object.class == 'mob') {
+        var radius = 4;
+        var filter = {
+            min_x: object.x - radius,
+            max_x: object.x + radius,
+            min_y: object.y - radius,
+            max_y: object.y + radius
+        };
+        environment.map = {
             width: this.map.width,
             height: this.map.height,
             slice: this.map.getRectangle(filter.min_x, filter.min_y, filter.max_x, filter.max_y)
-        },
-        dir: this.getDirectionsMap(),
-        passableTiles: this.map.getTilesByTerrainClass('land'),
-        objects: this.getObjects(filter)
-    };
+        };
+        environment.dir = this.getDirectionsMap();
+        environment.passableTiles = this.map.getTilesByTerrainClass('land');
+        environment.objects = this.getObjects(filter);
+    }
+    return environment;
 };
 
 module.exports.create = function(map) {
