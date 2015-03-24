@@ -158,6 +158,7 @@ Mob.prototype.tick = function(environment)
     if (this.age > Constants.balance.AGENT_AGE_DEATH) {
         this.updateHealthWith(-Constants.balance.AGENT_OLDNESS_DAMAGE);
     }
+    return true;
 };
 
 Mob.prototype.toJson = function()

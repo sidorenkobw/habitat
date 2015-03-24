@@ -114,7 +114,7 @@ AgentMob.prototype.tick = function(environment)
     if (error !== null) {
         this.client.onNotification(error);
     }
-    return error;
+    return error || true;
 };
 
 AgentMob.prototype._getClientData = function(environment)

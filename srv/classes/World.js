@@ -139,7 +139,7 @@ World.prototype.getOccupiedPositions = function(options)
 
 World.prototype.tick = function()
 {
-    var i, l, object;
+    var i, l, object, result, position, radius;
 
     this.mobLastActions = [];
 
@@ -149,7 +149,7 @@ World.prototype.tick = function()
     for (i = 0, l = this._objects.length; i < l; i++) {
         object = this._objects[i];
 
-        object.tick(this.getEnvironmentForObject(object));
+        result = object.tick(this.getEnvironmentForObject(object));
         if (object.class == 'mob') {
             this.mobLastActions.push(object.lastAction);
         }
@@ -160,6 +160,23 @@ World.prototype.tick = function()
             }
             // Remove object from world
             this._objects.splice(i, 1); l--;
+        }
+        if (typeof(result) == 'object') {
+            // New object spawned
+            radius = 1;
+            do {
+                position = this.map.getRandomFreePosition({
+                    'class': 'land',
+                    'minX': object.x - radius,
+                    'maxX': object.x + radius,
+                    'minY': object.y - radius,
+                    'maxY': object.y + radius,
+                    'xNot': object.x,
+                    'yNot': object.y
+                });
+                radius++;
+            } while (!position);
+            this.spawnObject(result, position);
         }
     }
 };
