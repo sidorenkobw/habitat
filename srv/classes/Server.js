@@ -159,13 +159,14 @@ Server.prototype.initAgents = function (resetAgents) {
 Server.prototype.generateFood = function () {
     var food, coords;
 
-    do {
-        coords = this.world.map.getRandomLocation({'class':'land'});
-    } while (!_.contains([1, 2, 3], this.world.map.getTerrainTypeByXY(coords.x, coords.y)));
-
-    food = Food.create(Math.floor(Math.random() * 300) + 100);
-    this.world.spawnObject(food, coords);
-    this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y, 2);
+    coords = this.world.map.getRandomPosition({'class':'land'});
+    if (coords) {
+        food = Food.create(Math.floor(Math.random() * 300) + 100);
+        this.world.spawnObject(food, coords);
+        this.log("Food with richness: " + food.richness + " was generated at x:" + food.x + " y:" + food.y, 2);
+    } else {
+        this.log('No free location for food');
+    }
 };
 
 Server.prototype.initFood = function () {

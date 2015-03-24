@@ -60,8 +60,12 @@ World.prototype.spawnObject = function(object, options)
     if (typeof(options.x) != 'undefined' && typeof(options.y) != 'undefined') {
         object.setLocation(options.x, options.y);
     } else {
-        var pos = this.map.getRandomLocation({class:'land'});
-        object.setLocation(pos.x, pos.y);
+        var pos = this.map.getRandomPosition({class:'land'});
+        if (pos) {
+            object.setLocation(pos.x, pos.y);
+        } else {
+            throw new Error('Count not spawn new object: no suitable location');
+        }
     }
     return this.spawn(object);
 };
@@ -75,10 +79,10 @@ World.prototype.getObjects = function(options)
             (typeof(options.id) == 'undefined' || object.id != options.id)
             && (typeof(options.x) == 'undefined' || object.x == options.x)
             && (typeof(options.y) == 'undefined' || object.y == options.y)
-            && (typeof(options.min_x) == 'undefined' || object.x >= options.min_x)
-            && (typeof(options.min_y) == 'undefined' || object.y >= options.min_y)
-            && (typeof(options.max_x) == 'undefined' || object.x <= options.max_x)
-            && (typeof(options.max_y) == 'undefined' || object.y <= options.max_y)
+            && (typeof(options.minX) == 'undefined' || object.x >= options.minX)
+            && (typeof(options.minY) == 'undefined' || object.y >= options.minY)
+            && (typeof(options.maxX) == 'undefined' || object.x <= options.maxX)
+            && (typeof(options.maxY) == 'undefined' || object.y <= options.maxY)
             && (typeof(options.class) == 'undefined' || object.class == options.class)
             && (typeof(options.classNot) == 'undefined' || object.class != options.classNot)
         ) {
@@ -86,12 +90,6 @@ World.prototype.getObjects = function(options)
         }
     }
     return result;
-};
-
-World.prototype.getObject = function(options)
-{
-    var result = this.getObjects(options);
-    return result.length ? result[0] : null;
 };
 
 World.prototype.getDirectionsMap = function () {
@@ -110,10 +108,9 @@ World.prototype.getDirectionsMap = function () {
     return this._cache['directionsMap'];
 };
 
-
 World.prototype.getRandomFreePosition = function(options)
 {
-    var pos = this.map.getPositionsByTerrainClass(options.class);
+    var pos = this.map.getPositions(options);
     var occ = this.getOccupiedPositions({sort:true});
     var freePositions = [];
     for (var idxPos = 0, idxOcc = 0, lenPos = pos.length, lenOcc = occ.length; idxPos < lenPos; idxPos++) {
@@ -173,15 +170,15 @@ World.prototype.getEnvironmentForObject = function (object)
     if (object.class == 'mob') {
         var radius = 4;
         var filter = {
-            min_x: object.x - radius,
-            max_x: object.x + radius,
-            min_y: object.y - radius,
-            max_y: object.y + radius
+            minX: object.x - radius,
+            maxX: object.x + radius,
+            minY: object.y - radius,
+            maxY: object.y + radius
         };
         environment.map = {
             width: this.map.width,
             height: this.map.height,
-            slice: this.map.getRectangle(filter.min_x, filter.min_y, filter.max_x, filter.max_y)
+            slice: this.map.getRectangle(filter.minX, filter.minY, filter.maxX, filter.maxY)
         };
         environment.dir = this.getDirectionsMap();
         environment.passableTiles = this.map.getTilesByTerrainClass('land');

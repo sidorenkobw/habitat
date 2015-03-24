@@ -73,7 +73,7 @@ Map.prototype.getRectangle = function(minX, minY, maxX, maxY)
     return result;
 };
 
-Map.prototype.getPositionsByTerrain = function(terrains)
+Map.prototype._getPositionsByTerrain = function(terrains)
 {
     if (typeof terrains === 'string') {
         terrains = [terrains];
@@ -82,7 +82,7 @@ Map.prototype.getPositionsByTerrain = function(terrains)
     var s = ' ' + terrains.join(' ') + ' ';
     if (typeof (this._cache['positionsByTerrain'][s]) == 'undefined') {
         var result = [];
-        for(var x = 0; x < this.width; x ++) {
+        for (var x = 0; x < this.width; x ++) {
             for (var y = 0; y < this.height; y++) {
                 if (s.indexOf(' ' + this.terrains[this.map[y][x]] + ' ') >= 0) {
                     result.push({x: x, y: y});
@@ -92,25 +92,6 @@ Map.prototype.getPositionsByTerrain = function(terrains)
         this._cache['positionsByTerrain'][s] = result;
     }
     return this._cache['positionsByTerrain'][s];
-};
-
-Map.prototype.getPositionsByTerrainClass = function(cls)
-{
-    return this.getPositionsByTerrain(this.terrainClasses[cls]);
-};
-
-Map.prototype.checkPositionTerrainClass = function(x, y, cls)
-{
-    var suitableTerrains = typeof(this.terrainClasses[cls]) == 'undefined' ? [] : this.terrainClasses[cls];
-    if (suitableTerrains.length) {
-        var terrain = this.terrains[this.getTerrainTypeByXY(x, y)];
-        for(var i= 0, l = suitableTerrains.length; i < l; i++) {
-            if (suitableTerrains[i] == terrain) {
-                return true;
-            }
-        }
-    }
-    return false;
 };
 
 Map.prototype.getTilesByTerrainClass = function(cls)
@@ -131,18 +112,50 @@ Map.prototype.getTilesByTerrainClass = function(cls)
     return this._cache['tilesByClass'][cls];
 };
 
-Map.prototype.getRandomLocation = function()
+Map.prototype.getRandomPosition = function()
 {
     var options = arguments.length ? arguments[0] : {};
-    if (typeof(options.class) != 'undefined') {
-        var positions = this.getPositionsByTerrainClass(options.class);
-        return positions[Math.floor(Math.random() * positions.length)];
-    } else {
-        return {
-            x: Math.floor(Math.random() * this.width),
-            y: Math.floor(Math.random() * this.height)
-        };
+    var positions = this.getPositions(options);
+    return positions ? positions[Math.floor(Math.random() * positions.length)] : null;
+};
+
+Map.prototype.getPositions = function(options)
+{
+    var x, y, i, l, positions, result = [];
+    if (options.class && options.terrains) {
+        throw new Error('Invalid options: terrains and class are mutually exclusive options');
     }
+    if (options.class) {
+        positions = this._getPositionsByTerrain(this.terrainClasses[options.class]);
+    }
+    if (options.terrains) {
+        positions = this._getPositionsByTerrain(options.terrains);
+    }
+    if (typeof(positions) == 'undefined') {
+        positions = [];
+        for (x = 0; x < this.width; x++) {
+            for (y = 0; y < this.width; y++) {
+                positions.push({x: x, y: y});
+            }
+        }
+    }
+    for (i = 0, l = result.length; i < l; i++) {
+        if (this._filterPosition(positions[i], options)) {
+            result.push(positions[i]);
+        }
+    }
+    return result;
+};
+
+Map.prototype._filterPosition = function(p, filters) {
+    return !!(
+        (typeof(filters['minX']) == 'undefined' || p.x >= filters['minX'])
+        && (typeof(filters['maxX']) == 'undefined' || p.x <= filters['maxX'])
+        && (typeof(filters['minY']) == 'undefined' || p.y >= filters['minY'])
+        && (typeof(filters['maxY']) == 'undefined' || p.y <= filters['maxY'])
+        && (typeof(filters['xNot']) == 'undefined' || p.x != filters['xNot'])
+        && (typeof(filters['yNot']) == 'undefined' || p.y != filters['yNot'])
+    );
 };
 
 module.exports.Map = Map;
