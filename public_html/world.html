@@ -70,7 +70,7 @@
                         var templateMap = _.template($('#template-map').html()),
                             templateMob = _.template($('#template-mob').html()),
                             templateMobStatus = _.template($('#template-mob-status').html()),
-                            templateMobAction = _.template($('#template-mob-action').html())
+                            templateMobAction = _.template($('#template-mob-action').html()),
                             templateObj = _.template($('#template-object').html());
                         var tMap = {
                             s : [[0, -1], [1, 0], [0, 1], [-1, 0]],
@@ -86,7 +86,7 @@
                                     my = map.length - 1,
                                     mx = my >= 0 ? map[0].length - 1 : 0,
                                     r = [],
-                                    dx, dy, nx, ny, b, ct, nt, i, l, m;
+                                    dx, dy, nx, ny, b, nt, i, l, m;
                                 for(i = 0, l = tMap.s.length; i < l; i++) {
                                     dx = tMap.s[i][0];
                                     dy = tMap.s[i][1];
@@ -147,7 +147,7 @@
                                 return true;
                             }
                             return false;
-                        }
+                        };
                         jQuery(document).keyup(function(event){
                             if (event.keyCode == 27 && trackingMob) {
                                 trackMob(null);
@@ -161,12 +161,12 @@
                                 wL = w.scrollLeft(),
                                 o = el.offset(),
                                 th = 40,
-                                belowthefold = wH + wT <= o.top - th,
-                                abovethetop = wT >= o.top + el.height() - th,
-                                rightofscreen = wW + wL <= o.left - th,
-                                leftofscreen = wL >= o.left + el.width() - th
+                                belowTheFold = wH + wT <= o.top - th,
+                                aboveTheTop = wT >= o.top + el.height() - th,
+                                rightOfScreen = wW + wL <= o.left - th,
+                                leftOfScreen = wL >= o.left + el.width() - th
                             ;
-                            return !rightofscreen && !leftofscreen && !belowthefold && !abovethetop;
+                            return !rightOfScreen && !leftOfScreen && !belowTheFold && !aboveTheTop;
                         };
                         var drawObjects = function() {
                             $.ajax('/state.json', {
@@ -300,7 +300,6 @@
                             });
                         };
                         drawObjects();
-
                     }
                 });
 

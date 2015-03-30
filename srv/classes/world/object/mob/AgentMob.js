@@ -20,9 +20,6 @@ AgentMob.prototype.tick = function(environment)
     Mob.prototype.tick.call(this);
     var decision, object, actionOptions = {}, error = null;
     /**
-     * Prepare data for client
-     */
-    /**
      * Get decision from client
      */
     try {

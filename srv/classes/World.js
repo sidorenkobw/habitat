@@ -6,24 +6,10 @@ var AgentMob = require("./world/object/mob/AgentMob").AgentMob;
 function World(map)
 {
     this.map = map;
-    /**
-     * @deprecated
-     * @type {Array}
-     */
-    this.objects = [];
-    this._objectsIdSeq = 1;
-    /**
-     * @deprecated
-     * @type {Array}
-     */
-    this.mobs = [];
-    this._mobsIdSeq = 1;
-    this._cache = {
-        'directionsMap': null,
-        'mobsById': {}
-    };
-    this.mobLastActions = [];
     this._objects = [];
+    this._objectsIdSeq = 1;
+    this._cache = {};
+    this.mobLastActions = [];
 }
 
 World.prototype.spawn = function(object)
@@ -92,8 +78,9 @@ World.prototype.getObjects = function(options)
     return result;
 };
 
-World.prototype.getDirectionsMap = function () {
-    if (this._cache['directionsMap'] === null) {
+World.prototype.getDirectionsMap = function ()
+{
+    if (typeof(this._cache['directionsMap']) == 'undefined') {
         this._cache['directionsMap'] = [];
         this._cache['directionsMap'][0] = {x:  0, y:  0 }; // Current cell
         this._cache['directionsMap'][1] = {x:  0, y: -1 }; // N

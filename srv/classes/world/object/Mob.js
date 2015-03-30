@@ -3,9 +3,6 @@ var Constants = require("../../constants");
 
 function Mob(options)
 {
-//    if (typeof (options) != 'object') {
-//        options = {};
-//    }
     objModule.Object.call(this);
     this.class = 'mob';
     this.subClass = 'unknown';
@@ -130,7 +127,7 @@ Mob.prototype.eat = function(options)
     return true;
 };
 
-Mob.prototype.idle = function(options)
+Mob.prototype.idle = function()
 {
     // Regeneration
     if (this.satiety >= Math.floor(this.maxSatiety * Constants.balance.AGENT_SATIETY_LEVEL_REGENERATION)) {
@@ -139,7 +136,7 @@ Mob.prototype.idle = function(options)
     return true;
 };
 
-Mob.prototype.tick = function(environment)
+Mob.prototype.tick = function()
 {
     this.lastAction = {
         'mobId' : this.id,

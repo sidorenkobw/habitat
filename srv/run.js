@@ -9,7 +9,7 @@ var serverModule = require("./classes/Server"),
             "class"     : name,
             "params"    : params
         };
-    };
+    }
 
     var Map = require("./classes/Map").Map;
     var map = new Map();

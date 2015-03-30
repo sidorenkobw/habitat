@@ -1,5 +1,3 @@
-var _ = require("underscore");
-
 function Map()
 {
     this.width  = 0;
@@ -7,8 +5,7 @@ function Map()
     this.map    = [];
     this._cache = {
         'positionsByTerrain' : {},
-        'tilesByClass': {},
-        'possibleDirections': null
+        'tilesByClass': {}
     };
 }
 
@@ -48,11 +45,6 @@ Map.prototype.toJson = function()
         height: this.height,
         map: this.map
     }
-};
-
-Map.prototype.getTerrainTypeByXY = function(x, y)
-{
-    return this.map[y][x];
 };
 
 Map.prototype.getRectangle = function(minX, minY, maxX, maxY)
@@ -139,7 +131,7 @@ Map.prototype.getPositions = function(options)
             }
         }
     }
-    for (i = 0, l = result.length; i < l; i++) {
+    for (i = 0, l = positions.length; i < l; i++) {
         if (this._filterPosition(positions[i], options)) {
             result.push(positions[i]);
         }
@@ -147,7 +139,8 @@ Map.prototype.getPositions = function(options)
     return result;
 };
 
-Map.prototype._filterPosition = function(p, filters) {
+Map.prototype._filterPosition = function(p, filters)
+{
     return !!(
         (typeof(filters['minX']) == 'undefined' || p.x >= filters['minX'])
         && (typeof(filters['maxX']) == 'undefined' || p.x <= filters['maxX'])

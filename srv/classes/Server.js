@@ -6,7 +6,8 @@ var World = require("./World"),
     Food = require("./world/object/Food"),
     Constants = require("./constants");
 
-var Server = function (agents, map) {
+var Server = function (agents, map)
+{
     this.agentsClasses = agents;
     this.agents = [];
     this.tickId = 0;
@@ -40,16 +41,18 @@ var Server = function (agents, map) {
         'Wendy',
         'Xena',
         'Yan',
-        'Zed',
+        'Zed'
     ];
     this._names = [];
 };
 
-Server.prototype.initLog = function () {
+Server.prototype.initLog = function ()
+{
 //    fs.writeFileSync("../var/log", "");
 };
 
-Server.prototype.log = function (msg, level) {
+Server.prototype.log = function (msg, level)
+{
     if (this.displayLogs) {
         if (level < 2) {
             util.log('Tick ' + this.tickId + ': ' + msg);
@@ -58,12 +61,14 @@ Server.prototype.log = function (msg, level) {
     //fs.appendFileSync("../var/log", this.tickId + " " + msg + "\n");
 };
 
-Server.prototype.stop = function () {
+Server.prototype.stop = function ()
+{
     this.log("Server stopped", 1);
     process.exit();
 };
 
-Server.prototype.instantiateAgent = function (agentData) {
+Server.prototype.instantiateAgent = function (agentData)
+{
     var agentModule, params, agent, agentClient, agentIntroduction;
     agentModule = agentData.module;
     params = agentData.params;
@@ -128,7 +133,8 @@ Server.prototype.instantiateAgent = function (agentData) {
     return mob;
 };
 
-Server.prototype.initAgents = function (resetAgents) {
+Server.prototype.initAgents = function (resetAgents)
+{
     if (resetAgents) {
         this.agents = [];
     }
@@ -156,7 +162,8 @@ Server.prototype.initAgents = function (resetAgents) {
     }
 };
 
-Server.prototype.generateFood = function () {
+Server.prototype.generateFood = function ()
+{
     var food, coords;
 
     coords = this.world.map.getRandomPosition({'class':'land'});
@@ -169,13 +176,14 @@ Server.prototype.generateFood = function () {
     }
 };
 
-Server.prototype.initFood = function () {
+Server.prototype.initFood = function ()
+{
     this.generateFood();
 };
 
 
-Server.prototype.tick = function () {
-
+Server.prototype.tick = function ()
+{
     this.tickId++;
 
     var freeFoodFrequency = 350 / ((Constants.balance.AGENT_MOVE_COST_STRAIGHT + Constants.balance.AGENT_MOVE_COST_DIAGONAL) / 2 * this.agents.length);
@@ -218,7 +226,8 @@ Server.prototype.tick = function () {
     }, this.tickInterval);
 };
 
-Server.prototype.getServerState = function () {
+Server.prototype.getServerState = function ()
+{
     var state = {
         "tickId": this.tickId,
         "map": this.world.map.toJson(),
@@ -237,12 +246,14 @@ Server.prototype.getServerState = function () {
     return state;
 };
 
-Server.prototype.saveServerState = function () {
+Server.prototype.saveServerState = function ()
+{
 //    var state = this.getServerState();
 //    fs.writeFileSync("../var/state.json", JSON.stringify(state));
 };
 
-Server.prototype.run = function () {
+Server.prototype.run = function ()
+{
     this.initLog();
 
     this.log("Server started", 1);
