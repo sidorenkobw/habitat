@@ -19,7 +19,8 @@ var serverModule = require("./classes/Server"),
     map.map = mapGenerator.generate({
         'width': 50,
         'height': 50,
-        'seed' : 'Woo!'
+        //'method': 'Voronoi', // available methods: Voronoi, Perlin
+        'seed' : 'sa2342csdSd4r2fA'
     });
 
 
