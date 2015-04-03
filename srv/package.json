@@ -2,6 +2,7 @@
     "name": "habitat",
     "version": "0.0.1",
     "dependencies": {
+        "seedrandom" : "= 2.3.11",
         "mime"  : ">= 1.2.0",
         "underscore" : ">= 1.5.0"
     },
