@@ -11,7 +11,7 @@ function MapGenerator(options)
 MapGenerator.prototype.generatePerlin = function()
 {
     var x, y,
-        map = this._generatePerlinNoise(this._generateWhiteNoise(), 4)
+        map = this._generatePerlinNoise()
         ;
     var tileMapping = [0, 4, 3, 2, 2, 1, 5, 5, 5];
     for (x = 0; x < this.width; x ++) {
@@ -36,79 +36,60 @@ MapGenerator.prototype._getEmptyArray = function()
     return map;
 };
 
-MapGenerator.prototype._generateWhiteNoise = function()
-{
-    var x, y, map = this._getEmptyArray();
-    for (x = 0; x < this.width; x++) {
-        for (y = 0; y < this.height; y++) {
-            map[x][y] = this.random();
-        }
-    }
-    return map;
-};
-
-MapGenerator.prototype._generateSmoothNoise = function(baseNoise, octave)
-{
-    var x, sample_x0, sample_x1, horizontal_blend,
-        y, sample_y0, sample_y1, vertical_blend,
-        top, bottom,
-        map = this._getEmptyArray(),
-        samplePeriod = 1 << octave,
-        sampleFrequency = 1.0 / samplePeriod
-        ;
-    for (x = 0; x < this.width; x++) {
-        //calculate the horizontal sampling indices
-        sample_x0 = (Math.floor(x / samplePeriod)) * samplePeriod;
-        sample_x1 = (sample_x0 + samplePeriod) % this.width; //wrap around
-        horizontal_blend = (x - sample_x0) * sampleFrequency;
-        for (y = 0; y < this.height; y++) {
-            //calculate the vertical sampling indices
-            sample_y0 = (Math.floor(y / samplePeriod)) * samplePeriod;
-            sample_y1 = (sample_y0 + samplePeriod) % this.height; //wrap around
-            vertical_blend = (y - sample_y0) * sampleFrequency;
-
-            //blend the top two corners
-            top = this._interpolate(baseNoise[sample_x0][sample_y0],
-                baseNoise[sample_x1][sample_y0], horizontal_blend);
-
-            //blend the bottom two corners
-            bottom = this._interpolate(baseNoise[sample_x0][sample_y1],
-                baseNoise[sample_x1][sample_y1], horizontal_blend);
-
-            //final blend
-            map[x][y] = this._interpolate(top, bottom, vertical_blend);
-        }
-    }
-    return map;
-};
-
 MapGenerator.prototype._interpolate = function(a, b, alpha)
 {
     return a * (1 - alpha) + alpha * b;
 };
 
-MapGenerator.prototype._generatePerlinNoise = function(baseNoise, octaveCount)
+MapGenerator.prototype._generatePerlinNoise = function()
 {
     var x, y, octave, smoothNoise = [],
-        map = this._getEmptyArray(this.width, this.height),
+        baseNoise = this._getEmptyArray(),
+        map = this._getEmptyArray(),
         persistence = 0.35,
         amplitude = 1.0,
-        totalAmplitude = 0.0
+        totalAmplitude = 0.0,
+        octaveCount = 4
         ;
-
-    //generate smooth noise
-    for (x = 0; x < octaveCount; x++) {
-        smoothNoise[x] = this._generateSmoothNoise(baseNoise, x);
+    var sample_x0, sample_x1, horizontal_blend,
+        sample_y0, sample_y1, vertical_blend,
+        top, bottom,
+        samplePeriod,
+        sampleFrequency
+        ;
+    // generate base noise
+    for (x = 0; x < this.width; x++) {
+        for (y = 0; y < this.height; y++) {
+            baseNoise[x][y] = this.random();
+        }
     }
-
-    //blend noise together
+    // smooth base noise and blend into result
     for (octave = octaveCount - 1; octave >= 0; octave--) {
         amplitude *= persistence;
         totalAmplitude += amplitude;
-
+        samplePeriod = 1 << octave;
+        sampleFrequency = 1.0 / samplePeriod;
         for (x = 0; x < this.width; x++) {
+            //calculate the horizontal sampling indices
+            sample_x0 = (Math.floor(x / samplePeriod)) * samplePeriod;
+            sample_x1 = (sample_x0 + samplePeriod) % this.width; //wrap around
+            horizontal_blend = (x - sample_x0) * sampleFrequency;
             for (y = 0; y < this.height; y++) {
-                map[x][y] += smoothNoise[octave][x][y] * amplitude;
+                //calculate the vertical sampling indices
+                sample_y0 = (Math.floor(y / samplePeriod)) * samplePeriod;
+                sample_y1 = (sample_y0 + samplePeriod) % this.height; //wrap around
+                vertical_blend = (y - sample_y0) * sampleFrequency;
+
+                //blend the top two corners
+                top = this._interpolate(baseNoise[sample_x0][sample_y0],
+                    baseNoise[sample_x1][sample_y0], horizontal_blend);
+
+                //blend the bottom two corners
+                bottom = this._interpolate(baseNoise[sample_x0][sample_y1],
+                    baseNoise[sample_x1][sample_y1], horizontal_blend);
+
+                //final blend
+                map[x][y] += this._interpolate(top, bottom, vertical_blend) * amplitude;
             }
         }
     }
@@ -125,7 +106,7 @@ MapGenerator.prototype._generatePerlinNoise = function(baseNoise, octaveCount)
 MapGenerator.prototype.generateVoronoi = function()
 {
     var x, y, i, f, distance, selectedDistance, selectedPoint,
-        map = this._getEmptyArray(this.width, this.height),
+        map = this._getEmptyArray(),
         pointsCount = Math.ceil(this.width * this.height / 20),
         points = []
         ;
